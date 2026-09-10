@@ -17,6 +17,7 @@
 </head>
 
 <body>
+    <a class="skip-link" href="#home">Skip to content</a>
 
     <!-- TOP BAR -->
     <div class="top-bar">
@@ -76,7 +77,14 @@
             </a>
 
 
-            <nav class="nav-menu">
+            <button class="mobile-menu-toggle" type="button"
+                    aria-label="Open navigation menu"
+                    aria-expanded="false"
+                    aria-controls="site-navigation">
+                <span></span><span></span><span></span>
+            </button>
+
+            <nav class="nav-menu" id="site-navigation">
                 <a href="#home">Home</a>
                 <a href="#electrical">Electrical</a>
                 <a href="#chief-electrician">প্রধান ইলেকট্রিশিয়ান</a>
@@ -180,22 +188,22 @@
 
         <div class="container hero-metrics">
 
-            <div class="metric-box">
+            <div class="metric-box reveal-item">
                 <h3>40+</h3>
                 <p>Years Experience</p>
             </div>
 
-            <div class="metric-box">
+            <div class="metric-box reveal-item">
                 <h3>100%</h3>
                 <p>Safety Focus</p>
             </div>
 
-            <div class="metric-box">
+            <div class="metric-box reveal-item">
                 <h3>IoT</h3>
                 <p>Smart Ready</p>
             </div>
 
-            <div class="metric-box">
+            <div class="metric-box reveal-item">
                 <h3>24/7</h3>
                 <p>Support</p>
             </div>
@@ -229,7 +237,7 @@
 
             <div class="services-grid">
 
-                <div class="service-card">
+                <div class="service-card reveal-item">
 
                     <div class="card-icon">
                         <i class="fa-solid fa-plug-circle-bolt"></i>
@@ -245,7 +253,7 @@
                 </div>
 
 
-                <div class="service-card">
+                <div class="service-card reveal-item">
 
                     <div class="card-icon">
                         <i class="fa-solid fa-microchip"></i>
@@ -261,7 +269,7 @@
                 </div>
 
 
-                <div class="service-card">
+                <div class="service-card reveal-item">
 
                     <div class="card-icon solar-icon">
                         <i class="fa-solid fa-solar-panel"></i>
@@ -324,7 +332,7 @@
 
                     <!-- LIGHT -->
 
-                    <div class="control-card" id="card-light">
+                    <div class="control-card reveal-item" id="card-light">
 
                         <div class="status-indicator"></div>
 
@@ -349,7 +357,7 @@
 
                     <!-- FAN -->
 
-                    <div class="control-card" id="card-fan">
+                    <div class="control-card reveal-item" id="card-fan">
 
                         <div class="status-indicator"></div>
 
@@ -374,7 +382,7 @@
 
                     <!-- SENSOR -->
 
-                    <div class="control-card" id="card-sensor">
+                    <div class="control-card reveal-item" id="card-sensor">
 
                         <div class="status-indicator"></div>
 
@@ -726,28 +734,28 @@
         </p>
 
         <div class="chief-credentials">
-          <div class="credential-card">
+          <div class="credential-card reveal-item">
             <i class="fa-solid fa-certificate"></i>
             <div>
               <strong>লাইসেন্সপ্রাপ্ত</strong>
               <span>Professional Electrical License</span>
             </div>
           </div>
-          <div class="credential-card">
+          <div class="credential-card reveal-item">
             <i class="fa-solid fa-calendar-check"></i>
             <div>
               <strong>৪০+ বছর</strong>
               <span>বাস্তব Electrical Experience</span>
             </div>
           </div>
-          <div class="credential-card">
+          <div class="credential-card reveal-item">
             <i class="fa-solid fa-shield-halved"></i>
             <div>
               <strong>Safety First</strong>
               <span>নিরাপদ ও নিয়মমাফিক কাজের অগ্রাধিকার</span>
             </div>
           </div>
-          <div class="credential-card">
+          <div class="credential-card reveal-item">
             <i class="fa-solid fa-screwdriver-wrench"></i>
             <div>
               <strong>Hands-on Expertise</strong>
@@ -786,7 +794,7 @@
         
         <div class="team-grid">
             <!-- Person 1 -->
-            <div class="team-card">
+            <div class="team-card reveal-item">
                 <div class="team-img-wrapper">
                     <img src="https://images.unsplash.com/photo-1581092921461-eab62e97a780?w=400&q=80" alt="Engineer Name">
                     <span class="team-badge">Senior Engineer</span>
@@ -799,7 +807,7 @@
             </div>
 
             <!-- Person 2 -->
-            <div class="team-card">
+            <div class="team-card reveal-item">
                 <div class="team-img-wrapper">
                     <img src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=400&q=80" alt="Electrician Name">
                     <span class="team-badge">Licensed</span>
@@ -812,7 +820,7 @@
             </div>
 
             <!-- Person 3 -->
-            <div class="team-card">
+            <div class="team-card reveal-item">
                 <div class="team-img-wrapper">
                     <img src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&q=80" alt="Engineer Name">
                     <span class="team-badge">Engineer</span>
@@ -825,7 +833,7 @@
             </div>
 
             <!-- Person 4 -->
-            <div class="team-card">
+            <div class="team-card reveal-item">
                 <div class="team-img-wrapper">
                     <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=400&q=80" alt="Electrician Name">
                     <span class="team-badge">Technician</span>
@@ -838,9 +846,9 @@
             </div>
 
             <!-- Person 5 -->
-            <div class="team-card">
+            <div class="team-card reveal-item">
                 <div class="team-img-wrapper">
-                    <img src="img\aaa.png" alt="Electrician Name">
+                    <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=400&auto=format&fit=crop" alt="Electrician Name">
                     <span class="team-badge">Licensed</span>
                 </div>
                 <div class="team-info">
@@ -851,9 +859,9 @@
             </div>
 
             <!-- Person 6 -->
-            <div class="team-card">
+            <div class="team-card reveal-item">
                 <div class="team-img-wrapper">
-                    <img src="img\ab.png" alt="Engineer Name">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=400&auto=format&fit=crop" alt="Engineer Name">
                     <span class="team-badge">Safety Officer</span>
                 </div>
                 <div class="team-info">
