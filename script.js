@@ -385,8 +385,13 @@ function updateFileName(input) {
 
 function handleBookingSubmit(event) {
 
-    event.preventDefault();
-
+    // NOTE: we do NOT preventDefault() here anymore (unless validation fails
+    // below). The form now has action="https://formsubmit.co/..." and
+    // target="formsubmit-hidden-frame", so leaving the default submission
+    // to happen lets the browser actually POST the data (name, phone,
+    // date, file, etc.) to that email address in the background via the
+    // hidden iframe, while this page stays exactly where it is and still
+    // shows the confirmation modal below as before.
 
     const nameElement =
         document.getElementById("client-name");
@@ -421,6 +426,8 @@ function handleBookingSubmit(event) {
 
 
     if (!name || !phone || !service || !date) {
+
+        event.preventDefault();
 
         alert(
             "দয়া করে প্রয়োজনীয় সব তথ্য পূরণ করুন।"
@@ -565,6 +572,49 @@ function closeBookingModal() {
 
         updateFileName(fileInput);
     }
+}
+
+
+/* =========================================================
+   6B. FOOTER NEWSLETTER / QUICK-CONTACT FORM
+   ========================================================= */
+
+function handleNewsletterSubmit(event) {
+
+    const contactElement =
+        document.getElementById("newsletter-contact");
+
+    const contact =
+        contactElement ? contactElement.value.trim() : "";
+
+    if (!contact) {
+
+        event.preventDefault();
+
+        alert(
+            "দয়া করে আপনার ইমেইল অথবা ফোন নম্বর লিখুন।"
+        );
+
+        return;
+    }
+
+    // Valid input: do NOT preventDefault(). The form has
+    // action="https://formsubmit.co/..." and
+    // target="formsubmit-hidden-frame", so the browser will POST it
+    // to that email address in the background via the hidden iframe
+    // without leaving/reloading this page.
+
+    setTimeout(() => {
+
+        if (contactElement) {
+            contactElement.value = "";
+        }
+
+        alert(
+            "ধন্যবাদ! আমরা শীঘ্রই আপনার সাথে যোগাযোগ করব।"
+        );
+
+    }, 400);
 }
 
 
