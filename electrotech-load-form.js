@@ -49,70 +49,51 @@
     };
 
     const equipmentList = [
-        {
-            name: "Fan",
-            watt: 75
-        },
-        {
-            name: "LED Light",
-            watt: 12
-        },
-        {
-            name: "Tube Light",
-            watt: 40
-        },
-        {
-            name: "TV",
-            watt: 100
-        },
-        {
-            name: "Refrigerator",
-            watt: 150
-        },
-        {
-            name: "Computer",
-            watt: 200
-        },
-        {
-            name: "Laptop",
-            watt: 65
-        },
-        {
-            name: "Router",
-            watt: 15
-        },
-        {
-            name: "Washing Machine",
-            watt: 500
-        },
-        {
-            name: "Iron",
-            watt: 1000
-        },
-        {
-            name: "Rice Cooker",
-            watt: 700
-        },
-        {
-            name: "Water Pump",
-            watt: 750
-        },
-        {
-            name: "AC",
-            watt: 1200
-        },
-        {
-            name: "Microwave Oven",
-            watt: 1200
-        },
-        {
-            name: "Water Heater",
-            watt: 2000
-        },
-        {
-            name: "Custom Equipment",
-            watt: 100
-        }
+        { group: "Basic Appliances", name: "Fan", watt: 75 },
+        { group: "Basic Appliances", name: "LED Light", watt: 12 },
+        { group: "Basic Appliances", name: "Tube Light", watt: 40 },
+        { group: "Basic Appliances", name: "TV", watt: 100 },
+        { group: "Basic Appliances", name: "Refrigerator", watt: 150 },
+        { group: "Basic Appliances", name: "Computer", watt: 200 },
+        { group: "Basic Appliances", name: "Laptop", watt: 65 },
+        { group: "Basic Appliances", name: "Router", watt: 15 },
+        { group: "Basic Appliances", name: "Deep Freezer", watt: 250 },
+        { group: "AC, Heater & Geyser", name: "AC", watt: 1200 },
+        { group: "AC, Heater & Geyser", name: "AC 1 Ton", watt: 1000 },
+        { group: "AC, Heater & Geyser", name: "AC 1.5 Ton", watt: 1500 },
+        { group: "AC, Heater & Geyser", name: "AC 2 Ton", watt: 2000 },
+        { group: "AC, Heater & Geyser", name: "Inverter AC 1.5 Ton", watt: 1100 },
+        { group: "AC, Heater & Geyser", name: "Water Heater", watt: 2000 },
+        { group: "AC, Heater & Geyser", name: "Geyser (Storage)", watt: 2000 },
+        { group: "AC, Heater & Geyser", name: "Geyser (Instant)", watt: 3000 },
+        { group: "AC, Heater & Geyser", name: "Room Heater", watt: 1500 },
+        { group: "AC, Heater & Geyser", name: "Blower Heater", watt: 2000 },
+        { group: "Washing & Kitchen", name: "Washing Machine", watt: 500 },
+        { group: "Washing & Kitchen", name: "Washing Machine (Semi-Auto)", watt: 350 },
+        { group: "Washing & Kitchen", name: "Washing Machine (Front Load)", watt: 1200 },
+        { group: "Washing & Kitchen", name: "Clothes Dryer", watt: 2000 },
+        { group: "Washing & Kitchen", name: "Iron", watt: 1000 },
+        { group: "Washing & Kitchen", name: "Rice Cooker", watt: 700 },
+        { group: "Washing & Kitchen", name: "Microwave Oven", watt: 1200 },
+        { group: "Washing & Kitchen", name: "Induction Cooker", watt: 1800 },
+        { group: "Motor & Pump", name: "Water Pump", watt: 750 },
+        { group: "Motor & Pump", name: "Motor 0.5 HP", watt: 500 },
+        { group: "Motor & Pump", name: "Motor 1 HP", watt: 900 },
+        { group: "Motor & Pump", name: "Motor 2 HP", watt: 1750 },
+        { group: "Motor & Pump", name: "Motor 3 HP", watt: 2600 },
+        { group: "Motor & Pump", name: "Motor 5 HP", watt: 4250 },
+        { group: "Motor & Pump", name: "Motor 7.5 HP", watt: 6300 },
+        { group: "Motor & Pump", name: "Motor 10 HP", watt: 8300 },
+        { group: "Professional / Industrial", name: "Air Compressor (3 HP)", watt: 2600 },
+        { group: "Professional / Industrial", name: "Welding Machine", watt: 5000 },
+        { group: "Professional / Industrial", name: "Lathe / CNC Machine", watt: 4000 },
+        { group: "Professional / Industrial", name: "Water Chiller (5 TR)", watt: 6000 },
+        { group: "Professional / Industrial", name: "Lift / Elevator Motor", watt: 7500 },
+        { group: "Professional / Industrial", name: "Industrial Exhaust Fan", watt: 750 },
+        { group: "Professional / Industrial", name: "Server Rack / UPS Load", watt: 2000 },
+        { group: "Professional / Industrial", name: "CCTV System (8 Cam + NVR)", watt: 120 },
+        { group: "Professional / Industrial", name: "LED Flood Light 200W", watt: 200 },
+        { group: "Other", name: "Custom Equipment", watt: 100 }
     ];
 
     /*
@@ -351,6 +332,34 @@
     =====================================================
     */
 
+    function renderEquipmentMenu(row) {
+        let lastGroup = "";
+
+        return equipmentList.map(item => {
+            let heading = "";
+
+            if (item.group && item.group !== lastGroup) {
+                lastGroup = item.group;
+                heading = `<div class="etl-select-group" role="presentation">${escapeHTML(item.group)}</div>`;
+            }
+
+            const selected = item.name === row.name;
+
+            return `${heading}
+                <button
+                    type="button"
+                    class="etl-custom-option${selected ? " is-selected" : ""}"
+                    role="option"
+                    aria-selected="${selected ? "true" : "false"}"
+                    data-custom-option
+                    data-value="${escapeHTML(item.name)}"
+                    data-id="${row.id}">
+                    <span>${escapeHTML(item.name)}</span>
+                    <small>${item.watt} W</small>
+                </button>`;
+        }).join("");
+    }
+
     function renderRows() {
         const container =
             document.getElementById(
@@ -396,19 +405,7 @@
                                         role="listbox"
                                         aria-label="Equipment"
                                         data-custom-select-menu>
-                                        ${equipmentList.map(item => `
-                                            <button
-                                                type="button"
-                                                class="etl-custom-option${item.name === row.name ? " is-selected" : ""}"
-                                                role="option"
-                                                aria-selected="${item.name === row.name ? "true" : "false"}"
-                                                data-custom-option
-                                                data-value="${escapeHTML(item.name)}"
-                                                data-id="${row.id}">
-                                                <span>${escapeHTML(item.name)}</span>
-                                                <small>${item.watt} W</small>
-                                            </button>
-                                        `).join("")}
+                                        ${renderEquipmentMenu(row)}
                                     </div>
                                 </div>
                             </div>
@@ -1341,6 +1338,21 @@
             .etl-custom-select.open-up .etl-custom-select-menu {
                 top: auto;
                 bottom: calc(100% + 5px);
+            }
+
+            .etl-select-group {
+                position: sticky;
+                top: -5px;
+                z-index: 1;
+                margin: 4px 0 2px;
+                padding: 7px 10px 5px;
+                color: #00f5d4;
+                background: #142535;
+                border-bottom: 1px solid rgba(0, 245, 212, 0.25);
+                font-size: 11px;
+                font-weight: 700;
+                letter-spacing: 0.6px;
+                text-transform: uppercase;
             }
 
             .etl-custom-option {
