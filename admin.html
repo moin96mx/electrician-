@@ -465,6 +465,7 @@
                 <th>Phone</th>
                 <th>Service</th>
                 <th>Date</th>
+                <th>File</th>
                 <th>Status</th>
                 <th>Action</th>
               </tr>
@@ -477,6 +478,7 @@
                   <td>${item.phone}</td>
                   <td>${item.service}</td>
                   <td>${item.date}</td>
+                  <td>${item.attachment ? `<button class="status-btn" data-file-booking-id="${encodeURIComponent(item.id)}">View file</button>` : '—'}</td>
                   <td>
                     <select class="status-select" data-booking-id="${item.id}" data-current-status="${item.status || 'new'}">
                       <option value="new" ${item.status === 'new' ? 'selected' : ''}>New</option>
@@ -500,6 +502,21 @@
             const select = document.querySelector(`.status-select[data-booking-id="${bookingId}"]`);
             const nextStatus = select ? select.value : 'new';
             await updateBookingStatus(bookingId, nextStatus);
+          });
+        });
+
+        document.querySelectorAll('[data-file-booking-id]').forEach((button) => {
+          button.addEventListener('click', async () => {
+            const bookingId = decodeURIComponent(button.getAttribute('data-file-booking-id'));
+            const fileResponse = await fetch(`/api/bookings/${encodeURIComponent(bookingId)}/file`, {
+              headers: { Authorization: `Bearer ${getToken()}` }
+            });
+            if (!fileResponse.ok) {
+              alert('ফাইলটি খোলা যায়নি।');
+              return;
+            }
+            const fileUrl = URL.createObjectURL(await fileResponse.blob());
+            window.open(fileUrl, '_blank', 'noopener');
           });
         });
 

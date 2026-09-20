@@ -416,6 +416,9 @@ function handleBookingSubmit(event) {
     const notes =
         notesElement ? notesElement.value.trim() : "";
 
+    const fileElement =
+        document.getElementById("blueprint-file");
+
     if (!name || !phone || !service || !date) {
 
         event.preventDefault();
@@ -426,6 +429,8 @@ function handleBookingSubmit(event) {
 
         return;
     }
+
+    event.preventDefault();
 
     const randomNumber =
         Math.floor(
@@ -496,18 +501,20 @@ function handleBookingSubmit(event) {
         );
     }
 
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('phone', phone);
+    formData.append('service', service);
+    formData.append('date', date);
+    formData.append('notes', notes);
+
+    if (fileElement?.files?.[0]) {
+        formData.append('attachment', fileElement.files[0]);
+    }
+
     fetch('/api/bookings', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            name: name,
-            phone: phone,
-            service: service,
-            date: date,
-            notes: notes
-        })
+        body: formData
     }).catch(error => {
         console.warn('Backend booking save failed:', error);
     });

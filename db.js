@@ -24,6 +24,10 @@ async function initDatabase() {
       visit_date DATE NOT NULL,
       notes TEXT NOT NULL DEFAULT '',
       status TEXT NOT NULL DEFAULT 'new',
+      file_name TEXT,
+      file_type TEXT,
+      file_size INTEGER,
+      file_data BYTEA,
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
     );
 
@@ -37,6 +41,10 @@ async function initDatabase() {
 
     CREATE INDEX IF NOT EXISTS bookings_created_at_idx ON bookings (created_at DESC);
     CREATE INDEX IF NOT EXISTS contacts_created_at_idx ON contacts (created_at DESC);
+    ALTER TABLE bookings ADD COLUMN IF NOT EXISTS file_name TEXT;
+    ALTER TABLE bookings ADD COLUMN IF NOT EXISTS file_type TEXT;
+    ALTER TABLE bookings ADD COLUMN IF NOT EXISTS file_size INTEGER;
+    ALTER TABLE bookings ADD COLUMN IF NOT EXISTS file_data BYTEA;
   `);
 }
 

@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const multer = require('multer');
 const { pool, initDatabase } = require('./db');
 
 const app = express();
@@ -9,6 +10,15 @@ const ADMIN_PHONE = (process.env.WHATSAPP_ADMIN_NUMBER || '').replace(/\s+/g, ''
 const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'admin';
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'electrotech123';
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 10 * 1024 * 1024 },
+  fileFilter: (req, file, callback) => {
+    const allowedExtensions = ['.pdf', '.png', '.jpg', '.jpeg', '.dwg'];
+    const extension = path.extname(file.originalname).toLowerCase();
+    callback(null, allowedExtensions.includes(extension));
+  }
+});
 
 if (IS_PRODUCTION && (ADMIN_PASSWORD === 'electrotech123' || !process.env.ADMIN_USERNAME)) {
   throw new Error('Production requires ADMIN_USERNAME and a non-default ADMIN_PASSWORD.');
@@ -43,6 +53,11 @@ function bookingFromRow(row) {
     date: String(row.visit_date).slice(0, 10),
     notes: row.notes,
     status: row.status,
+    attachment: row.file_name ? {
+      name: row.file_name,
+      type: row.file_type,
+      size: row.file_size
+    } : null,
     createdAt: new Date(row.created_at).toISOString()
   };
 }
@@ -106,7 +121,7 @@ app.get('/api/health', asyncHandler(async (req, res) => {
   res.json({ success: true, message: 'ElectroTechBD backend and PostgreSQL are running' });
 }));
 
-app.post('/api/bookings', asyncHandler(async (req, res) => {
+app.post('/api/bookings', upload.single('attachment'), asyncHandler(async (req, res) => {
   const { name, phone, service, date, notes } = req.body || {};
 
   if (!name || !phone || !service || !date) {
@@ -126,10 +141,21 @@ app.post('/api/bookings', asyncHandler(async (req, res) => {
   };
 
   const result = await pool.query(
-    `INSERT INTO bookings (id, name, phone, service, visit_date, notes)
-     VALUES ($1, $2, $3, $4, $5, $6)
+    `INSERT INTO bookings (id, name, phone, service, visit_date, notes, file_name, file_type, file_size, file_data)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
      RETURNING *`,
-    [booking.id, booking.name, booking.phone, booking.service, booking.date, booking.notes]
+    [
+      booking.id,
+      booking.name,
+      booking.phone,
+      booking.service,
+      booking.date,
+      booking.notes,
+      req.file?.originalname || null,
+      req.file?.mimetype || null,
+      req.file?.size || null,
+      req.file?.buffer || null
+    ]
   );
 
   const savedBooking = bookingFromRow(result.rows[0]);
@@ -187,6 +213,23 @@ app.delete('/api/bookings/:id', authMiddleware, asyncHandler(async (req, res) =>
   }
 
   return res.json({ success: true, message: 'Booking deleted.' });
+}));
+
+app.get('/api/bookings/:id/file', authMiddleware, asyncHandler(async (req, res) => {
+  const id = decodeURIComponent(req.params.id || '');
+  const result = await pool.query(
+    'SELECT file_name, file_type, file_data FROM bookings WHERE id = $1 AND file_data IS NOT NULL',
+    [id]
+  );
+
+  if (!result.rowCount) {
+    return res.status(404).json({ success: false, message: 'Attachment not found.' });
+  }
+
+  const file = result.rows[0];
+  res.setHeader('Content-Type', file.file_type || 'application/octet-stream');
+  res.setHeader('Content-Disposition', `inline; filename="${file.file_name.replace(/"/g, '')}"`);
+  return res.send(file.file_data);
 }));
 
 app.delete('/api/contacts/:id', authMiddleware, asyncHandler(async (req, res) => {
@@ -296,6 +339,9 @@ app.get('*', (req, res, next) => {
 
 app.use((error, req, res, next) => {
   console.error(error);
+  if (error instanceof multer.MulterError || error.message === 'Unexpected field') {
+    return res.status(400).json({ success: false, message: 'ফাইলটি ১০MB-এর মধ্যে PDF, ছবি বা DWG হতে হবে।' });
+  }
   res.status(500).json({ success: false, message: 'Server error. Please try again later.' });
 });
 
