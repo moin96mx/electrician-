@@ -496,6 +496,21 @@ function handleBookingSubmit(event) {
         );
     }
 
+    fetch('/api/bookings', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            name: name,
+            phone: phone,
+            service: service,
+            date: date,
+            notes: notes
+        })
+    }).catch(error => {
+        console.warn('Backend booking save failed:', error);
+    });
     const modal =
         document.getElementById("booking-modal");
 
@@ -580,6 +595,19 @@ function handleNewsletterSubmit(event) {
         return;
     }
 
+    fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            name: 'Newsletter Contact',
+            contact: contact,
+            message: 'Newsletter/contact form submission'
+        })
+    }).catch(error => {
+        console.warn('Backend contact save failed:', error);
+    });
     setTimeout(() => {
 
         if (contactElement) {
