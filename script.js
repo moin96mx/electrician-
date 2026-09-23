@@ -1,10 +1,11 @@
-
-
 const state = {
     light: false,
     fan: false,
-    sensor: false
+    sensor: false,
+    ac: false
 };
+
+let acTemp = 24;
 
 function toggleAppliance(type) {
 
@@ -74,6 +75,272 @@ function toggleAppliance(type) {
                 'স্ট্যাটাস: <span>নিষ্ক্রিয় (IDLE)</span>';
         }
     }
+
+    if (type === "ac") {
+
+        if (state.ac) {
+
+            card.classList.add("active-ac");
+
+            status.innerHTML =
+                `স্ট্যাটাস: <span style="color:#38bdf8;font-weight:bold;">কুলিং (${acTemp}°C)</span>`;
+
+        } else {
+
+            card.classList.remove("active-ac");
+
+            status.innerHTML =
+                'স্ট্যাটাস: <span>অফ (OFF)</span>';
+        }
+    }
+
+    const logMessages = {
+        light: state.light ? "স্মার্ট লাইট চালু (ON) করা হয়েছে" : "স্মার্ট লাইট বন্ধ (OFF) করা হয়েছে",
+        fan: state.fan ? "স্মার্ট ফ্যান চালু (ON) করা হয়েছে" : "স্মার্ট ফ্যান বন্ধ (OFF) করা হয়েছে",
+        sensor: state.sensor ? "মোশন সেন্সর ট্রিগার হয়েছে — মুভমেন্ট ডিটেক্টেড" : "মোশন সেন্সর আইডল অবস্থায় ফিরেছে",
+        ac: state.ac ? `স্মার্ট এসি চালু হয়েছে — ${acTemp}°C তে সেট করা` : "স্মার্ট এসি বন্ধ করা হয়েছে"
+    };
+
+    logActivity(logMessages[type]);
+    updateEnergyMeter();
+}
+
+/* ---------- AC Temperature Control ---------- */
+function adjustAcTemp(direction) {
+
+    const newTemp = acTemp + direction;
+
+    if (newTemp < 18 || newTemp > 30) {
+        return;
+    }
+
+    acTemp = newTemp;
+
+    const tempLabel = document.getElementById("ac-temp-value");
+
+    if (tempLabel) {
+        tempLabel.textContent = `${acTemp}°C`;
+    }
+
+    if (state.ac) {
+
+        const status = document.getElementById("status-ac");
+
+        if (status) {
+            status.innerHTML =
+                `স্ট্যাটাস: <span style="color:#38bdf8;font-weight:bold;">কুলিং (${acTemp}°C)</span>`;
+        }
+
+        logActivity(`এসি টেম্পারেচার ${acTemp}°C এ সেট করা হয়েছে`);
+        updateEnergyMeter();
+    }
+}
+
+/* ---------- Activity Log ---------- */
+function logActivity(message) {
+
+    const list = document.getElementById("activity-log");
+
+    if (!list) {
+        return;
+    }
+
+    const emptyItem = list.querySelector(".log-empty");
+
+    if (emptyItem) {
+        emptyItem.remove();
+    }
+
+    const li = document.createElement("li");
+
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+
+    li.innerHTML = `<span class="log-time">${timeStr}</span>${message}`;
+
+    list.prepend(li);
+
+    while (list.children.length > 6) {
+        list.removeChild(list.lastChild);
+    }
+}
+
+/* ---------- Energy Meter ---------- */
+const applianceWatts = {
+    light: 15,
+    fan: 60
+};
+
+const AC_MAX_WATTS = 1500; // ১৮°C (সর্বোচ্চ কুলিং লোড)
+const AC_MIN_WATTS = 1080; // ৩০°C (সর্বনিম্ন কুলিং লোড)
+
+function acWattsForTemp(temp) {
+    const ratio = (temp - 18) / (30 - 18);
+    return Math.round(AC_MAX_WATTS - ratio * (AC_MAX_WATTS - AC_MIN_WATTS));
+}
+
+const ELEC_RATE_TAKA = 7.5; // আনুমানিক গড় ইউনিট প্রতি রেট (৳/kWh)
+
+const usageWithoutAutomation = { light: 8, fan: 10, ac: 10 }; // ঘণ্টা/দিন — ম্যানুয়াল ব্যবহার (ভুলে চালু থাকা সহ)
+const usageWithAutomation = { light: 5, fan: 6, ac: 6 };      // ঘণ্টা/দিন — ElectroTech স্মার্ট অটোমেশন সহ (motion/timer/occupancy ভিত্তিক)
+
+function calcMonthlySavings() {
+
+    const acAvgWatts = acWattsForTemp(24); // গড় সেটিং ধরে হিসাব
+
+    const baselineKwh =
+        ((applianceWatts.light * usageWithoutAutomation.light) +
+         (applianceWatts.fan * usageWithoutAutomation.fan) +
+         (acAvgWatts * usageWithoutAutomation.ac)) / 1000 * 30;
+
+    const smartKwh =
+        ((applianceWatts.light * usageWithAutomation.light) +
+         (applianceWatts.fan * usageWithAutomation.fan) +
+         (acAvgWatts * usageWithAutomation.ac)) / 1000 * 30;
+
+    return Math.max(0, Math.round((baselineKwh - smartKwh) * ELEC_RATE_TAKA));
+}
+
+function updateEnergyMeter() {
+
+    const bar = document.getElementById("energy-bar");
+    const wattsLabel = document.getElementById("energy-watts");
+    const noteLabel = document.getElementById("energy-note");
+    const savingsLabel = document.getElementById("energy-savings");
+
+    if (!bar || !wattsLabel || !noteLabel) {
+        return;
+    }
+
+    let totalWatts = 0;
+
+    if (state.light) {
+        totalWatts += applianceWatts.light;
+    }
+
+    if (state.fan) {
+        totalWatts += applianceWatts.fan;
+    }
+
+    if (state.ac) {
+        totalWatts += acWattsForTemp(acTemp);
+    }
+
+    const maxWatts = applianceWatts.light + applianceWatts.fan + AC_MAX_WATTS;
+    const percent = maxWatts === 0 ? 0 : Math.round((totalWatts / maxWatts) * 100);
+
+    bar.style.width = `${percent}%`;
+    wattsLabel.textContent = `${totalWatts} W`;
+
+    if (totalWatts === 0) {
+        noteLabel.textContent = "সব ডিভাইস বন্ধ আছে";
+    } else if (totalWatts < maxWatts * 0.5) {
+        noteLabel.textContent = "এনার্জি সাশ্রয়ী মোডে চলছে";
+    } else {
+        noteLabel.textContent = "সর্বোচ্চ লোডে চলছে";
+    }
+
+    if (savingsLabel) {
+        const savings = calcMonthlySavings();
+        savingsLabel.textContent = `স্মার্ট অটোমেশন দিয়ে আনুমানিক মাসিক সাশ্রয়: ৳ ${savings}`;
+    }
+}
+
+/* ---------- Climate Sensor ---------- */
+function getClimateRange() {
+
+    const hour = new Date().getHours();
+
+    if (hour >= 0 && hour < 6) {
+        return { tempMin: 22, tempMax: 26, humMin: 75, humMax: 90 };
+    }
+
+    if (hour >= 6 && hour < 11) {
+        return { tempMin: 25, tempMax: 29, humMin: 60, humMax: 75 };
+    }
+
+    if (hour >= 11 && hour < 16) {
+        return { tempMin: 30, tempMax: 36, humMin: 40, humMax: 55 };
+    }
+
+    if (hour >= 16 && hour < 20) {
+        return { tempMin: 28, tempMax: 32, humMin: 50, humMax: 65 };
+    }
+
+    return { tempMin: 25, tempMax: 28, humMin: 65, humMax: 80 };
+}
+
+function refreshClimate(silent) {
+
+    const tempEl = document.getElementById("temp-value");
+    const humEl = document.getElementById("humidity-value");
+    const card = document.getElementById("card-climate");
+
+    if (!tempEl || !humEl) {
+        return;
+    }
+
+    const range = getClimateRange();
+
+    const temp = (Math.random() * (range.tempMax - range.tempMin) + range.tempMin).toFixed(1);
+    const humidity = Math.round(Math.random() * (range.humMax - range.humMin) + range.humMin);
+
+    tempEl.textContent = `${temp}°C`;
+    humEl.textContent = `${humidity}% Humidity`;
+
+    if (silent) {
+        return;
+    }
+
+    if (card) {
+        card.classList.remove("pulse-update");
+        void card.offsetWidth;
+        card.classList.add("pulse-update");
+    }
+
+    logActivity(`Climate reading আপডেট হয়েছে — ${temp}°C, ${humidity}% Humidity`);
+}
+
+/* ---------- Voice Assistant ---------- */
+const voiceCommands = [
+    { phrase: '"লাইট জ্বালাও"', action: () => { if (!state.light) { toggleAppliance("light"); } } },
+    { phrase: '"লাইট বন্ধ করো"', action: () => { if (state.light) { toggleAppliance("light"); } } },
+    { phrase: '"ফ্যান চালাও"', action: () => { if (!state.fan) { toggleAppliance("fan"); } } },
+    { phrase: '"ফ্যান বন্ধ করো"', action: () => { if (state.fan) { toggleAppliance("fan"); } } }
+];
+
+function triggerVoiceCommand() {
+
+    const card = document.getElementById("card-voice");
+    const status = document.getElementById("status-voice");
+
+    if (!card || !status) {
+        return;
+    }
+
+    if (card.classList.contains("voice-listening")) {
+        return;
+    }
+
+    card.classList.add("voice-listening");
+    status.innerHTML = 'স্ট্যাটাস: <span style="color:#a855f7;font-weight:bold;">শুনছে...</span>';
+
+    setTimeout(() => {
+
+        const command = voiceCommands[Math.floor(Math.random() * voiceCommands.length)];
+
+        status.innerHTML = `স্ট্যাটাস: <span style="color:#a855f7;font-weight:bold;">কমান্ড: ${command.phrase}</span>`;
+
+        logActivity(`ভয়েস কমান্ড প্রসেস হয়েছে — ${command.phrase}`);
+
+        command.action();
+
+        setTimeout(() => {
+            card.classList.remove("voice-listening");
+            status.innerHTML = 'স্ট্যাটাস: <span>স্ট্যান্ডবাই</span>';
+        }, 1800);
+
+    }, 1200);
 }
 
 let currentSqft = 1200;
@@ -1889,6 +2156,10 @@ document.addEventListener(
 
         initModalEscape();
 
+        refreshClimate(true);
+
+        updateEnergyMeter();
+
         const fileInput =
             document.getElementById(
                 "blueprint-file"
@@ -1943,4 +2214,3 @@ document.addEventListener(
         syncVoltChatViewport();
     }
 })();
-
