@@ -438,6 +438,332 @@ body {
     background: #ff0055;
 }
 
+.active-ac {
+    border-color: #38bdf8;
+    box-shadow: 0 0 25px #38bdf855;
+}
+
+.active-ac .sim-icon {
+    color: #38bdf8;
+    animation: acShimmer 2s ease-in-out infinite;
+}
+
+.active-ac .status-indicator {
+    background: #38bdf8;
+}
+
+@keyframes acShimmer {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(0.92); }
+}
+
+.ac-temp-control {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-top: 15px;
+}
+
+.ac-temp-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid #ffffff33;
+    background: transparent;
+    color: #fff;
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ac-temp-btn:hover {
+    background: #38bdf8;
+    border-color: #38bdf8;
+    color: #071018;
+}
+
+.ac-temp-value {
+    font-size: 18px;
+    font-weight: 700;
+    color: #38bdf8;
+    min-width: 55px;
+    text-align: center;
+}
+
+.status-indicator.active-dot {
+    background: var(--accent-cyan, #00ffcc);
+}
+
+.climate-readout {
+    font-size: 14px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.climate-readout span#temp-value,
+.climate-readout span#humidity-value {
+    color: #fff;
+    font-weight: 600;
+}
+
+.climate-sep {
+    opacity: 0.4;
+}
+
+#card-climate.pulse-update {
+    animation: climatePulse 0.6s ease;
+}
+
+@keyframes climatePulse {
+    0% { box-shadow: 0 0 0px #00ffcc55; }
+    50% { box-shadow: 0 0 25px #00ffcc55; }
+    100% { box-shadow: 0 0 0px transparent; }
+}
+
+#card-voice.voice-listening {
+    border-color: #a855f7;
+    box-shadow: 0 0 25px #a855f755;
+}
+
+#card-voice.voice-listening .sim-icon {
+    color: #a855f7;
+    animation: voicePulse 0.7s ease-in-out infinite;
+}
+
+@keyframes voicePulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+}
+
+.simulator-extra {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+    padding: 0 30px 30px;
+}
+
+.energy-meter-box,
+.activity-log-box {
+    background: #050810;
+    border: 1px solid #ffffff14;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.energy-meter-box h4,
+.activity-log-box h4 {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin: 0 0 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.energy-meter-box h4 i {
+    color: #ffd700;
+}
+
+.activity-log-box h4 i {
+    color: var(--accent-cyan, #00ffcc);
+}
+
+.energy-bar-track {
+    width: 100%;
+    height: 10px;
+    background: #ffffff11;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.energy-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #00ffcc, #ffd700);
+    border-radius: 10px;
+    transition: width 0.5s ease;
+}
+
+.energy-meter-readout {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 12px;
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.energy-meter-readout #energy-watts {
+    color: #fff;
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.energy-savings {
+    margin: 14px 0 0;
+    padding: 10px 12px;
+    background: linear-gradient(90deg, #ffd70014, #00ffcc0c);
+    border: 1px solid #ffd70033;
+    border-radius: 8px;
+    font-size: 12.5px;
+    color: #ffd700;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+.energy-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 12px;
+    font-size: 12.5px;
+    color: var(--accent-cyan, #00ffcc);
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.energy-cta:hover {
+    gap: 10px;
+    color: #fff;
+}
+
+.activity-log-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-height: 140px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.activity-log-list li {
+    font-size: 12.5px;
+    color: var(--text-muted);
+    padding: 8px 10px;
+    background: #ffffff08;
+    border-radius: 6px;
+    border-left: 2px solid var(--accent-cyan, #00ffcc);
+    animation: logIn 0.3s ease;
+}
+
+.activity-log-list li.log-empty {
+    border-left-color: #ffffff22;
+    text-align: center;
+}
+
+.activity-log-list li span.log-time {
+    color: #fff;
+    font-weight: 600;
+    margin-right: 6px;
+}
+
+@keyframes logIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.activity-log-list::-webkit-scrollbar {
+    width: 5px;
+}
+
+.activity-log-list::-webkit-scrollbar-thumb {
+    background: #ffffff22;
+    border-radius: 10px;
+}
+
+@media (max-width: 768px) {
+    .simulator-extra {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ===== Testimonials ===== */
+.testimonial-section {
+    padding: 90px 0;
+}
+
+.testimonial-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+.testimonial-card {
+    background: #0a0f1e;
+    border: 1px solid #ffffff14;
+    border-radius: 14px;
+    padding: 28px;
+    transition: 0.3s;
+}
+
+.testimonial-card:hover {
+    border-color: #00ffcc44;
+    transform: translateY(-4px);
+}
+
+.testimonial-stars {
+    color: #ffd700;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.testimonial-text {
+    color: var(--text-muted);
+    font-size: 14.5px;
+    line-height: 1.7;
+    min-height: 100px;
+}
+
+.testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 20px;
+    padding-top: 18px;
+    border-top: 1px solid #ffffff14;
+}
+
+.testimonial-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #00ffcc, #00bfff);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: #071018;
+    flex-shrink: 0;
+}
+
+.testimonial-author h5 {
+    margin: 0;
+    font-size: 14px;
+    color: #fff;
+}
+
+.testimonial-author span {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+@media (max-width: 900px) {
+    .testimonial-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
 .estimator-wrapper {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -5032,4 +5358,3 @@ a:focus-visible {
     padding: 14px 10px !important;
   }
 }
-
