@@ -452,6 +452,37 @@
 
                     </div>
 
+                    <div class="control-card reveal-item" id="card-ac">
+
+                        <div class="status-indicator"></div>
+
+                        <i class="fa-solid fa-snowflake sim-icon"></i>
+
+                        <h3>স্মার্ট এসি</h3>
+
+                        <p id="status-ac">
+                            স্ট্যাটাস:
+                            <span>অফ (OFF)</span>
+                        </p>
+
+                        <div class="ac-temp-control">
+
+                            <button class="ac-temp-btn" onclick="adjustAcTemp(-1)" aria-label="তাপমাত্রা কমান">−</button>
+
+                            <span class="ac-temp-value" id="ac-temp-value">24°C</span>
+
+                            <button class="ac-temp-btn" onclick="adjustAcTemp(1)" aria-label="তাপমাত্রা বাড়ান">+</button>
+
+                        </div>
+
+                        <button class="sim-btn" onclick="toggleAppliance('ac')">
+
+                            AC Switch
+
+                        </button>
+
+                    </div>
+
                     <div class="control-card reveal-item" id="card-sensor">
 
                         <div class="status-indicator"></div>
@@ -471,6 +502,82 @@
                             Trigger Sensor
 
                         </button>
+
+                    </div>
+
+                    <div class="control-card reveal-item" id="card-climate">
+
+                        <div class="status-indicator active-dot"></div>
+
+                        <i class="fa-solid fa-temperature-half sim-icon"></i>
+
+                        <h3>Climate Sensor</h3>
+
+                        <p class="climate-readout">
+                            <span id="temp-value">২৯°C</span>
+                            <span class="climate-sep">|</span>
+                            <span id="humidity-value">৫৮% Humidity</span>
+                        </p>
+
+                        <button class="sim-btn" onclick="refreshClimate()">
+
+                            Refresh Reading
+
+                        </button>
+
+                    </div>
+
+                    <div class="control-card reveal-item" id="card-voice">
+
+                        <div class="status-indicator"></div>
+
+                        <i class="fa-solid fa-microphone sim-icon"></i>
+
+                        <h3>Voice Assistant</h3>
+
+                        <p id="status-voice">
+                            স্ট্যাটাস:
+                            <span>স্ট্যান্ডবাই</span>
+                        </p>
+
+                        <button class="sim-btn" onclick="triggerVoiceCommand()">
+
+                            Try Voice Command
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <div class="simulator-extra">
+
+                    <div class="energy-meter-box">
+
+                        <h4><i class="fa-solid fa-bolt"></i> লাইভ এনার্জি ইউসেজ</h4>
+
+                        <div class="energy-bar-track">
+                            <div class="energy-bar-fill" id="energy-bar" style="width:0%;"></div>
+                        </div>
+
+                        <div class="energy-meter-readout">
+                            <span id="energy-watts">০ W</span>
+                            <span id="energy-note">সব ডিভাইস বন্ধ আছে</span>
+                        </div>
+
+                        <p class="energy-savings" id="energy-savings">স্মার্ট অটোমেশন দিয়ে আনুমানিক মাসিক সাশ্রয়: ৳ 0</p>
+
+                        <a href="#pricing" class="energy-cta">বিস্তারিত জানতে প্যাকেজ দেখুন <i class="fa-solid fa-arrow-right"></i></a>
+
+                    </div>
+
+                    <div class="activity-log-box">
+
+                        <h4><i class="fa-solid fa-list-check"></i> ডিভাইস অ্যাক্টিভিটি লগ</h4>
+
+                        <ul class="activity-log-list" id="activity-log">
+                            <li class="log-empty">এখনো কোনো অ্যাক্টিভিটি নেই — উপরের বাটনগুলো ব্যবহার করে দেখুন</li>
+                        </ul>
 
                     </div>
 
@@ -1098,6 +1205,62 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+</section>
+
+<section class="testimonial-section" id="testimonials">
+  <div class="container">
+    <div class="section-header text-center">
+      <span class="sub-badge-cyber"><i class="fa-solid fa-quote-left"></i> CLIENT FEEDBACK</span>
+      <h2 class="section-title">আমাদের <span class="highlight-text-cyan">ক্লায়েন্টরা যা বলেন</span></h2>
+      <p class="section-desc">বাস্তব প্রজেক্টে কাজ করা ক্লায়েন্টদের অভিজ্ঞতা</p>
+    </div>
+
+    <div class="testimonial-grid">
+
+      <div class="testimonial-card">
+        <div class="testimonial-stars">
+          <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+        </div>
+        <p class="testimonial-text">"আমাদের পুরো বাসার ওয়্যারিং ও স্মার্ট লাইট সিস্টেম খুবই প্রফেশনালভাবে করে দিয়েছে। কাজের মান ও সময়মতো ডেলিভারি দুটোই সন্তোষজনক।"</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">রহ</div>
+          <div>
+            <h5>রহিম উদ্দিন</h5>
+            <span>গুলশান, ঢাকা</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card">
+        <div class="testimonial-stars">
+          <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+        </div>
+        <p class="testimonial-text">"ফ্যাক্টরির থ্রি-ফেজ প্যানেল আপগ্রেড করার পর লোড-শেডিং এর সমস্যা অনেকটাই কমে গেছে। টিম খুবই দক্ষ ও অভিজ্ঞ।"</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">কা</div>
+          <div>
+            <h5>কামরুল হাসান</h5>
+            <span>গাজীপুর</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card">
+        <div class="testimonial-stars">
+          <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i>
+        </div>
+        <p class="testimonial-text">"সোলার সিস্টেম ইন্সটল করার পর থেকে ইলেকট্রিসিটি বিল অনেক কমে গেছে। যোগাযোগ ও সাপোর্ট টিম খুবই রেসপন্সিভ।"</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">না</div>
+          <div>
+            <h5>নাসরিন আক্তার</h5>
+            <span>উত্তরা, ঢাকা</span>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
