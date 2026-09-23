@@ -17,13 +17,20 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Noto+Sans+Bengali:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 
     <link rel="icon" type="image/png" href="/img/electrotechLogo.png">
 
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.min.css">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Non-blocking: Google Fonts + Font Awesome (swap after first paint) -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Noto+Sans+Bengali:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+    <noscript>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Noto+Sans+Bengali:wght@400;500;600;700;800&display=swap">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    </noscript>
+
 
     <script type="application/ld+json">
     {
@@ -146,6 +153,7 @@
 
     <div class="nav-overlay" id="nav-overlay"></div>
 
+    <main>
     <section class="hero-section" id="home">
 
         <div class="container hero-grid">
@@ -189,7 +197,7 @@
 
             <div class="hero-image-box">
 
-                <img src="img/11a.webp" class="hero-main-img father-hero-img" alt="ElectroTechBD Chief Licensed Electrician">
+                <img src="img/11a.webp" class="hero-main-img father-hero-img" fetchpriority="high" decoding="async" alt="ElectroTechBD Chief Licensed Electrician">
 
                 <div class="floating-badge top-right">
 
@@ -635,6 +643,7 @@
                         <input
                             type="range"
                             id="sqft-slider"
+                            aria-label="বাড়ির আয়তন (বর্গফুট)"
                             min="300"
                             max="10000"
                             step="100"
@@ -736,6 +745,7 @@
                             <input
                                 type="checkbox"
                                 id="solar-toggle"
+                                aria-label="সোলার সিস্টেম যুক্ত করুন"
                                 onchange="calculateBudget()">
 
                             <span class="slider"></span>
@@ -977,7 +987,7 @@
 
             <div class="team-card reveal-item">
                 <div class="team-img-wrapper">
-                    <img src="img/1x4.webp" alt="Smart Home Installer" loading="lazy">
+                    <img src="img/1x4.webp" alt="ElectroTechBD team member" loading="lazy">
                     <span class="team-badge">Technician</span>
                 </div>
                 <div class="team-info">
@@ -1062,21 +1072,21 @@
 
           <div class="input-hud-box">
             <span class="hud-input-tag">CLIENT NAME</span>
-            <label><i class="fa-solid fa-fingerprint"></i> আপনার পূর্ণ নাম</label>
+            <label for="client-name"><i class="fa-solid fa-fingerprint"></i> আপনার পূর্ণ নাম</label>
             <input type="text" id="client-name" name="নাম" placeholder="যেমন: মো: রফিকুল ইসলাম" required>
             <span class="input-laser"></span>
           </div>
 
           <div class="input-hud-box">
             <span class="hud-input-tag">CONTACT</span>
-            <label><i class="fa-solid fa-satellite-dish"></i> মোবাইল নম্বর</label>
+            <label for="client-phone"><i class="fa-solid fa-satellite-dish"></i> মোবাইল নম্বর</label>
             <input type="tel" id="client-phone" name="ফোন নম্বর" placeholder="017XXXXXXXX" required>
             <span class="input-laser"></span>
           </div>
 
           <div class="input-hud-box">
             <span class="hud-input-tag">SERVICE</span>
-            <label><i class="fa-solid fa-microchip"></i> প্রয়োজনীয় সার্ভিস</label>
+            <label for="service-type"><i class="fa-solid fa-microchip"></i> প্রয়োজনীয় সার্ভিস</label>
             <select id="service-type" name="সার্ভিস" required>
               <option value="Residential Smart Wiring">বাড়ির ইলেকট্রিক্যাল ওয়ারিং</option>
               <option value="Commercial & Factory Sub-Station">অফিস / ফ্যাক্টরি সাব-স্টেশন</option>
@@ -1089,14 +1099,14 @@
 
           <div class="input-hud-box">
             <span class="hud-input-tag">DATE</span>
-            <label><i class="fa-solid fa-calendar-alt"></i> সাইট ভিজিটের তারিখ</label>
+            <label for="meeting-date"><i class="fa-solid fa-calendar-alt"></i> সাইট ভিজিটের তারিখ</label>
             <input type="date" id="meeting-date" name="মিটিং তারিখ" required>
             <span class="input-laser"></span>
           </div>
         </div>
 
         <div class="holo-dropzone" id="dropzone">
-          <input type="file" id="blueprint-file" name="ব্লুপ্রিন্ট ফাইল" accept=".pdf,.png,.jpg,.jpeg,.dwg" onchange="updateFileName(this)">
+          <input type="file" id="blueprint-file" aria-label="ব্লুপ্রিন্ট বা ড্রয়িং ফাইল আপলোড করুন" name="ব্লুপ্রিন্ট ফাইল" accept=".pdf,.png,.jpg,.jpeg,.dwg" onchange="updateFileName(this)">
           <div class="dropzone-hud-content">
             <div class="holo-scan-ring">
               <i class="fa-solid fa-cube holo-cube-icon"></i>
@@ -1111,7 +1121,7 @@
 
         <div class="input-hud-box full-width">
           <span class="hud-input-tag">DETAILS</span>
-          <label><i class="fa-solid fa-code"></i> আপনার প্রজেক্টের বিবরণ</label>
+          <label for="project-notes"><i class="fa-solid fa-code"></i> আপনার প্রজেক্টের বিবরণ</label>
           <textarea id="project-notes" name="বিশেষ নির্দেশনা" rows="3" placeholder="যেমন: রুম অনুযায়ী লাইট, ফ্যান, স্মার্ট কন্ট্রোল, সোলার, সার্ভিস প্রয়োজন..."></textarea>
           <span class="input-laser"></span>
         </div>
@@ -1451,6 +1461,7 @@
     </div>
   </div>
 </section>
+</main>
 
 <button class="chat-launcher" id="chat-launcher" type="button"
         aria-label="চ্যাট সহকারী খুলুন" aria-expanded="false" aria-controls="chat-window">
@@ -1544,7 +1555,7 @@
             onsubmit="handleNewsletterSubmit(event)">
         <input type="hidden" name="_subject" value="📩 নিউজলেটার / কুইক কন্টাক্ট - ElectroTechBD">
         <input type="hidden" name="_captcha" value="false">
-        <input type="text" id="newsletter-contact" name="ইমেইল বা ফোন" placeholder="Enter your email or Number" inputmode="email" autocomplete="on" required>
+        <input type="text" id="newsletter-contact" aria-label="ইমেইল বা ফোন নম্বর" name="ইমেইল বা ফোন" placeholder="Enter your email or Number" inputmode="email" autocomplete="on" required>
         <button type="submit" aria-label="সাবস্ক্রাইব করুন"><i class="fa-solid fa-paper-plane"></i></button>
       </form>
     </div>
