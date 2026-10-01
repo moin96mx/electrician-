@@ -1313,12 +1313,14 @@ const CHAT_KB = [
             "map",
             "location",
             "address",
-            "direction"
+            "direction",
+            "thikana kothay",
+            "office location"
         ],
 
         reply:
             "ElectroTech-এর contact section-এ অফিসের location এবং Google Map দেওয়া আছে। 👉 #contact\n\n" +
-            "বর্তমান ওয়েবসাইটে location হিসেবে Dhaka, Bangladesh দেখানো হয়েছে।"
+            "বর্তমান location Dhaka, Bangladesh."
     },
 
     {
@@ -1331,7 +1333,11 @@ const CHAT_KB = [
             "phone",
             "call",
             "whatsapp",
-            "হোয়াটসঅ্যাপ"
+            "হোয়াটসঅ্যাপ",
+            "jogajog korbo kivabey",
+            "jogajog kortey chai",
+            "kotha boltey chai",
+            "theam ayr sathey kota boltey chai"
         ],
 
         reply:
@@ -1349,7 +1355,11 @@ const CHAT_KB = [
             "smart",
             "automation",
             "সেন্সর",
-            "অ্যাপ"
+            "অ্যাপ",
+            "esp32 ki",
+            "iot ki",
+            "otometion ki",
+            "automation ki"
         ],
 
         reply:
@@ -1361,7 +1371,9 @@ const CHAT_KB = [
         keys: [
             "লাইট",
             "light",
-            "বাতি"
+            "বাতি",
+            "lite",
+            "lait"
         ],
 
         reply:
@@ -1385,7 +1397,9 @@ const CHAT_KB = [
             "ওয়্যারিং",
             "wiring",
             "rewiring",
-            "দেয়াল"
+            "দেয়াল",
+            "old wiring",
+            "porano work"
         ],
 
         reply:
@@ -1399,7 +1413,10 @@ const CHAT_KB = [
             "সৌর",
             "বিদ্যুৎ বিল",
             "ব্যাকআপ",
-            "ips"
+            "ips",
+            "soler sistam",
+            "soler sistam kortey chai",
+            "soler kortey chai"
         ],
 
         reply:
@@ -1416,11 +1433,15 @@ const CHAT_KB = [
             "owner",
             "সাইদুজ্জামান",
             "কে চালায়",
-            "কোম্পানির"
+            "কোম্পানির",
+            "companir malik ke",
+            "malik key",
+            "owner key",
+            "founder key"
         ],
 
         reply:
-            "ElectroTech Engineering & Automation-এর website information অনুযায়ী এইচ. এম. মো. সাইদুজ্জামান প্রতিষ্ঠাতা ও প্রধান নির্বাহী হিসেবে উল্লেখ আছেন। বিস্তারিত দেখতে 👉 #team"
+            "ElectroTechBD Engineering & Automation-এর প্রতিষ্ঠাতা এইচ. এম. মো. সাইদুজ্জামান। বিস্তারিত দেখতে 👉 #team"
     },
 
     {
@@ -1441,11 +1462,18 @@ const CHAT_KB = [
             "লাইসেন্স",
             "license",
             "permit",
-            "অনুমোদন"
+            "অনুমোদন",
+            "onomodon",
+            "parmit",
+            "permition asy",
+            "permision"
         ],
 
         reply:
-            "ElectroTech website-এ Chief Electrician-এর জন্য Permit: E20230043144 উল্লেখ করা হয়েছে। লাইসেন্স/permit সম্পর্কিত সিদ্ধান্তের ক্ষেত্রে official verification করা সবচেয়ে ভালো।"
+            "⚡ Yes\n\n" +
+            "বাংলাদেশ সরকারের অনুমোদিত যোগ্যতাসম্পন্ন ইঞ্জিনিয়ার ও ইলেকট্রিশিয়ান।\n" +
+            "ElectroTechBD-এর License/Permit: E20230043144"
+            
     },
 
     {
@@ -1485,7 +1513,11 @@ const CHAT_KB = [
             "কবে",
             "how long",
             "duration",
-            "time"
+            "time",
+            "kajeyr somoy koto",
+            "kaj kor tey koto din lage",
+            "work time",
+            "working time"
         ],
 
         reply:
@@ -1501,7 +1533,12 @@ const CHAT_KB = [
             "hello",
             "hi",
             "hey",
-            "কেমন আছ"
+            "কেমন আছ",
+            "kemon aso",
+            "tomi ke",
+            "who are you",
+            "how are you",
+            "asalamualaikum"
         ],
 
         reply:
@@ -1515,11 +1552,15 @@ const CHAT_KB = [
             "ধন্যবাদ",
             "thanks",
             "thank you",
-            "thnx"
+            "thnx",
+            "dhonnobad",
+            "donobad",
+            "thans"
         ],
 
         reply:
-            "আপনাকেও ধন্যবাদ! ⚡ আরও কোনো প্রশ্ন থাকলে জিজ্ঞাসা করুন।"
+            "আপনাকেও ধন্যবাদ! ⚡ ইলেকট্রিক্যাল কাজ সম্পর্কে আপনার আরও কোনো প্রশ্ন থাকলে, নির্দ্বিধায়  জানাতে পারেন।
+।"
     }
 ];
 
@@ -1541,8 +1582,7 @@ const CHAT_CHIPS = [
 
     "বুকিং করব",
 
-    "অফিস কোথায়?",
-
+    // "অফিস কোথায়?",
     "Electrical Safety সম্পর্কে বলুন"
 ];
 
@@ -1907,7 +1947,7 @@ function chatToggle(forceClose = false) {
         chatAddMessage(
 
             "আসসালামু আলাইকুম! 👋\n" +
-            "আমি ভোল্ট — ElectroTech-এর AI Assistant। ⚡\n\n" +
+            "আমি ভোল্ট, ElectroTechBD-এর AI Assistant। ⚡\n\n" +
             "Electrical, Smart Home, Solar, Wiring, Budget অথবা Booking সম্পর্কে আপনার প্রশ্ন লিখুন।",
 
             "bot"
