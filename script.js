@@ -47,7 +47,7 @@ function toggleAppliance(type) {
             card.classList.add("active-fan");
 
             status.innerHTML =
-                'স্ট্যাটাস: <span style="color:#00bfff;font-weight:bold;">রানিং (100%)</span>';
+                'স্ট্যাটাস: <span style="color:#00e5ff;font-weight:bold;">অন (ON)</span>';
 
         } else {
 
@@ -65,14 +65,14 @@ function toggleAppliance(type) {
             card.classList.add("active-sensor");
 
             status.innerHTML =
-                'স্ট্যাটাস: <span style="color:#ff0055;font-weight:bold;">MOTION DETECTED!</span>';
+                'স্ট্যাটাস: <span style="color:#00ff88;font-weight:bold;">সক্রিয় (ACTIVE)</span>';
 
         } else {
 
             card.classList.remove("active-sensor");
 
             status.innerHTML =
-                'স্ট্যাটাস: <span>নিষ্ক্রিয় (IDLE)</span>';
+                'স্ট্যাটাস: <span>নিষ্ক্রিয় (INACTIVE)</span>';
         }
     }
 
@@ -83,7 +83,7 @@ function toggleAppliance(type) {
             card.classList.add("active-ac");
 
             status.innerHTML =
-                `স্ট্যাটাস: <span style="color:#38bdf8;font-weight:bold;">কুলিং (${acTemp}°C)</span>`;
+                `স্ট্যাটাস: <span style="color:#00bfff;font-weight:bold;">অন (ON) - ${acTemp}°C</span>`;
 
         } else {
 
@@ -94,975 +94,246 @@ function toggleAppliance(type) {
         }
     }
 
-    const logMessages = {
-        light: state.light ? "স্মার্ট লাইট চালু (ON) করা হয়েছে" : "স্মার্ট লাইট বন্ধ (OFF) করা হয়েছে",
-        fan: state.fan ? "স্মার্ট ফ্যান চালু (ON) করা হয়েছে" : "স্মার্ট ফ্যান বন্ধ (OFF) করা হয়েছে",
-        sensor: state.sensor ? "মোশন সেন্সর ট্রিগার হয়েছে — মুভমেন্ট ডিটেক্টেড" : "মোশন সেন্সর আইডল অবস্থায় ফিরেছে",
-        ac: state.ac ? `স্মার্ট এসি চালু হয়েছে — ${acTemp}°C তে সেট করা` : "স্মার্ট এসি বন্ধ করা হয়েছে"
-    };
+    updateEnergyMeter();
+    updateActivityLog(type, state[type]);
+}
 
-    logActivity(logMessages[type]);
+
+function increaseAC() {
+
+    if (acTemp >= 30) {
+        return;
+    }
+
+    acTemp++;
+
+    updateACDisplay();
+}
+
+
+function decreaseAC() {
+
+    if (acTemp <= 16) {
+        return;
+    }
+
+    acTemp--;
+
+    updateACDisplay();
+}
+
+
+function updateACDisplay() {
+
+    const tempDisplay = document.getElementById("ac-temp");
+
+    if (tempDisplay) {
+        tempDisplay.textContent = `${acTemp}°C`;
+    }
+
+    const status = document.getElementById("status-ac");
+
+    if (status && state.ac) {
+
+        status.innerHTML =
+            `স্ট্যাটাস: <span style="color:#00bfff;font-weight:bold;">অন (ON) - ${acTemp}°C</span>`;
+    }
+
     updateEnergyMeter();
 }
 
-/* ---------- AC Temperature Control ---------- */
-function adjustAcTemp(direction) {
 
-    const newTemp = acTemp + direction;
+function updateActivityLog(type, status) {
 
-    if (newTemp < 18 || newTemp > 30) {
+    const logContainer = document.getElementById("activity-log");
+
+    if (!logContainer) {
         return;
     }
 
-    acTemp = newTemp;
+    const names = {
+        light: "লাইট",
+        fan: "ফ্যান",
+        sensor: "সেন্সর",
+        ac: "এসি"
+    };
 
-    const tempLabel = document.getElementById("ac-temp-value");
+    const currentTime = new Date().toLocaleTimeString("bn-BD", {
+        hour: "2-digit",
+        minute: "2-digit"
+    });
 
-    if (tempLabel) {
-        tempLabel.textContent = `${acTemp}°C`;
-    }
+    const item = document.createElement("div");
 
-    if (state.ac) {
+    item.className = "activity-item";
 
-        const status = document.getElementById("status-ac");
+    item.innerHTML = `
+        <span>${names[type] || type}</span>
+        <span>${status ? "চালু" : "বন্ধ"}</span>
+        <small>${currentTime}</small>
+    `;
 
-        if (status) {
-            status.innerHTML =
-                `স্ট্যাটাস: <span style="color:#38bdf8;font-weight:bold;">কুলিং (${acTemp}°C)</span>`;
-        }
+    logContainer.prepend(item);
 
-        logActivity(`এসি টেম্পারেচার ${acTemp}°C এ সেট করা হয়েছে`);
-        updateEnergyMeter();
-    }
-}
-
-/* ---------- Activity Log ---------- */
-function logActivity(message) {
-
-    const list = document.getElementById("activity-log");
-
-    if (!list) {
-        return;
-    }
-
-    const emptyItem = list.querySelector(".log-empty");
-
-    if (emptyItem) {
-        emptyItem.remove();
-    }
-
-    const li = document.createElement("li");
-
-    const now = new Date();
-    const timeStr = now.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
-
-    li.innerHTML = `<span class="log-time">${timeStr}</span>${message}`;
-
-    list.prepend(li);
-
-    while (list.children.length > 6) {
-        list.removeChild(list.lastChild);
+    while (logContainer.children.length > 10) {
+        logContainer.removeChild(logContainer.lastChild);
     }
 }
 
-/* ---------- Energy Meter ---------- */
-const applianceWatts = {
-    light: 15,
-    fan: 60
-};
-
-const AC_MAX_WATTS = 1500; // ১৮°C (সর্বোচ্চ কুলিং লোড)
-const AC_MIN_WATTS = 1080; // ৩০°C (সর্বনিম্ন কুলিং লোড)
-
-function acWattsForTemp(temp) {
-    const ratio = (temp - 18) / (30 - 18);
-    return Math.round(AC_MAX_WATTS - ratio * (AC_MAX_WATTS - AC_MIN_WATTS));
-}
-
-const ELEC_RATE_TAKA = 7.5; // আনুমানিক গড় ইউনিট প্রতি রেট (৳/kWh)
-
-const usageWithoutAutomation = { light: 8, fan: 10, ac: 10 }; // ঘণ্টা/দিন — ম্যানুয়াল ব্যবহার (ভুলে চালু থাকা সহ)
-const usageWithAutomation = { light: 5, fan: 6, ac: 6 };      // ঘণ্টা/দিন — ElectroTech স্মার্ট অটোমেশন সহ (motion/timer/occupancy ভিত্তিক)
-
-function calcMonthlySavings() {
-
-    const acAvgWatts = acWattsForTemp(24); // গড় সেটিং ধরে হিসাব
-
-    const baselineKwh =
-        ((applianceWatts.light * usageWithoutAutomation.light) +
-         (applianceWatts.fan * usageWithoutAutomation.fan) +
-         (acAvgWatts * usageWithoutAutomation.ac)) / 1000 * 30;
-
-    const smartKwh =
-        ((applianceWatts.light * usageWithAutomation.light) +
-         (applianceWatts.fan * usageWithAutomation.fan) +
-         (acAvgWatts * usageWithAutomation.ac)) / 1000 * 30;
-
-    return Math.max(0, Math.round((baselineKwh - smartKwh) * ELEC_RATE_TAKA));
-}
 
 function updateEnergyMeter() {
 
-    const bar = document.getElementById("energy-bar");
-    const wattsLabel = document.getElementById("energy-watts");
-    const noteLabel = document.getElementById("energy-note");
-    const savingsLabel = document.getElementById("energy-savings");
+    const energyDisplay = document.getElementById("energy-value");
+    const costDisplay = document.getElementById("energy-cost");
 
-    if (!bar || !wattsLabel || !noteLabel) {
-        return;
-    }
-
-    let totalWatts = 0;
+    let watts = 0;
 
     if (state.light) {
-        totalWatts += applianceWatts.light;
+        watts += 15;
     }
 
     if (state.fan) {
-        totalWatts += applianceWatts.fan;
+        watts += 60;
     }
 
     if (state.ac) {
-        totalWatts += acWattsForTemp(acTemp);
+        watts += 1080 + ((30 - acTemp) * 35);
     }
 
-    const maxWatts = applianceWatts.light + applianceWatts.fan + AC_MAX_WATTS;
-    const percent = maxWatts === 0 ? 0 : Math.round((totalWatts / maxWatts) * 100);
+    const hours = 1;
 
-    bar.style.width = `${percent}%`;
-    wattsLabel.textContent = `${totalWatts} W`;
+    const kwh = watts * hours / 1000;
 
-    if (totalWatts === 0) {
-        noteLabel.textContent = "সব ডিভাইস বন্ধ আছে";
-    } else if (totalWatts < maxWatts * 0.5) {
-        noteLabel.textContent = "এনার্জি সাশ্রয়ী মোডে চলছে";
-    } else {
-        noteLabel.textContent = "সর্বোচ্চ লোডে চলছে";
+    const rate = 7.5;
+
+    const cost = kwh * rate;
+
+    if (energyDisplay) {
+        energyDisplay.textContent = `${watts.toFixed(0)} W`;
     }
 
-    if (savingsLabel) {
-        const savings = calcMonthlySavings();
-        savingsLabel.textContent = `স্মার্ট অটোমেশন দিয়ে আনুমানিক মাসিক সাশ্রয়: ৳ ${savings}`;
+    if (costDisplay) {
+        costDisplay.textContent = `৳${cost.toFixed(2)}`;
     }
 }
 
-/* ---------- Climate Sensor ---------- */
-function getClimateRange() {
+
+function updateClimateSensor() {
+
+    const temperatureElement =
+        document.getElementById("climate-temperature");
+
+    const humidityElement =
+        document.getElementById("climate-humidity");
+
+    if (!temperatureElement && !humidityElement) {
+        return;
+    }
 
     const hour = new Date().getHours();
 
-    if (hour >= 0 && hour < 6) {
-        return { tempMin: 22, tempMax: 26, humMin: 75, humMax: 90 };
-    }
+    let temperature;
 
-    if (hour >= 6 && hour < 11) {
-        return { tempMin: 25, tempMax: 29, humMin: 60, humMax: 75 };
-    }
-
-    if (hour >= 11 && hour < 16) {
-        return { tempMin: 30, tempMax: 36, humMin: 40, humMax: 55 };
-    }
-
-    if (hour >= 16 && hour < 20) {
-        return { tempMin: 28, tempMax: 32, humMin: 50, humMax: 65 };
-    }
-
-    return { tempMin: 25, tempMax: 28, humMin: 65, humMax: 80 };
-}
-
-function refreshClimate(silent) {
-
-    const tempEl = document.getElementById("temp-value");
-    const humEl = document.getElementById("humidity-value");
-    const card = document.getElementById("card-climate");
-
-    if (!tempEl || !humEl) {
-        return;
-    }
-
-    const range = getClimateRange();
-
-    const temp = (Math.random() * (range.tempMax - range.tempMin) + range.tempMin).toFixed(1);
-    const humidity = Math.round(Math.random() * (range.humMax - range.humMin) + range.humMin);
-
-    tempEl.textContent = `${temp}°C`;
-    humEl.textContent = `${humidity}% Humidity`;
-
-    if (silent) {
-        return;
-    }
-
-    if (card) {
-        card.classList.remove("pulse-update");
-        void card.offsetWidth;
-        card.classList.add("pulse-update");
-    }
-
-    logActivity(`Climate reading আপডেট হয়েছে — ${temp}°C, ${humidity}% Humidity`);
-}
-
-/* ---------- Voice Assistant ---------- */
-const voiceCommands = [
-    { phrase: '"লাইট জ্বালাও"', action: () => { if (!state.light) { toggleAppliance("light"); } } },
-    { phrase: '"লাইট বন্ধ করো"', action: () => { if (state.light) { toggleAppliance("light"); } } },
-    { phrase: '"ফ্যান চালাও"', action: () => { if (!state.fan) { toggleAppliance("fan"); } } },
-    { phrase: '"ফ্যান বন্ধ করো"', action: () => { if (state.fan) { toggleAppliance("fan"); } } }
-];
-
-function triggerVoiceCommand() {
-
-    const card = document.getElementById("card-voice");
-    const status = document.getElementById("status-voice");
-
-    if (!card || !status) {
-        return;
-    }
-
-    if (card.classList.contains("voice-listening")) {
-        return;
-    }
-
-    card.classList.add("voice-listening");
-    status.innerHTML = 'স্ট্যাটাস: <span style="color:#a855f7;font-weight:bold;">শুনছে...</span>';
-
-    setTimeout(() => {
-
-        const command = voiceCommands[Math.floor(Math.random() * voiceCommands.length)];
-
-        status.innerHTML = `স্ট্যাটাস: <span style="color:#a855f7;font-weight:bold;">কমান্ড: ${command.phrase}</span>`;
-
-        logActivity(`ভয়েস কমান্ড প্রসেস হয়েছে — ${command.phrase}`);
-
-        command.action();
-
-        setTimeout(() => {
-            card.classList.remove("voice-listening");
-            status.innerHTML = 'স্ট্যাটাস: <span>স্ট্যান্ডবাই</span>';
-        }, 1800);
-
-    }, 1200);
-}
-
-let currentSqft = 1200;
-let roomCount = 3;
-let selectedGrade = "standard";
-
-function updateRooms(change) {
-
-    roomCount += Number(change) || 0;
-
-    if (roomCount < 1) {
-        roomCount = 1;
-    }
-
-    const roomElement = document.getElementById("room-count");
-
-    if (roomElement) {
-        roomElement.innerText = roomCount;
-    }
-
-    calculateBudget();
-}
-
-function setGrade(grade, element) {
-
-    if (grade !== "standard" && grade !== "smart") {
-        return;
-    }
-
-    selectedGrade = grade;
-
-    document
-        .querySelectorAll(".grade-card")
-        .forEach(card => {
-            card.classList.remove("active");
-        });
-
-    if (element) {
-        element.classList.add("active");
-    }
-
-    calculateBudget();
-}
-
-function calculateBudget() {
-
-    const slider = document.getElementById("sqft-slider");
-
-    if (!slider) {
-        return;
-    }
-
-    currentSqft = parseInt(slider.value, 10) || 1200;
-
-    const sqftValue = document.getElementById("sqft-val");
-
-    if (sqftValue) {
-        sqftValue.innerText =
-            `${currentSqft.toLocaleString()} Sq.Ft`;
-    }
-
-    const solarToggle =
-        document.getElementById("solar-toggle");
-
-    const isSolar =
-        solarToggle ? solarToggle.checked : false;
-
-    let ratePerSqft = 25;
-
-    if (selectedGrade === "smart") {
-        ratePerSqft = 45;
-    }
-
-    const materialCost =
-        (currentSqft * ratePerSqft) +
-        (roomCount * 1500);
-
-    const laborCost =
-        materialCost * 0.45;
-
-    let solarCost = 0;
-
-    const solarRow =
-        document.getElementById("solar-row");
-
-    const solarCostElement =
-        document.getElementById("solar-cost");
-
-    if (isSolar) {
-
-        solarCost =
-            Math.round(currentSqft * 35);
-
-        if (solarRow) {
-            solarRow.style.display = "flex";
-        }
-
-        if (solarCostElement) {
-            solarCostElement.innerText =
-                `৳ ${solarCost.toLocaleString()}`;
-        }
-
+    if (hour >= 6 && hour < 12) {
+        temperature = 27 + Math.random() * 3;
+    } else if (hour >= 12 && hour < 17) {
+        temperature = 30 + Math.random() * 5;
+    } else if (hour >= 17 && hour < 22) {
+        temperature = 28 + Math.random() * 3;
     } else {
+        temperature = 24 + Math.random() * 3;
+    }
 
-        if (solarRow) {
-            solarRow.style.display = "none";
+    const humidity = 55 + Math.random() * 25;
+
+    if (temperatureElement) {
+        temperatureElement.textContent =
+            `${temperature.toFixed(1)}°C`;
+    }
+
+    if (humidityElement) {
+        humidityElement.textContent =
+            `${humidity.toFixed(0)}%`;
+    }
+}
+
+
+function getCurrentDate() {
+
+    const now = new Date();
+
+    const year = now.getFullYear();
+
+    const month =
+        String(now.getMonth() + 1).padStart(2, "0");
+
+    const day =
+        String(now.getDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+}
+
+
+function setMinimumDate() {
+
+    const dateInputs =
+        document.querySelectorAll('input[type="date"]');
+
+    const today = getCurrentDate();
+
+    dateInputs.forEach(input => {
+
+        if (!input.min) {
+            input.min = today;
         }
-    }
-
-    const totalBudget =
-        Math.round(
-            materialCost +
-            laborCost +
-            solarCost
-        );
-
-    const materialElement =
-        document.getElementById("mat-cost");
-
-    const laborElement =
-        document.getElementById("labor-cost");
-
-    const totalElement =
-        document.getElementById("total-price");
-
-    if (materialElement) {
-
-        materialElement.innerText =
-            `৳ ${Math.round(materialCost).toLocaleString()}`;
-    }
-
-    if (laborElement) {
-
-        laborElement.innerText =
-            `৳ ${Math.round(laborCost).toLocaleString()}`;
-    }
-
-    if (totalElement) {
-
-        totalElement.innerText =
-            `৳ ${totalBudget.toLocaleString()}`;
-    }
-}
-
-function triggerConsultation() {
-
-    const priceElement =
-        document.getElementById("total-price");
-
-    const price =
-        priceElement
-            ? priceElement.innerText
-            : "৳ 0";
-
-    const message =
-        `আপনার নির্বাচিত আনুমানিক বাজেট: ${price}
-
-আমাদের টিম আপনার সাথে যোগাযোগ করবে এবং প্রয়োজন অনুযায়ী প্রধান ইলেকট্রিশিয়ানের পরামর্শ দেবে।`;
-
-    alert(message);
-
-    sendEstimatorLead(price);
-
-    const booking =
-        document.getElementById("booking");
-
-    if (booking) {
-
-        setTimeout(() => {
-
-            booking.scrollIntoView({
-                behavior: "smooth",
-                block: "start"
-            });
-
-        }, 300);
-    }
-}
-
-function sendEstimatorLead(price) {
-
-    const sqftElement =
-        document.getElementById("sqft-val");
-
-    const roomElement =
-        document.getElementById("room-count");
-
-    const activeGradeCard =
-        document.querySelector(".grade-card.active h4");
-
-    const solarToggle =
-        document.getElementById("solar-toggle");
-
-    const matElement =
-        document.getElementById("mat-cost");
-
-    const laborElement =
-        document.getElementById("labor-cost");
-
-    const solarCostElement =
-        document.getElementById("solar-cost");
-
-    const payload = {
-
-        _subject:
-            "\ud83d\udca1 \u09a8\u09a4\u09c1\u09a8 \u098f\u09b8\u09cd\u099f\u09bf\u09ae\u09c7\u099f\u09b0 \u09b2\u09bf\u09a1 - Free Consultation \u0995\u09cd\u09b2\u09bf\u0995 \u0995\u09b0\u09c7\u099b\u09c7",
-
-        _captcha: "false",
-
-        "\u09ae\u09cb\u099f \u098f\u09b0\u09bf\u09af\u09bc\u09be":
-            sqftElement ? sqftElement.innerText.trim() : "N/A",
-
-        "\u09ae\u09cb\u099f \u09b0\u09c1\u09ae":
-            roomElement ? roomElement.innerText.trim() : "N/A",
-
-        "\u0993\u09df\u09cd\u09af\u09be\u09b0\u09bf\u0982 \u0997\u09cd\u09b0\u09c7\u09a1":
-            activeGradeCard ? activeGradeCard.innerText.trim() : "N/A",
-
-        "\u09b8\u09cb\u09b2\u09be\u09b0 \u09b8\u09bf\u09b8\u09cd\u099f\u09c7\u09ae":
-            (solarToggle && solarToggle.checked) ? "\u09b9\u09cd\u09af\u09be\u0981" : "\u09a8\u09be",
-
-        "\u0986\u09a8\u09c1\u09ae\u09be\u09a8\u09bf\u0995 \u09ae\u09cb\u099f \u0996\u09b0\u099a": price,
-
-        "\u09ae\u09cd\u09af\u09be\u099f\u09c7\u09b0\u09bf\u09af\u09bc\u09be\u09b2\u09b8 \u0996\u09b0\u099a":
-            matElement ? matElement.innerText.trim() : "N/A",
-
-        "\u0987\u099e\u09cd\u099c\u09bf\u09a8\u09bf\u09df\u09be\u09b0\u09bf\u0982/\u09b2\u09c7\u09ac\u09be\u09b0 \u0996\u09b0\u099a":
-            laborElement ? laborElement.innerText.trim() : "N/A",
-
-        "\u09b8\u09cb\u09b2\u09be\u09b0 \u0985\u09cd\u09af\u09be\u09a1-\u0985\u09a8 \u0996\u09b0\u099a":
-            (solarToggle && solarToggle.checked && solarCostElement)
-                ? solarCostElement.innerText.trim()
-                : "\u09aa\u09cd\u09b0\u09af\u09cb\u099c\u09cd\u09af \u09a8\u09df",
-
-        "\u09b8\u09ae\u09df":
-            new Date().toLocaleString("bn-BD")
-    };
-
-    fetch("https://formsubmit.co/ajax/contact.electrotechbd@gmail.com", {
-
-        method: "POST",
-
-        headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json"
-        },
-
-        body: JSON.stringify(payload)
-
-    }).catch(error => {
-
-        console.warn(
-            "Estimator lead email failed:",
-            error
-        );
     });
 }
 
-function updateFileName(input) {
 
-    const display =
-        document.getElementById("file-name-display");
+function setupMobileMenu() {
 
-    if (!display) {
-        return;
-    }
-
-    if (
-        input &&
-        input.files &&
-        input.files.length > 0
-    ) {
-
-        const file =
-            input.files[0];
-
-        const fileName =
-            file.name;
-
-        display.innerHTML =
-            `<i class="fa-solid fa-file-circle-check"></i>
-             ফাইল যুক্ত হয়েছে:
-             <strong>${escapeHTML(fileName)}</strong>`;
-
-        display.style.color =
-            "#00ff66";
-
-        display.style.borderColor =
-            "#00ff66";
-
-        display.style.background =
-            "rgba(0, 255, 102, 0.1)";
-
-    } else {
-
-        display.innerHTML =
-            `<i class="fa-solid fa-shield-cat"></i>
-             কোনো ফাইল যুক্ত হয়নি (ঐচ্ছিক)`;
-
-        display.style.color =
-            "var(--accent-cyan, #00ffcc)";
-
-        display.style.borderColor =
-            "rgba(0, 255, 204, 0.4)";
-
-        display.style.background =
-            "rgba(0, 255, 204, 0.08)";
-    }
-}
-
-function handleBookingSubmit(event) {
-
-    const nameElement =
-        document.getElementById("client-name");
-
-    const phoneElement =
-        document.getElementById("client-phone");
-
-    const serviceElement =
-        document.getElementById("service-type");
-
-    const dateElement =
-        document.getElementById("meeting-date");
-
-    const notesElement =
-        document.getElementById("project-notes");
-
-    const name =
-        nameElement ? nameElement.value.trim() : "";
-
-    const phone =
-        phoneElement ? phoneElement.value.trim() : "";
-
-    const service =
-        serviceElement ? serviceElement.value : "";
-
-    const date =
-        dateElement ? dateElement.value : "";
-
-    const notes =
-        notesElement ? notesElement.value.trim() : "";
-
-    const fileElement =
-        document.getElementById("blueprint-file");
-
-    if (!name || !phone || !service || !date) {
-
-        event.preventDefault();
-
-        alert(
-            "দয়া করে প্রয়োজনীয় সব তথ্য পূরণ করুন।"
-        );
-
-        return;
-    }
-
-    event.preventDefault();
-
-    const randomNumber =
-        Math.floor(
-            1000 + Math.random() * 9000
-        );
-
-    const randomId =
-        `#ENG-2050-${randomNumber}`;
-
-    const modalName =
-        document.getElementById("modal-client-name");
-
-    const modalService =
-        document.getElementById("modal-service");
-
-    const modalDate =
-        document.getElementById("modal-date");
-
-    const modalId =
-        document.getElementById("modal-id");
-
-    if (modalName) {
-        modalName.innerText = name;
-    }
-
-    if (modalService) {
-        modalService.innerText = service;
-    }
-
-    if (modalDate) {
-        modalDate.innerText = date;
-    }
-
-    if (modalId) {
-        modalId.innerText = randomId;
-    }
-
-    const bookingData = {
-
-        id: randomId,
-
-        name: name,
-
-        phone: phone,
-
-        service: service,
-
-        date: date,
-
-        notes: notes,
-
-        createdAt:
-            new Date().toISOString()
-    };
-
-    try {
-
-        localStorage.setItem(
-            "electrotech_last_booking",
-            JSON.stringify(bookingData)
-        );
-
-    } catch (error) {
-
-        console.warn(
-            "LocalStorage unavailable:",
-            error
-        );
-    }
-
-    const formData = new FormData();
-    formData.append('name', name);
-    formData.append('phone', phone);
-    formData.append('service', service);
-    formData.append('date', date);
-    formData.append('notes', notes);
-
-    if (fileElement?.files?.[0]) {
-        formData.append('attachment', fileElement.files[0]);
-    }
-
-    fetch('/api/bookings', {
-        method: 'POST',
-        body: formData
-    }).catch(error => {
-        console.warn('Backend booking save failed:', error);
-    });
-    const modal =
-        document.getElementById("booking-modal");
-
-    if (modal) {
-
-        modal.classList.add("active");
-
-        document.body.classList.add(
-            "modal-open"
-        );
-    }
-}
-
-function closeBookingModal() {
-
-    const modal =
-        document.getElementById("booking-modal");
-
-    if (modal) {
-
-        modal.classList.remove("active");
-
-        document.body.classList.remove(
-            "modal-open"
-        );
-    }
-
-    const form =
-        document.getElementById("consultation-form");
-
-    if (form) {
-
-        form.reset();
-    }
-
-    const fileInput =
-        document.getElementById("blueprint-file");
-
-    if (fileInput) {
-
-        updateFileName(fileInput);
-    }
-}
-
-function handleNewsletterSubmit(event) {
-
-    const contactElement =
-        document.getElementById("newsletter-contact");
-
-    const contact =
-        contactElement ? contactElement.value.trim() : "";
-
-    if (!contact) {
-
-        event.preventDefault();
-
-        alert(
-            "দয়া করে আপনার ইমেইল অথবা ফোন নম্বর লিখুন।"
-        );
-
-        return;
-    }
-
-    const emailPattern =
-        /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    const phonePattern =
-        /^[0-9+\-\s]{7,15}$/;
-
-    const isValid =
-        emailPattern.test(contact) ||
-        phonePattern.test(contact);
-
-    if (!isValid) {
-
-        event.preventDefault();
-
-        alert(
-            "দয়া করে সঠিক ইমেইল অথবা ফোন নম্বর লিখুন।"
-        );
-
-        return;
-    }
-
-    fetch('/api/contact', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            name: 'Newsletter Contact',
-            contact: contact,
-            message: 'Newsletter/contact form submission'
-        })
-    }).catch(error => {
-        console.warn('Backend contact save failed:', error);
-    });
-    setTimeout(() => {
-
-        if (contactElement) {
-            contactElement.value = "";
-        }
-
-        alert(
-    `ধন্যবাদ! ElectroTech-এর সঙ্গে যোগাযোগ করার জন্য।
-
-    আপনার প্রয়োজন ও তথ্য পর্যালোচনা করে আমাদের টিম প্রয়োজন অনুযায়ী আপনার সঙ্গে যোগাযোগ করবে।
-
-    আপনি যদি আমাদের সঙ্গে কাজ করতে আগ্রহী হন, তাহলে উপরের Blueprint Form-টি সম্পূর্ণ করুন। আমাদের অভিজ্ঞ টিম আপনার তথ্য পর্যালোচনা করে পরবর্তী পদক্ষেপের জন্য আপনার সঙ্গে যোগাযোগ করবে।
-
-    আপনার আস্থা ও সহযোগিতার জন্য ধন্যবাদ।
-
-    ElectroTechBD ⚡
-    Engineering & Smart Automation`
-    );
-
-    }, 400);
-}
-
-function initFAQ() {
-
-    const questions =
-        document.querySelectorAll(
-            ".faq-question"
-        );
-
-    questions.forEach(button => {
-
-        button.addEventListener(
-            "click",
-            function () {
-
-                const faqItem =
-                    this.parentElement;
-
-                if (!faqItem) {
-                    return;
-                }
-
-                const answer =
-                    faqItem.querySelector(
-                        ".faq-answer"
-                    );
-
-                document
-                    .querySelectorAll(".faq-item")
-                    .forEach(item => {
-
-                        if (item !== faqItem) {
-
-                            item.classList.remove(
-                                "active"
-                            );
-
-                            const otherAnswer =
-                                item.querySelector(
-                                    ".faq-answer"
-                                );
-
-                            if (otherAnswer) {
-
-                                otherAnswer.style.maxHeight =
-                                    null;
-                            }
-                        }
-                    });
-
-                faqItem.classList.toggle(
-                    "active"
-                );
-
-                if (
-                    faqItem.classList.contains(
-                        "active"
-                    )
-                ) {
-
-                    if (answer) {
-
-                        answer.style.maxHeight =
-                            answer.scrollHeight +
-                            "px";
-                    }
-
-                } else {
-
-                    if (answer) {
-
-                        answer.style.maxHeight =
-                            null;
-                    }
-                }
-            }
-        );
-    });
-}
-
-function initMobileMenu() {
-
-    const toggle =
-        document.querySelector(
-            ".mobile-menu-toggle"
-        );
+    const menuButton =
+        document.querySelector(".mobile-menu-btn");
 
     const nav =
-        document.getElementById(
-            "site-navigation"
-        );
+        document.querySelector(".nav-menu");
 
-    if (!toggle || !nav) {
+    if (!menuButton || !nav) {
         return;
     }
 
-    toggle.addEventListener(
-        "click",
-        function () {
+    menuButton.addEventListener("click", () => {
 
-            const isOpen =
-                nav.classList.toggle(
-                    "active"
-                );
+        nav.classList.toggle("active");
 
-            toggle.classList.toggle(
-                "active",
-                isOpen
-            );
+        menuButton.classList.toggle("active");
+    });
 
-            toggle.setAttribute(
-                "aria-expanded",
-                isOpen ? "true" : "false"
-            );
-        }
-    );
+    nav.querySelectorAll("a").forEach(link => {
 
-    nav.querySelectorAll("a")
-        .forEach(link => {
+        link.addEventListener("click", () => {
 
-            link.addEventListener(
-                "click",
-                function () {
+            nav.classList.remove("active");
 
-                    nav.classList.remove(
-                        "active"
-                    );
-
-                    toggle.classList.remove(
-                        "active"
-                    );
-
-                    toggle.setAttribute(
-                        "aria-expanded",
-                        "false"
-                    );
-                }
-            );
+            menuButton.classList.remove("active");
         });
+    });
 }
 
-function initRevealAnimations() {
 
-    const items =
-        document.querySelectorAll(
-            ".reveal-item"
-        );
+function setupRevealAnimations() {
 
-    if (!items.length) {
+    const elements =
+        document.querySelectorAll(".reveal, .fade-in, .animate-on-scroll");
+
+    if (!elements.length) {
         return;
     }
 
-    if (
-        !("IntersectionObserver" in window)
-    ) {
+    if (!("IntersectionObserver" in window)) {
 
-        items.forEach(item => {
-
-            item.classList.add(
-                "visible"
-            );
+        elements.forEach(element => {
+            element.classList.add("visible");
         });
 
         return;
@@ -1074,1183 +345,1695 @@ function initRevealAnimations() {
 
                 entries.forEach(entry => {
 
-                    if (
-                        entry.isIntersecting
-                    ) {
+                    if (entry.isIntersecting) {
 
-                        entry.target.classList.add(
-                            "visible"
-                        );
+                        entry.target.classList.add("visible");
 
-                        observer.unobserve(
-                            entry.target
-                        );
+                        observer.unobserve(entry.target);
                     }
                 });
-
             },
             {
                 threshold: 0.12
             }
         );
 
-    items.forEach(item => {
-
-        observer.observe(item);
+    elements.forEach(element => {
+        observer.observe(element);
     });
 }
 
-function initDateInput() {
 
-    const dateInput =
-        document.getElementById(
-            "meeting-date"
-        );
+function setupDragAndDrop() {
 
-    if (!dateInput) {
-        return;
-    }
+    const dropZones =
+        document.querySelectorAll(".drop-zone, [data-drop-zone]");
 
-    const today =
-        new Date();
+    dropZones.forEach(zone => {
 
-    const year =
-        today.getFullYear();
+        ["dragenter", "dragover"].forEach(eventName => {
 
-    const month =
-        String(
-            today.getMonth() + 1
-        ).padStart(2, "0");
-
-    const day =
-        String(
-            today.getDate()
-        ).padStart(2, "0");
-
-    dateInput.min =
-        `${year}-${month}-${day}`;
-}
-
-function initDragAndDrop() {
-
-    const dropzone =
-        document.getElementById(
-            "dropzone"
-        );
-
-    const fileInput =
-        document.getElementById(
-            "blueprint-file"
-        );
-
-    if (!dropzone || !fileInput) {
-        return;
-    }
-
-    [
-        "dragenter",
-        "dragover"
-    ].forEach(eventName => {
-
-        dropzone.addEventListener(
-            eventName,
-            event => {
+            zone.addEventListener(eventName, event => {
 
                 event.preventDefault();
 
-                event.stopPropagation();
-
-                dropzone.classList.add(
-                    "drag-active"
-                );
-            }
-        );
-    });
-
-    [
-        "dragleave",
-        "drop"
-    ].forEach(eventName => {
-
-        dropzone.addEventListener(
-            eventName,
-            event => {
-
-                event.preventDefault();
-
-                event.stopPropagation();
-
-                dropzone.classList.remove(
-                    "drag-active"
-                );
-            }
-        );
-    });
-
-    dropzone.addEventListener(
-        "drop",
-        event => {
-
-            const files =
-                event.dataTransfer.files;
-
-            if (
-                files &&
-                files.length > 0
-            ) {
-
-                try {
-
-                    fileInput.files =
-                        files;
-
-                    updateFileName(
-                        fileInput
-                    );
-
-                } catch (error) {
-
-                    console.warn(
-                        "Could not assign dropped file.",
-                        error
-                    );
-                }
-            }
-        }
-    );
-}
-
-function escapeHTML(value) {
-
-    return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-}
-
-const CHAT_CONFIG = {
-
-    apiUrl: "",
-
-    phone: "+8801710830391",
-
-    website:
-        "https://electrotechbd.xyz",
-
-    assistantName:
-        "ভোল্ট",
-
-    maxHistory:
-        12
-};
-
-const CHAT_KB = [
-
-    {
-        keys: [
-            "দাম",
-            "খরচ",
-            "মূল্য",
-            "বাজেট",
-            "রেট",
-            "price",
-            "cost",
-            "budget",
-            "charge",
-            "কত টাকা"
-        ],
-
-        reply:
-            "খরচ নির্ভর করে কাজের ধরন, জায়গার আয়তন, রুম সংখ্যা এবং নির্বাচিত গ্রেডের উপর।\n\n" +
-            "• Standard Wiring: ৳২৫ / Sq.Ft\n" +
-            "• Smart IoT: ৳৪৫ / Sq.Ft\n" +
-            "• Solar Add-on: আনুমানিক ৳৩৫ / Sq.Ft\n\n" +
-            "সঠিক আনুমানিক হিসাব দেখতে আমাদের Smart Cost Estimator ব্যবহার করতে পারেন 👉 #estimator"
-    },
-
-    {
-        keys: [
-            "প্যাকেজ",
-            "package",
-            "pricing",
-            "plan",
-            "অফার"
-        ],
-
-        reply:
-            "ElectroTech-এর প্রধান প্যাকেজগুলো হলো:\n\n" +
-            "⚡ Basic Wiring — ৳২৫ / Sq.Ft\n" +
-            "🏠 Smart Home IoT — ৳৪৫ / Sq.Ft\n" +
-            "🏭 Industrial / Commercial — Custom Budget\n\n" +
-            "বিস্তারিত দেখতে 👉 #pricing"
-    },
-
-    {
-        keys: [
-            "বুকিং",
-            "বুক",
-            "অ্যাপয়েন্টমেন্ট",
-            "মিটিং",
-            "book",
-            "booking",
-            "appointment",
-            "schedule"
-        ],
-
-        reply:
-            "বুকিং করতে আমাদের Booking Section-এ গিয়ে নাম, ফোন নম্বর, সার্ভিস এবং পছন্দের তারিখ দিন। চাইলে Blueprint বা Wiring Drawing-ও upload করতে পারবেন। 👉 #booking"
-    },
-
-    {
-        keys: [
-            "ঠিকানা",
-            "অফিস",
-            "কোথায়",
-            "লোকেশন",
-            "ম্যাপ",
-            "map",
-            "location",
-            "address",
-            "direction",
-            "thikana kothay",
-            "office location"
-        ],
-
-        reply:
-            "ElectroTech-এর contact section-এ অফিসের location এবং Google Map দেওয়া আছে। 👉 #contact\n\n" +
-            "বর্তমান location Dhaka, Bangladesh."
-    },
-
-    {
-        keys: [
-            "ফোন",
-            "যোগাযোগ",
-            "নম্বর",
-            "কল",
-            "contact",
-            "phone",
-            "call",
-            "whatsapp",
-            "হোয়াটসঅ্যাপ",
-            "jogajog korbo kivabey",
-            "jogajog kortey chai",
-            "kotha boltey chai",
-            "theam ayr sathey kota boltey chai"
-        ],
-
-        reply:
-            "ElectroTech-এর সাথে সরাসরি যোগাযোগ করতে কল করুন:\n\n" +
-            "📞 +880 1710830391\n\n" +
-            "Booking-এর মাধ্যমে site visit request-ও করতে পারেন 👉 #booking"
-    },
-
-    {
-        keys: [
-            "স্মার্ট",
-            "অটোমেশন",
-            "esp32",
-            "iot",
-            "smart",
-            "automation",
-            "সেন্সর",
-            "অ্যাপ",
-            "esp32 ki",
-            "iot ki",
-            "otometion ki",
-            "automation ki"
-        ],
-
-        reply:
-            "Smart Home Automation-এ ESP32 ও IoT ব্যবহার করে লাইট, ফ্যান এবং বিভিন্ন sensor-based system নিয়ন্ত্রণ করা যায়। মোবাইল App/Web বা voice control-এর মতো system ব্যবহার করা যেতে পারে।\n\n" +
-            "আমাদের simulator দেখতে 👉 #simulator"
-    },
-
-    {
-        keys: [
-            "লাইট",
-            "light",
-            "বাতি",
-            "lite",
-            "lait"
-        ],
-
-        reply:
-            "Smart Light automation-এর মাধ্যমে লাইটকে automated বা remote-controlled করা যায়। আমাদের Live Simulator-এ একটি demo দেখতে পারবেন 👉 #simulator"
-    },
-
-    {
-        keys: [
-            "ফ্যান",
-            "fan"
-        ],
-
-        reply:
-            "Smart Home system-এর মাধ্যমে fan control automation করা যায়। ElectroTech-এর simulator-এ fan control-এর একটি demo আছে 👉 #simulator"
-    },
-
-    {
-        keys: [
-            "পুরোনো",
-            "পুরনো",
-            "ওয়্যারিং",
-            "wiring",
-            "rewiring",
-            "দেয়াল",
-            "old wiring",
-            "porano work"
-        ],
-
-        reply:
-            "পুরোনো wiring-এ smart automation যোগ করা সম্ভব হতে পারে, তবে wiring-এর condition, neutral availability, load এবং existing electrical system site inspection করে নিশ্চিত করা উচিত।"
-    },
-
-    {
-        keys: [
-            "সোলার",
-            "solar",
-            "সৌর",
-            "বিদ্যুৎ বিল",
-            "ব্যাকআপ",
-            "ips",
-            "soler sistam",
-            "soler sistam kortey chai",
-            "soler kortey chai"
-        ],
-
-        reply:
-            "ElectroTech-এর estimator-এ Solar System option আছে। Solar select করলে আনুমানিক Solar Add-on cost মোট বাজেটে যোগ হয় 👉 #estimator"
-    },
-
-    {
-        keys: [
-            "ceo",
-            "সিইও",
-            "মালিক",
-            "প্রতিষ্ঠাতা",
-            "founder",
-            "owner",
-            "সাইদুজ্জামান",
-            "কে চালায়",
-            "কোম্পানির",
-            "companir malik ke",
-            "malik key",
-            "owner key",
-            "founder key"
-        ],
-
-        reply:
-            "ElectroTechBD Engineering & Automation-এর প্রতিষ্ঠাতা এইচ. এম. মো. সাইদুজ্জামান। বিস্তারিত দেখতে 👉 #team"
-    },
-
-    {
-        keys: [
-            "ওয়েবসাইট",
-            "সাইট",
-            "website",
-            "domain",
-            "electrotechbd"
-        ],
-
-        reply:
-            "ElectroTech-এর website: electrotechbd.xyz ⚡"
-    },
-
-    {
-        keys: [
-            "লাইসেন্স",
-            "license",
-            "permit",
-            "অনুমোদন",
-            "onomodon",
-            "parmit",
-            "permition asy",
-            "permision"
-        ],
-
-        reply:
-            "⚡ Yes\n\n" +
-            "বাংলাদেশ সরকারের অনুমোদিত যোগ্যতাসম্পন্ন ইঞ্জিনিয়ার ও ইলেকট্রিশিয়ান।\n" +
-            "ElectroTechBD-এর License/Permit: E20230043144"
-            
-    },
-
-    {
-        keys: [
-            "সেফটি",
-            "নিরাপত্তা",
-            "safe",
-            "safety",
-            "বিপদ",
-            "শক",
-            "electric shock"
-        ],
-
-        reply:
-            "Electrical কাজের ক্ষেত্রে safety সবচেয়ে গুরুত্বপূর্ণ। Live circuit-এ কাজ করার আগে power isolate করা এবং প্রয়োজন অনুযায়ী qualified/licensed electrician-এর সাহায্য নেওয়া উচিত।\n\n" +
-            "⚠️ বিদ্যুৎস্পৃষ্ট হওয়ার ঝুঁকি থাকলে নিজে পরীক্ষা না করে professional help নিন।"
-    },
-
-    {
-        keys: [
-            "প্রজেক্ট",
-            "কাজের",
-            "উদাহরণ",
-            "project",
-            "portfolio",
-            "আগের কাজ"
-        ],
-
-        reply:
-            "ElectroTech-এর Smart Automation project showcase দেখতে পারেন 👉 #projects"
-    },
-
-    {
-        keys: [
-            "সময়",
-            "কতদিন",
-            "কবে",
-            "how long",
-            "duration",
-            "time",
-            "kajeyr somoy koto",
-            "kaj kor tey koto din lage",
-            "work time",
-            "working time"
-        ],
-
-        reply:
-            "কাজের সময় project-এর size, wiring condition এবং service type-এর উপর নির্ভর করে। ছোট automation project তুলনামূলকভাবে দ্রুত শেষ হতে পারে; বড় wiring বা industrial project-এর জন্য site assessment প্রয়োজন।"
-    },
-
-    {
-        keys: [
-            "হ্যালো",
-            "হাই",
-            "সালাম",
-            "assalamu",
-            "hello",
-            "hi",
-            "hey",
-            "কেমন আছ",
-            "kemon aso",
-            "tomi ke",
-            "who are you",
-            "how are you",
-            "asalamualaikum"
-        ],
-
-        reply:
-            "আসসালামু আলাইকুম! 👋\n\n" +
-            "আমি ভোল্ট — ElectroTech-এর AI Assistant। ⚡\n\n" +
-            "আপনি electrical service, wiring, smart home, solar, budget, booking বা safety সম্পর্কে প্রশ্ন করতে পারেন।"
-    },
-
-    {
-        keys: [
-            "ধন্যবাদ",
-            "thanks",
-            "thank you",
-            "thnx",
-            "dhonnobad",
-            "donobad",
-            "thans"
-        ],
-
-        reply:
-            "আপনাকেও ধন্যবাদ! ⚡ ইলেকট্রিক্যাল কাজ সম্পর্কে আপনার আরও কোনো প্রশ্ন থাকলে, নির্দ্বিধায়  জানাতে পারেন।
-।"
-    }
-];
-
-const CHAT_FALLBACK =
-
-    "এই প্রশ্নটির নির্দিষ্ট উত্তর আমার ElectroTech knowledge base-এ নেই। 🙂\n\n" +
-
-    "আপনি চাইলে প্রশ্নটি একটু বিস্তারিতভাবে লিখতে পারেন। অথবা ElectroTech team-এর সাথে যোগাযোগ করুন:\n\n" +
-
-    "📞 +880 1710830391\n\n" +
-
-    "👉 #booking";
-
-const CHAT_CHIPS = [
-
-    "খরচ কত?",
-
-    "Smart Home কী?",
-
-    "বুকিং করব",
-
-    // "অফিস কোথায়?",
-    "Electrical Safety সম্পর্কে বলুন"
-];
-
-const chatHistory = [];
-
-function chatEl(id) {
-
-    return document.getElementById(id);
-}
-
-function chatLinkify(text) {
-
-    let safeText =
-        escapeHTML(text);
-
-    safeText =
-        safeText.replace(
-            /#(estimator|pricing|booking|contact|simulator|team|projects|chief-electrician)/gi,
-            '<a href="#$1" class="chat-jump">#$1</a>'
-        );
-
-    safeText =
-        safeText.replace(
-            /(\+880[\s-]?1[3-9]\d{8})/g,
-            '<a href="tel:$1">$1</a>'
-        );
-
-    safeText =
-        safeText.replace(
-            /\n/g,
-            "<br>"
-        );
-
-    return safeText;
-}
-
-function chatAddMessage(text, who) {
-
-    const body =
-        chatEl("chat-body");
-
-    if (!body) {
-        return null;
-    }
-
-    const bubble =
-        document.createElement("div");
-
-    bubble.className =
-        `chat-msg ${who}`;
-
-    if (who === "bot") {
-
-        bubble.innerHTML =
-            chatLinkify(text);
-
-    } else {
-
-        bubble.textContent =
-            text;
-    }
-
-    body.appendChild(
-        bubble
-    );
-
-    body.scrollTop =
-        body.scrollHeight;
-
-    return bubble;
-}
-
-function chatShowTyping() {
-
-    const body =
-        chatEl("chat-body");
-
-    if (!body) {
-        return null;
-    }
-
-    const bubble =
-        document.createElement("div");
-
-    bubble.className =
-        "chat-msg bot chat-typing";
-
-    bubble.innerHTML =
-        "<span></span><span></span><span></span>";
-
-    body.appendChild(
-        bubble
-    );
-
-    body.scrollTop =
-        body.scrollHeight;
-
-    return bubble;
-}
-
-function chatLocalAnswer(message) {
-
-    const text =
-        String(message)
-            .toLowerCase()
-            .trim();
-
-    let best = null;
-
-    let bestScore = 0;
-
-    CHAT_KB.forEach(item => {
-
-        let score = 0;
-
-        item.keys.forEach(key => {
-
-            const keyword =
-                key.toLowerCase();
-
-            if (text.includes(keyword)) {
-
-                score +=
-                    keyword.length * 2;
-            }
+                zone.classList.add("drag-over");
+            });
         });
 
-        if (score > bestScore) {
+        ["dragleave", "drop"].forEach(eventName => {
 
-            bestScore =
-                score;
+            zone.addEventListener(eventName, event => {
 
-            best =
-                item;
-        }
+                event.preventDefault();
+
+                zone.classList.remove("drag-over");
+            });
+        });
+
+        zone.addEventListener("drop", event => {
+
+            const files = event.dataTransfer.files;
+
+            if (!files || !files.length) {
+                return;
+            }
+
+            const input =
+                zone.querySelector('input[type="file"]');
+
+            if (input) {
+                input.files = files;
+
+                input.dispatchEvent(
+                    new Event("change", {
+                        bubbles: true
+                    })
+                );
+            }
+        });
     });
-
-    return best
-        ? best.reply
-        : CHAT_FALLBACK;
 }
 
-async function chatGetReply(message) {
 
-    if (!CHAT_CONFIG.apiUrl) {
+function generateProjectId() {
 
-        return chatLocalAnswer(
-            message
-        );
+    const randomNumber =
+        Math.floor(1000 + Math.random() * 9000);
+
+    return `#ENG-2050-${randomNumber}`;
+}
+
+
+async function submitBooking(form) {
+
+    if (!form) {
+        return;
+    }
+
+    const submitButton =
+        form.querySelector('[type="submit"]');
+
+    const originalText =
+        submitButton ? submitButton.innerHTML : "";
+
+    if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.innerHTML = "Submitting...";
     }
 
     try {
 
+        const formData = new FormData(form);
+
+        if (!formData.get("project_id")) {
+            formData.append(
+                "project_id",
+                generateProjectId()
+            );
+        }
+
+        const response =
+            await fetch("/api/bookings", {
+                method: "POST",
+                body: formData
+            });
+
+        if (!response.ok) {
+
+            throw new Error(
+                `Booking request failed: HTTP ${response.status}`
+            );
+        }
+
+        let result = null;
+
+        try {
+            result = await response.json();
+        } catch {
+            result = null;
+        }
+
+        console.log(
+            "Booking submitted successfully:",
+            result
+        );
+
+        try {
+            localStorage.setItem(
+                "lastBooking",
+                JSON.stringify(
+                    Object.fromEntries(formData.entries())
+                )
+            );
+        } catch (storageError) {
+            console.warn(
+                "Could not save booking locally:",
+                storageError
+            );
+        }
+
+        showNotification(
+            "আপনার বুকিং সফলভাবে পাঠানো হয়েছে। আমাদের MR MOIN টিম শীঘ্রই আপনার সাথে যোগাযোগ করবে।",
+            "success"
+        );
+
+        form.reset();
+
+    } catch (error) {
+
+        console.error(
+            "Booking error:",
+            error
+        );
+
+        showNotification(
+            "বুকিং পাঠানো যায়নি। অনুগ্রহ করে আবার চেষ্টা করুন।",
+            "error"
+        );
+
+    } finally {
+
+        if (submitButton) {
+            submitButton.disabled = false;
+            submitButton.innerHTML = originalText;
+        }
+    }
+}
+
+
+async function submitContactForm(form) {
+
+    if (!form) {
+        return;
+    }
+
+    const submitButton =
+        form.querySelector('[type="submit"]');
+
+    const originalText =
+        submitButton ? submitButton.innerHTML : "";
+
+    if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.innerHTML = "Sending...";
+    }
+
+    try {
+
+        const formData = new FormData(form);
+
+        const response =
+            await fetch("/api/contact", {
+                method: "POST",
+                body: formData
+            });
+
+        if (!response.ok) {
+
+            throw new Error(
+                `Contact request failed: HTTP ${response.status}`
+            );
+        }
+
+        let result = null;
+
+        try {
+            result = await response.json();
+        } catch {
+            result = null;
+        }
+
+        console.log(
+            "Contact form submitted:",
+            result
+        );
+
+        showNotification(
+            "আপনার মেসেজ সফলভাবে পাঠানো হয়েছে।",
+            "success"
+        );
+
+        form.reset();
+
+    } catch (error) {
+
+        console.error(
+            "Contact form error:",
+            error
+        );
+
+        showNotification(
+            "মেসেজ পাঠানো যায়নি। অনুগ্রহ করে আবার চেষ্টা করুন।",
+            "error"
+        );
+
+    } finally {
+
+        if (submitButton) {
+            submitButton.disabled = false;
+            submitButton.innerHTML = originalText;
+        }
+    }
+}
+
+
+async function submitEstimator(form) {
+
+    if (!form) {
+        return;
+    }
+
+    const submitButton =
+        form.querySelector('[type="submit"]');
+
+    const originalText =
+        submitButton ? submitButton.innerHTML : "";
+
+    if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.innerHTML = "Calculating...";
+    }
+
+    try {
+
+        const formData = new FormData(form);
+
         const response =
             await fetch(
-                CHAT_CONFIG.apiUrl,
+                "https://formsubmit.co/ajax/contact.electrotechbd@gmail.com",
                 {
-
                     method: "POST",
-
+                    body: formData,
                     headers: {
-                        "Content-Type":
-                            "application/json"
-                    },
-
-                    body:
-                        JSON.stringify({
-
-                            message:
-                                message,
-
-                            history:
-                                chatHistory.slice(
-                                    -CHAT_CONFIG.maxHistory
-                                )
-                        })
+                        Accept: "application/json"
+                    }
                 }
             );
 
         if (!response.ok) {
 
             throw new Error(
-                `HTTP ${response.status}`
+                `Estimator request failed: HTTP ${response.status}`
             );
         }
 
-        const data =
-            await response.json();
+        let result = null;
 
-        if (
-            data &&
-            typeof data.reply === "string" &&
-            data.reply.trim()
-        ) {
-
-            return data.reply.trim();
+        try {
+            result = await response.json();
+        } catch {
+            result = null;
         }
 
-        return chatLocalAnswer(
-            message
+        console.log(
+            "Estimator submitted:",
+            result
+        );
+
+        showNotification(
+            "আপনার তথ্য সফলভাবে পাঠানো হয়েছে।",
+            "success"
         );
 
     } catch (error) {
 
         console.error(
-            "Volt AI error:",
+            "Estimator error:",
             error
         );
 
-        const localReply =
-            chatLocalAnswer(
-                message
-            );
-
-        if (
-            localReply !== CHAT_FALLBACK
-        ) {
-
-            return (
-                localReply +
-                "\n\n⚠️ AI server বর্তমানে unavailable, তাই local ElectroTech information থেকে উত্তর দেওয়া হয়েছে।"
-            );
-        }
-
-        return (
-            "AI server-এর সাথে বর্তমানে যোগাযোগ করা যাচ্ছে না।\n\n" +
-            "📞 +880 1710830391"
+        showNotification(
+            "তথ্য পাঠানো যায়নি। অনুগ্রহ করে আবার চেষ্টা করুন।",
+            "error"
         );
+
+    } finally {
+
+        if (submitButton) {
+            submitButton.disabled = false;
+            submitButton.innerHTML = originalText;
+        }
     }
 }
 
-async function chatSend(message) {
 
-    const text =
-        String(message || "")
-            .trim();
+function showNotification(message, type = "info") {
 
-    if (!text) {
+    let container =
+        document.getElementById("notification-container");
+
+    if (!container) {
+
+        container =
+            document.createElement("div");
+
+        container.id =
+            "notification-container";
+
+        container.style.position = "fixed";
+        container.style.top = "20px";
+        container.style.right = "20px";
+        container.style.zIndex = "99999";
+        container.style.display = "flex";
+        container.style.flexDirection = "column";
+        container.style.gap = "10px";
+
+        document.body.appendChild(container);
+    }
+
+    const notification =
+        document.createElement("div");
+
+    notification.className =
+        `notification notification-${type}`;
+
+    notification.textContent = message;
+
+    notification.style.padding = "14px 18px";
+    notification.style.borderRadius = "10px";
+    notification.style.background = "#111";
+    notification.style.color = "#fff";
+    notification.style.border = "1px solid rgba(255,255,255,.15)";
+    notification.style.boxShadow =
+        "0 10px 30px rgba(0,0,0,.3)";
+    notification.style.maxWidth = "360px";
+
+    container.appendChild(notification);
+
+    setTimeout(() => {
+
+        notification.style.opacity = "0";
+        notification.style.transform =
+            "translateX(20px)";
+        notification.style.transition =
+            "all .3s ease";
+
+        setTimeout(() => {
+            notification.remove();
+        }, 300);
+
+    }, 4000);
+}
+
+
+function setupForms() {
+
+    const bookingForms =
+        document.querySelectorAll(
+            "#booking-form, .booking-form"
+        );
+
+    bookingForms.forEach(form => {
+
+        form.addEventListener("submit", event => {
+
+            event.preventDefault();
+
+            submitBooking(form);
+        });
+    });
+
+    const contactForms =
+        document.querySelectorAll(
+            "#contact-form, .contact-form"
+        );
+
+    contactForms.forEach(form => {
+
+        form.addEventListener("submit", event => {
+
+            event.preventDefault();
+
+            submitContactForm(form);
+        });
+    });
+
+    const estimatorForms =
+        document.querySelectorAll(
+            "#estimator-form, .estimator-form"
+        );
+
+    estimatorForms.forEach(form => {
+
+        form.addEventListener("submit", event => {
+
+            event.preventDefault();
+
+            submitEstimator(form);
+        });
+    });
+}
+
+
+function setupNewsletter() {
+
+    const forms =
+        document.querySelectorAll(
+            ".newsletter-form, #newsletter-form"
+        );
+
+    forms.forEach(form => {
+
+        form.addEventListener("submit", async event => {
+
+            event.preventDefault();
+
+            const button =
+                form.querySelector('[type="submit"]');
+
+            const originalText =
+                button ? button.innerHTML : "";
+
+            if (button) {
+                button.disabled = true;
+                button.innerHTML = "Subscribing...";
+            }
+
+            try {
+
+                const formData =
+                    new FormData(form);
+
+                const response =
+                    await fetch(
+                        "/api/contact",
+                        {
+                            method: "POST",
+                            body: formData
+                        }
+                    );
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        `Newsletter request failed: HTTP ${response.status}`
+                    );
+                }
+
+                showNotification(
+                    "আপনি সফলভাবে newsletter-এ subscribe করেছেন।",
+                    "success"
+                );
+
+                form.reset();
+
+            } catch (error) {
+
+                console.error(
+                    "Newsletter error:",
+                    error
+                );
+
+                showNotification(
+                    "Subscribe করা যায়নি। আবার চেষ্টা করুন।",
+                    "error"
+                );
+
+            } finally {
+
+                if (button) {
+                    button.disabled = false;
+                    button.innerHTML = originalText;
+                }
+            }
+        });
+    });
+}
+
+
+function setupFAQ() {
+
+    const questions =
+        document.querySelectorAll(
+            ".faq-question, .faq-header"
+        );
+
+    questions.forEach(question => {
+
+        question.addEventListener("click", () => {
+
+            const item =
+                question.closest(
+                    ".faq-item"
+                );
+
+            if (!item) {
+                return;
+            }
+
+            const answer =
+                item.querySelector(
+                    ".faq-answer"
+                );
+
+            const isActive =
+                item.classList.contains("active");
+
+            document
+                .querySelectorAll(".faq-item.active")
+                .forEach(activeItem => {
+
+                    if (activeItem !== item) {
+
+                        activeItem.classList.remove(
+                            "active"
+                        );
+
+                        const activeAnswer =
+                            activeItem.querySelector(
+                                ".faq-answer"
+                            );
+
+                        if (activeAnswer) {
+                            activeAnswer.style.maxHeight =
+                                null;
+                        }
+                    }
+                });
+
+            item.classList.toggle(
+                "active",
+                !isActive
+            );
+
+            if (!answer) {
+                return;
+            }
+
+            if (!isActive) {
+
+                answer.style.maxHeight =
+                    `${answer.scrollHeight}px`;
+
+            } else {
+
+                answer.style.maxHeight = null;
+            }
+        });
+    });
+}
+
+
+/* =========================================
+   VOICE ASSISTANT
+========================================= */
+
+const voiceCommands = [
+    {
+        patterns: [
+            "লাইট চালু",
+            "লাইট অন",
+            "light on",
+            "turn on light"
+        ],
+        action: () => {
+
+            if (!state.light) {
+                toggleAppliance("light");
+            }
+
+            return "লাইট চালু করা হয়েছে।";
+        }
+    },
+
+    {
+        patterns: [
+            "লাইট বন্ধ",
+            "লাইট অফ",
+            "light off",
+            "turn off light"
+        ],
+        action: () => {
+
+            if (state.light) {
+                toggleAppliance("light");
+            }
+
+            return "লাইট বন্ধ করা হয়েছে।";
+        }
+    },
+
+    {
+        patterns: [
+            "ফ্যান চালু",
+            "ফ্যান অন",
+            "fan on",
+            "turn on fan"
+        ],
+        action: () => {
+
+            if (!state.fan) {
+                toggleAppliance("fan");
+            }
+
+            return "ফ্যান চালু করা হয়েছে।";
+        }
+    },
+
+    {
+        patterns: [
+            "ফ্যান বন্ধ",
+            "ফ্যান অফ",
+            "fan off",
+            "turn off fan"
+        ],
+        action: () => {
+
+            if (state.fan) {
+                toggleAppliance("fan");
+            }
+
+            return "ফ্যান বন্ধ করা হয়েছে।";
+        }
+    },
+
+    {
+        patterns: [
+            "এসি চালু",
+            "এসি অন",
+            "ac on",
+            "turn on ac"
+        ],
+        action: () => {
+
+            if (!state.ac) {
+                toggleAppliance("ac");
+            }
+
+            return "এসি চালু করা হয়েছে।";
+        }
+    },
+
+    {
+        patterns: [
+            "এসি বন্ধ",
+            "এসি অফ",
+            "ac off",
+            "turn off ac"
+        ],
+        action: () => {
+
+            if (state.ac) {
+                toggleAppliance("ac");
+            }
+
+            return "এসি বন্ধ করা হয়েছে।";
+        }
+    },
+
+    {
+        patterns: [
+            "সেন্সর চালু",
+            "সেন্সর অন",
+            "sensor on"
+        ],
+        action: () => {
+
+            if (!state.sensor) {
+                toggleAppliance("sensor");
+            }
+
+            return "সেন্সর চালু করা হয়েছে।";
+        }
+    },
+
+    {
+        patterns: [
+            "সেন্সর বন্ধ",
+            "সেন্সর অফ",
+            "sensor off"
+        ],
+        action: () => {
+
+            if (state.sensor) {
+                toggleAppliance("sensor");
+            }
+
+            return "সেন্সর বন্ধ করা হয়েছে।";
+        }
+    }
+];
+
+
+function normalizeVoiceText(text) {
+
+    return text
+        .toLowerCase()
+        .trim()
+        .replace(/[।,!?.]/g, "");
+}
+
+
+function triggerVoiceCommand(commandText) {
+
+    if (!commandText) {
+        return "আমি কোনো কমান্ড শুনতে পাইনি।";
+    }
+
+    const normalized =
+        normalizeVoiceText(commandText);
+
+    for (const command of voiceCommands) {
+
+        const matched =
+            command.patterns.some(pattern => {
+
+                return normalized.includes(
+                    normalizeVoiceText(pattern)
+                );
+            });
+
+        if (matched) {
+            return command.action();
+        }
+    }
+
+    return `আমি "${commandText}" কমান্ডটি বুঝতে পারিনি।`;
+}
+
+
+let recognition = null;
+let isListening = false;
+
+
+function setupVoiceAssistant() {
+
+    const SpeechRecognition =
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
+
+    const button =
+        document.getElementById("voice-assistant-btn") ||
+        document.querySelector(
+            ".voice-assistant-btn, [data-voice-assistant]"
+        );
+
+    const status =
+        document.getElementById("voice-status");
+
+    if (!button) {
         return;
     }
 
-    chatAddMessage(
-        text,
-        "user"
-    );
+    if (!SpeechRecognition) {
 
-    chatHistory.push({
+        button.addEventListener("click", () => {
 
-        role: "user",
+            showNotification(
+                "আপনার browser Speech Recognition support করে না। Chrome/Edge ব্যবহার করুন।",
+                "error"
+            );
+        });
 
-        content: text
-    });
-
-    const input =
-        chatEl("chat-input");
-
-    if (input) {
-        input.value = "";
+        return;
     }
 
-    const typing =
-        chatShowTyping();
+    recognition =
+        new SpeechRecognition();
 
-    const reply =
-        await chatGetReply(
-            text
+    recognition.lang = "bn-BD";
+
+    recognition.continuous = false;
+
+    recognition.interimResults = false;
+
+    recognition.maxAlternatives = 1;
+
+    recognition.onstart = () => {
+
+        isListening = true;
+
+        button.classList.add("listening");
+
+        if (status) {
+            status.textContent =
+                "শুনছি...";
+        }
+    };
+
+    recognition.onresult = event => {
+
+        const transcript =
+            event.results[0][0].transcript;
+
+        const reply =
+            triggerVoiceCommand(transcript);
+
+        if (status) {
+            status.textContent =
+                reply;
+        }
+
+        showNotification(
+            reply,
+            "success"
+        );
+    };
+
+    recognition.onerror = event => {
+
+        console.error(
+            "Voice recognition error:",
+            event.error
         );
 
-    setTimeout(
-        () => {
+        if (status) {
 
-            if (typing) {
-                typing.remove();
+            status.textContent =
+                "Voice command কাজ করেনি। আবার চেষ্টা করুন।";
+        }
+
+        showNotification(
+            "Voice command কাজ করেনি। আবার চেষ্টা করুন।",
+            "error"
+        );
+    };
+
+    recognition.onend = () => {
+
+        isListening = false;
+
+        button.classList.remove(
+            "listening"
+        );
+    };
+
+    button.addEventListener("click", () => {
+
+        if (isListening) {
+
+            recognition.stop();
+
+            return;
+        }
+
+        try {
+
+            recognition.start();
+
+        } catch (error) {
+
+            console.error(
+                "Could not start voice recognition:",
+                error
+            );
+        }
+    });
+}
+
+
+/* =========================================
+   CHATBOT - VOLT
+========================================= */
+
+const CHAT_CONFIG = {
+
+    assistantName: "ভোল্ট",
+
+    phone: "+8801710830391",
+
+    website: "https://electrotechbd.xyz",
+
+    maxHistory: 12,
+
+    apiUrl: ""
+};
+
+
+const CHAT_KNOWLEDGE = [
+
+    {
+        keywords: [
+            "হ্যালো",
+            "হাই",
+            "hello",
+            "hi",
+            "assalamu alaikum",
+            "আসসালামু আলাইকুম"
+        ],
+
+        reply:
+            "আসসালামু আলাইকুম! ⚡ আমি ভোল্ট, ElectroTech-এর Smart Electrical Assistant। কীভাবে সাহায্য করতে পারি?"
+    },
+
+    {
+        keywords: [
+            "price",
+            "দাম",
+            "কত টাকা",
+            "খরচ"
+        ],
+
+        reply:
+            "কাজের ধরন, সাইট এবং প্রয়োজন অনুযায়ী electrical কাজের খরচ পরিবর্তন হয়। সঠিক quotation-এর জন্য আমাদের সাথে consultation করতে পারেন।"
+    },
+
+    {
+        keywords: [
+            "booking",
+            "বুকিং",
+            "appointment",
+            "অ্যাপয়েন্টমেন্ট"
+        ],
+
+        reply:
+            "আপনি website-এর booking form ব্যবহার করে কাজের জন্য request পাঠাতে পারেন। আমাদের MR MOIN টিম আপনার সাথে যোগাযোগ করবে।"
+    },
+
+    {
+        keywords: [
+            "location",
+            "লোকেশন",
+            "কোথায়",
+            "কোথায়"
+        ],
+
+        reply:
+            "ElectroTech ঢাকা শহরের বিভিন্ন এলাকায় electrical ও engineering service প্রদান করে। আপনার location জানালে service availability সম্পর্কে জানানো যাবে।"
+    },
+
+    {
+        keywords: [
+            "phone",
+            "মোবাইল",
+            "ফোন",
+            "যোগাযোগ"
+        ],
+
+        reply:
+            `যোগাযোগ: ${CHAT_CONFIG.phone}`
+    },
+
+    {
+        keywords: [
+            "smart automation",
+            "automation",
+            "স্মার্ট অটোমেশন"
+        ],
+
+        reply:
+            "ElectroTech smart home automation, electrical control এবং connected-device solution নিয়ে কাজ করে।"
+    },
+
+    {
+        keywords: [
+            "light",
+            "লাইট",
+            "বাতি"
+        ],
+
+        reply:
+            "Smart lighting-এর মাধ্যমে light remotely বা automatedভাবে control করা যায়।"
+    },
+
+    {
+        keywords: [
+            "fan",
+            "ফ্যান"
+        ],
+
+        reply:
+            "Smart fan control ব্যবহার করে fan automation ও remote control করা সম্ভব।"
+    },
+
+    {
+        keywords: [
+            "old wiring",
+            "পুরাতন wiring",
+            "পুরোনো wiring",
+            "wiring"
+        ],
+
+        reply:
+            "পুরোনো বা damaged wiring থাকলে inspection করে প্রয়োজন অনুযায়ী rewiring বা repair করা উচিত।"
+    },
+
+    {
+        keywords: [
+            "solar",
+            "সোলার"
+        ],
+
+        reply:
+            "Solar electrical system design ও installation-এর প্রয়োজন হলে site assessment অনুযায়ী solution তৈরি করা যায়।"
+    },
+
+    {
+        keywords: [
+            "website",
+            "ওয়েবসাইট",
+            "ওয়েবসাইট"
+        ],
+
+        reply:
+            `ElectroTech website: ${CHAT_CONFIG.website}`
+    },
+
+    {
+        keywords: [
+            "license",
+            "লাইসেন্স"
+        ],
+
+        reply:
+            "Electrical কাজের ক্ষেত্রে প্রয়োজনীয় অনুমোদন ও safety requirements project অনুযায়ী যাচাই করা গুরুত্বপূর্ণ।"
+    },
+
+    {
+        keywords: [
+            "safety",
+            "নিরাপত্তা",
+            "সেফটি"
+        ],
+
+        reply:
+            "Electrical কাজের সময় power isolation, proper protection এবং qualified electrician ব্যবহার করা অত্যন্ত গুরুত্বপূর্ণ।"
+    },
+
+    {
+        keywords: [
+            "project",
+            "প্রজেক্ট",
+            "কাজ"
+        ],
+
+        reply:
+            "ElectroTech residential, commercial এবং electrical engineering related বিভিন্ন project নিয়ে কাজ করতে পারে।"
+    },
+
+    {
+        keywords: [
+            "ceo",
+            "সিইও"
+        ],
+
+        reply:
+            "ElectroTech-এর business এবং technical operations সম্পর্কে জানতে আমাদের team-এর সাথে যোগাযোগ করতে পারেন।"
+    },
+
+    {
+        keywords: [
+            "time",
+            "সময়",
+            "সময়"
+        ],
+
+        reply:
+            "Service timing project এবং location অনুযায়ী নির্ধারণ করা হয়।"
+    },
+
+    {
+        keywords: [
+            "ধন্যবাদ",
+            "thanks",
+            "thank you"
+        ],
+
+        reply:
+            "আপনাকেও ধন্যবাদ! ⚡ ইলেকট্রিক্যাল কাজ সম্পর্কে আপনার আরও কোনো প্রশ্ন থাকলে, নির্দ্বিধায় জানাতে পারেন।"
+    }
+];
+
+
+let chatHistory = [];
+
+
+function findLocalChatReply(message) {
+
+    const normalized =
+        normalizeVoiceText(message);
+
+    for (const item of CHAT_KNOWLEDGE) {
+
+        const matched =
+            item.keywords.some(keyword => {
+
+                return normalized.includes(
+                    normalizeVoiceText(keyword)
+                );
+            });
+
+        if (matched) {
+            return item.reply;
+        }
+    }
+
+    return null;
+}
+
+
+async function chatGetReply(message) {
+
+    if (!message) {
+        return "আপনার প্রশ্নটি লিখুন।";
+    }
+
+    chatHistory.push({
+        role: "user",
+        content: message
+    });
+
+    if (
+        chatHistory.length >
+        CHAT_CONFIG.maxHistory
+    ) {
+
+        chatHistory =
+            chatHistory.slice(
+                -CHAT_CONFIG.maxHistory
+            );
+    }
+
+
+    if (CHAT_CONFIG.apiUrl) {
+
+        try {
+
+            const response =
+                await fetch(
+                    CHAT_CONFIG.apiUrl,
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body: JSON.stringify({
+                            message,
+                            history: chatHistory
+                        })
+                    }
+                );
+
+            if (!response.ok) {
+
+                throw new Error(
+                    `Chat API HTTP ${response.status}`
+                );
             }
 
-            chatAddMessage(
+            const data =
+                await response.json();
+
+            const reply =
+                data.reply ||
+                data.message ||
+                data.response;
+
+            if (reply) {
+
+                chatHistory.push({
+                    role: "assistant",
+                    content: reply
+                });
+
+                return reply;
+            }
+
+        } catch (error) {
+
+            console.error(
+                "Chat API error:",
+                error
+            );
+        }
+    }
+
+
+    const localReply =
+        findLocalChatReply(message);
+
+    if (localReply) {
+
+        chatHistory.push({
+            role: "assistant",
+            content: localReply
+        });
+
+        return localReply;
+    }
+
+
+    const fallback =
+        `দুঃখিত, এই প্রশ্নের নির্দিষ্ট উত্তর আমার knowledge base-এ নেই। আপনি চাইলে আমাদের সাথে ${CHAT_CONFIG.phone} নম্বরে যোগাযোগ করতে পারেন অথবা website-এর booking form ব্যবহার করতে পারেন।`;
+
+    chatHistory.push({
+        role: "assistant",
+        content: fallback
+    });
+
+    return fallback;
+}
+
+
+function setupChatbot() {
+
+    const input =
+        document.getElementById("chat-input") ||
+        document.querySelector(
+            ".chat-input"
+        );
+
+    const sendButton =
+        document.getElementById("chat-send") ||
+        document.querySelector(
+            ".chat-send"
+        );
+
+    const messagesContainer =
+        document.getElementById("chat-messages") ||
+        document.querySelector(
+            ".chat-messages"
+        );
+
+    const chatbot =
+        document.getElementById("chatbot") ||
+        document.querySelector(
+            ".chatbot"
+        );
+
+    const toggleButton =
+        document.getElementById("chat-toggle") ||
+        document.querySelector(
+            ".chat-toggle"
+        );
+
+    if (!input || !sendButton || !messagesContainer) {
+        return;
+    }
+
+
+    function addMessage(
+        message,
+        sender = "bot"
+    ) {
+
+        const messageElement =
+            document.createElement("div");
+
+        messageElement.className =
+            `chat-message ${sender}`;
+
+        messageElement.textContent =
+            message;
+
+        messagesContainer.appendChild(
+            messageElement
+        );
+
+        messagesContainer.scrollTop =
+            messagesContainer.scrollHeight;
+    }
+
+
+    async function sendMessage() {
+
+        const message =
+            input.value.trim();
+
+        if (!message) {
+            return;
+        }
+
+        addMessage(
+            message,
+            "user"
+        );
+
+        input.value = "";
+
+        sendButton.disabled = true;
+
+        const typing =
+            document.createElement("div");
+
+        typing.className =
+            "chat-message bot typing";
+
+        typing.textContent =
+            `${CHAT_CONFIG.assistantName} লিখছে...`;
+
+        messagesContainer.appendChild(
+            typing
+        );
+
+        messagesContainer.scrollTop =
+            messagesContainer.scrollHeight;
+
+
+        try {
+
+            const reply =
+                await chatGetReply(message);
+
+            typing.remove();
+
+            addMessage(
                 reply,
                 "bot"
             );
 
-            chatHistory.push({
+        } catch (error) {
 
-                role:
-                    "assistant",
-
-                content:
-                    reply
-            });
-
-            if (
-                chatHistory.length >
-                CHAT_CONFIG.maxHistory
-            ) {
-
-                chatHistory.splice(
-                    0,
-                    chatHistory.length -
-                    CHAT_CONFIG.maxHistory
-                );
-            }
-
-        },
-        450
-    );
-}
-
-function chatToggle(forceClose = false) {
-
-    const windowElement =
-        chatEl("chat-window");
-
-    const launcher =
-        chatEl("chat-launcher");
-
-    if (
-        !windowElement ||
-        !launcher
-    ) {
-        return;
-    }
-
-    const shouldOpen =
-        forceClose
-            ? false
-            : !windowElement.classList.contains(
-                "active"
+            console.error(
+                "Chatbot error:",
+                error
             );
 
-    windowElement.classList.toggle(
-        "active",
-        shouldOpen
-    );
+            typing.remove();
 
-    launcher.classList.toggle(
-        "open",
-        shouldOpen
-    );
-
-    launcher.setAttribute(
-        "aria-expanded",
-        shouldOpen
-            ? "true"
-            : "false"
-    );
-
-    launcher.innerHTML =
-        shouldOpen
-
-            ? '<i class="fa-solid fa-xmark"></i>'
-
-            : '<i class="fa-solid fa-comment-dots"></i><span class="chat-ping"></span>';
-
-    const body =
-        chatEl("chat-body");
-
-    if (
-        shouldOpen &&
-        body &&
-        body.children.length === 0
-    ) {
-
-        chatAddMessage(
-
-            "আসসালামু আলাইকুম! 👋\n" +
-            "আমি ভোল্ট, ElectroTechBD-এর AI Assistant। ⚡\n\n" +
-            "Electrical, Smart Home, Solar, Wiring, Budget অথবা Booking সম্পর্কে আপনার প্রশ্ন লিখুন।",
-
-            "bot"
-        );
-    }
-
-    if (shouldOpen) {
-
-        const input =
-            chatEl("chat-input");
-
-        if (input) {
-
-            setTimeout(
-                () => input.focus(),
-                100
+            addMessage(
+                "দুঃখিত, বর্তমানে কিছু সমস্যা হচ্ছে। পরে আবার চেষ্টা করুন।",
+                "bot"
             );
+
+        } finally {
+
+            sendButton.disabled = false;
+
+            input.focus();
         }
     }
-}
 
-function initChat() {
 
-    const launcher =
-        chatEl("chat-launcher");
-
-    const closeButton =
-        chatEl("chat-close");
-
-    const form =
-        chatEl("chat-form");
-
-    const input =
-        chatEl("chat-input");
-
-    const chipBox =
-        chatEl("chat-chips");
-
-    if (!launcher) {
-        return;
-    }
-
-    launcher.addEventListener(
+    sendButton.addEventListener(
         "click",
-        () => chatToggle()
+        sendMessage
     );
 
-    if (closeButton) {
 
-        closeButton.addEventListener(
-            "click",
-            () => chatToggle(true)
-        );
-    }
+    input.addEventListener(
+        "keydown",
+        event => {
 
-    if (form) {
-
-        form.addEventListener(
-            "submit",
-            event => {
+            if (
+                event.key === "Enter" &&
+                !event.shiftKey
+            ) {
 
                 event.preventDefault();
 
-                if (input) {
-
-                    chatSend(
-                        input.value
-                    );
-                }
-            }
-        );
-    }
-
-    if (input) {
-
-        input.addEventListener(
-            "keydown",
-            event => {
-
-                if (
-                    event.key === "Enter" &&
-                    !event.shiftKey
-                ) {
-
-                    event.preventDefault();
-
-                    chatSend(
-                        input.value
-                    );
-                }
-            }
-        );
-    }
-
-    document.addEventListener(
-        "keydown",
-        event => {
-
-            if (
-                event.key === "Escape"
-            ) {
-
-                chatToggle(true);
+                sendMessage();
             }
         }
     );
 
-    if (chipBox) {
 
-        chipBox.innerHTML = "";
+    if (toggleButton && chatbot) {
 
-        CHAT_CHIPS.forEach(label => {
+        toggleButton.addEventListener(
+            "click",
+            () => {
 
-            const chip =
-                document.createElement(
-                    "button"
+                chatbot.classList.toggle(
+                    "active"
                 );
+            }
+        );
+    }
+}
 
-            chip.type =
-                "button";
 
-            chip.className =
-                "chat-chip";
+/* =========================================
+   GLOBAL BUTTON HELPERS
+========================================= */
 
-            chip.innerText =
-                label;
+function setupApplianceButtons() {
 
-            chip.addEventListener(
+    document
+        .querySelectorAll(
+            "[data-appliance]"
+        )
+        .forEach(button => {
+
+            button.addEventListener(
                 "click",
                 () => {
 
-                    chatSend(
-                        label
-                    );
-                }
-            );
+                    const type =
+                        button.dataset.appliance;
 
-            chipBox.appendChild(
-                chip
+                    toggleAppliance(type);
+                }
             );
         });
-    }
 
-    const body =
-        chatEl("chat-body");
 
-    if (body) {
+    document
+        .querySelectorAll(
+            "[data-ac-increase]"
+        )
+        .forEach(button => {
 
-        body.addEventListener(
-            "click",
-            event => {
+            button.addEventListener(
+                "click",
+                increaseAC
+            );
+        });
 
-                const link =
-                    event.target.closest(
-                        ".chat-jump"
-                    );
 
-                if (!link) {
-                    return;
+    document
+        .querySelectorAll(
+            "[data-ac-decrease]"
+        )
+        .forEach(button => {
+
+            button.addEventListener(
+                "click",
+                decreaseAC
+            );
+        });
+}
+
+
+function setupSmoothScroll() {
+
+    document
+        .querySelectorAll(
+            'a[href^="#"]'
+        )
+        .forEach(link => {
+
+            link.addEventListener(
+                "click",
+                event => {
+
+                    const href =
+                        link.getAttribute("href");
+
+                    if (
+                        !href ||
+                        href === "#"
+                    ) {
+                        return;
+                    }
+
+                    const target =
+                        document.querySelector(
+                            href
+                        );
+
+                    if (!target) {
+                        return;
+                    }
+
+                    event.preventDefault();
+
+                    target.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start"
+                    });
                 }
-
-                setTimeout(
-                    () => chatToggle(true),
-                    200
-                );
-            }
-        );
-    }
+            );
+        });
 }
 
-function initModalOutsideClick() {
 
-    const modal =
-        document.getElementById(
-            "booking-modal"
-        );
-
-    if (!modal) {
-        return;
-    }
-
-    modal.addEventListener(
-        "click",
-        event => {
-
-            if (
-                event.target === modal
-            ) {
-
-                closeBookingModal();
-            }
-        }
-    );
-}
-
-function initModalEscape() {
-
-    document.addEventListener(
-        "keydown",
-        event => {
-
-            if (
-                event.key === "Escape"
-            ) {
-
-                const modal =
-                    document.getElementById(
-                        "booking-modal"
-                    );
-
-                if (
-                    modal &&
-                    modal.classList.contains(
-                        "active"
-                    )
-                ) {
-
-                    closeBookingModal();
-                }
-            }
-        }
-    );
-}
+/* =========================================
+   INITIALIZATION
+========================================= */
 
 document.addEventListener(
     "DOMContentLoaded",
-    function () {
+    () => {
 
-        console.log(
-            "⚡ ElectroTech System Online"
-        );
-
-        calculateBudget();
-
-        initFAQ();
-
-        initRevealAnimations();
-
-        initDateInput();
-
-        initDragAndDrop();
-
-        initChat();
-
-        initModalOutsideClick();
-
-        initModalEscape();
-
-        refreshClimate(true);
-
-        updateEnergyMeter();
-
-        const fileInput =
-            document.getElementById(
-                "blueprint-file"
-            );
-
-        if (fileInput) {
-
-            updateFileName(
-                fileInput
+        try {
+            setupMobileMenu();
+        } catch (error) {
+            console.error(
+                "Mobile menu initialization error:",
+                error
             );
         }
+
+
+        try {
+            setupRevealAnimations();
+        } catch (error) {
+            console.error(
+                "Reveal animation initialization error:",
+                error
+            );
+        }
+
+
+        try {
+            setupDragAndDrop();
+        } catch (error) {
+            console.error(
+                "Drag/drop initialization error:",
+                error
+            );
+        }
+
+
+        try {
+            setupForms();
+        } catch (error) {
+            console.error(
+                "Form initialization error:",
+                error
+            );
+        }
+
+
+        try {
+            setupNewsletter();
+        } catch (error) {
+            console.error(
+                "Newsletter initialization error:",
+                error
+            );
+        }
+
+
+        try {
+            setupFAQ();
+        } catch (error) {
+            console.error(
+                "FAQ initialization error:",
+                error
+            );
+        }
+
+
+        try {
+            setupVoiceAssistant();
+        } catch (error) {
+            console.error(
+                "Voice assistant initialization error:",
+                error
+            );
+        }
+
+
+        try {
+            setupChatbot();
+        } catch (error) {
+            console.error(
+                "Chatbot initialization error:",
+                error
+            );
+        }
+
+
+        try {
+            setupApplianceButtons();
+        } catch (error) {
+            console.error(
+                "Appliance button initialization error:",
+                error
+            );
+        }
+
+
+        try {
+            setupSmoothScroll();
+        } catch (error) {
+            console.error(
+                "Smooth scroll initialization error:",
+                error
+            );
+        }
+
+
+        try {
+            setMinimumDate();
+        } catch (error) {
+            console.error(
+                "Date initialization error:",
+                error
+            );
+        }
+
+
+        try {
+            updateClimateSensor();
+
+            setInterval(
+                updateClimateSensor,
+                30000
+            );
+        } catch (error) {
+            console.error(
+                "Climate sensor initialization error:",
+                error
+            );
+        }
+
+
+        try {
+            updateEnergyMeter();
+        } catch (error) {
+            console.error(
+                "Energy meter initialization error:",
+                error
+            );
+        }
+
+
+        console.log(
+            "ElectroTech JavaScript initialized successfully."
+        );
     }
 );
 
-(function () {
-    "use strict";
 
-    function syncVoltChatViewport() {
-        const chat = document.getElementById("chat-window");
-        if (!chat) return;
+/* =========================================
+   WINDOW EXPORTS
+   Keeps compatibility with inline HTML
+   onclick handlers.
+========================================= */
 
-        const isSmall = window.innerWidth <= 768;
-        if (!isSmall) {
-            chat.style.removeProperty("max-height");
-            chat.style.removeProperty("height");
-            return;
-        }
+window.toggleAppliance =
+    toggleAppliance;
 
-        const safeHeight = Math.max(
-            300,
-            window.visualViewport
-                ? window.visualViewport.height - 100
-                : window.innerHeight - 100
-        );
+window.increaseAC =
+    increaseAC;
 
-        chat.style.maxHeight = safeHeight + "px";
-        chat.style.height = Math.min(620, safeHeight) + "px";
-    }
+window.decreaseAC =
+    decreaseAC;
 
-    window.addEventListener("resize", syncVoltChatViewport, { passive: true });
-    if (window.visualViewport) {
-        window.visualViewport.addEventListener(
-            "resize",
-            syncVoltChatViewport,
-            { passive: true }
-        );
-    }
+window.updateEnergyMeter =
+    updateEnergyMeter;
 
-    if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", syncVoltChatViewport, { once: true });
-    } else {
-        syncVoltChatViewport();
-    }
-})();
+window.updateClimateSensor =
+    updateClimateSensor;
+
+window.triggerVoiceCommand =
+    triggerVoiceCommand;
+
+window.chatGetReply =
+    chatGetReply;
+
+window.submitBooking =
+    submitBooking;
+
+window.submitContactForm =
+    submitContactForm;
+
+window.submitEstimator =
+    submitEstimator;
