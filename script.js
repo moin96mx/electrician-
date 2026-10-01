@@ -25,11 +25,16 @@ function toggleAppliance(type) {
     if (type === "light") {
 
         if (state.light) {
+
             card.classList.add("active-light");
+
             status.innerHTML =
                 'স্ট্যাটাস: <span style="color:#ffd700;font-weight:bold;">অন (ON)</span>';
+
         } else {
+
             card.classList.remove("active-light");
+
             status.innerHTML =
                 'স্ট্যাটাস: <span>অফ (OFF)</span>';
         }
@@ -38,11 +43,16 @@ function toggleAppliance(type) {
     if (type === "fan") {
 
         if (state.fan) {
+
             card.classList.add("active-fan");
+
             status.innerHTML =
                 'স্ট্যাটাস: <span style="color:#00bfff;font-weight:bold;">রানিং (100%)</span>';
+
         } else {
+
             card.classList.remove("active-fan");
+
             status.innerHTML =
                 'স্ট্যাটাস: <span>অফ (OFF)</span>';
         }
@@ -51,11 +61,16 @@ function toggleAppliance(type) {
     if (type === "sensor") {
 
         if (state.sensor) {
+
             card.classList.add("active-sensor");
+
             status.innerHTML =
                 'স্ট্যাটাস: <span style="color:#ff0055;font-weight:bold;">MOTION DETECTED!</span>';
+
         } else {
+
             card.classList.remove("active-sensor");
+
             status.innerHTML =
                 'স্ট্যাটাস: <span>নিষ্ক্রিয় (IDLE)</span>';
         }
@@ -64,11 +79,16 @@ function toggleAppliance(type) {
     if (type === "ac") {
 
         if (state.ac) {
+
             card.classList.add("active-ac");
+
             status.innerHTML =
                 `স্ট্যাটাস: <span style="color:#38bdf8;font-weight:bold;">কুলিং (${acTemp}°C)</span>`;
+
         } else {
+
             card.classList.remove("active-ac");
+
             status.innerHTML =
                 'স্ট্যাটাস: <span>অফ (OFF)</span>';
         }
@@ -162,7 +182,7 @@ function acWattsForTemp(temp) {
 const ELEC_RATE_TAKA = 7.5; // আনুমানিক গড় ইউনিট প্রতি রেট (৳/kWh)
 
 const usageWithoutAutomation = { light: 8, fan: 10, ac: 10 }; // ঘণ্টা/দিন — ম্যানুয়াল ব্যবহার (ভুলে চালু থাকা সহ)
-const usageWithAutomation = { light: 5, fan: 6, ac: 6 }; // ঘণ্টা/দিন — ElectroTech স্মার্ট অটোমেশন সহ (motion/timer/occupancy ভিত্তিক)
+const usageWithAutomation = { light: 5, fan: 6, ac: 6 };      // ঘণ্টা/দিন — ElectroTech স্মার্ট অটোমেশন সহ (motion/timer/occupancy ভিত্তিক)
 
 function calcMonthlySavings() {
 
@@ -447,16 +467,19 @@ function calculateBudget() {
         document.getElementById("total-price");
 
     if (materialElement) {
+
         materialElement.innerText =
             `৳ ${Math.round(materialCost).toLocaleString()}`;
     }
 
     if (laborElement) {
+
         laborElement.innerText =
             `৳ ${Math.round(laborCost).toLocaleString()}`;
     }
 
     if (totalElement) {
+
         totalElement.innerText =
             `৳ ${totalBudget.toLocaleString()}`;
     }
@@ -475,7 +498,7 @@ function triggerConsultation() {
     const message =
         `আপনার নির্বাচিত আনুমানিক বাজেট: ${price}
 
-আমাদের টিম আপনার সাথে যোগাযোগ করবে এবং প্রয়োজন অনুযায়ী প্রধান ইলেকট্রিশিয়ানের পরামর্শ দেবে।`;
+আমাদের টিম আপনার সাথে যোগাযোগ করবে এবং প্রয়োজন অনুযায়ী প্রধান ইলেকট্রিশিয়ানের পরামর্শ দেবে।`;
 
     alert(message);
 
@@ -599,7 +622,7 @@ function updateFileName(input) {
 
         display.innerHTML =
             `<i class="fa-solid fa-file-circle-check"></i>
-             ফাইল যুক্ত হয়েছে:
+             ফাইল যুক্ত হয়েছে:
              <strong>${escapeHTML(fileName)}</strong>`;
 
         display.style.color =
@@ -668,7 +691,7 @@ function handleBookingSubmit(event) {
         event.preventDefault();
 
         alert(
-            "দয়া করে প্রয়োজনীয় সব তথ্য পূরণ করুন।"
+            "দয়া করে প্রয়োজনীয় সব তথ্য পূরণ করুন।"
         );
 
         return;
@@ -762,7 +785,6 @@ function handleBookingSubmit(event) {
     }).catch(error => {
         console.warn('Backend booking save failed:', error);
     });
-
     const modal =
         document.getElementById("booking-modal");
 
@@ -794,6 +816,7 @@ function closeBookingModal() {
         document.getElementById("consultation-form");
 
     if (form) {
+
         form.reset();
     }
 
@@ -801,6 +824,7 @@ function closeBookingModal() {
         document.getElementById("blueprint-file");
 
     if (fileInput) {
+
         updateFileName(fileInput);
     }
 }
@@ -858,7 +882,6 @@ function handleNewsletterSubmit(event) {
     }).catch(error => {
         console.warn('Backend contact save failed:', error);
     });
-
     setTimeout(() => {
 
         if (contactElement) {
@@ -866,17 +889,17 @@ function handleNewsletterSubmit(event) {
         }
 
         alert(
-`ধন্যবাদ! ElectroTech-এর সঙ্গে যোগাযোগ করার জন্য।
+    `ধন্যবাদ! ElectroTech-এর সঙ্গে যোগাযোগ করার জন্য।
 
-আপনার প্রয়োজন ও তথ্য পর্যালোচনা করে আমাদের টিম প্রয়োজন অনুযায়ী আপনার সঙ্গে যোগাযোগ করবে।
+    আপনার প্রয়োজন ও তথ্য পর্যালোচনা করে আমাদের টিম প্রয়োজন অনুযায়ী আপনার সঙ্গে যোগাযোগ করবে।
 
-আপনি যদি আমাদের সঙ্গে কাজ করতে আগ্রহী হন, তাহলে উপরের Blueprint Form-টি সম্পূর্ণ করুন। আমাদের অভিজ্ঞ টিম আপনার তথ্য পর্যালোচনা করে পরবর্তী পদক্ষেপের জন্য আপনার সঙ্গে যোগাযোগ করবে।
+    আপনি যদি আমাদের সঙ্গে কাজ করতে আগ্রহী হন, তাহলে উপরের Blueprint Form-টি সম্পূর্ণ করুন। আমাদের অভিজ্ঞ টিম আপনার তথ্য পর্যালোচনা করে পরবর্তী পদক্ষেপের জন্য আপনার সঙ্গে যোগাযোগ করবে।
 
-আপনার আস্থা ও সহযোগিতার জন্য ধন্যবাদ।
+    আপনার আস্থা ও সহযোগিতার জন্য ধন্যবাদ।
 
-ElectroTechBD ⚡
-Engineering & Smart Automation`
-        );
+    ElectroTechBD ⚡
+    Engineering & Smart Automation`
+    );
 
     }, 400);
 }
@@ -922,6 +945,7 @@ function initFAQ() {
                                 );
 
                             if (otherAnswer) {
+
                                 otherAnswer.style.maxHeight =
                                     null;
                             }
@@ -939,6 +963,7 @@ function initFAQ() {
                 ) {
 
                     if (answer) {
+
                         answer.style.maxHeight =
                             answer.scrollHeight +
                             "px";
@@ -947,6 +972,7 @@ function initFAQ() {
                 } else {
 
                     if (answer) {
+
                         answer.style.maxHeight =
                             null;
                     }
@@ -1033,6 +1059,7 @@ function initRevealAnimations() {
     ) {
 
         items.forEach(item => {
+
             item.classList.add(
                 "visible"
             );
@@ -1068,6 +1095,7 @@ function initRevealAnimations() {
         );
 
     items.forEach(item => {
+
         observer.observe(item);
     });
 }
@@ -1235,7 +1263,7 @@ const CHAT_KB = [
         ],
 
         reply:
-            "খরচ নির্ভর করে কাজের ধরন, জায়গার আয়তন, রুম সংখ্যা এবং নির্বাচিত গ্রেডের উপর।\n\n" +
+            "খরচ নির্ভর করে কাজের ধরন, জায়গার আয়তন, রুম সংখ্যা এবং নির্বাচিত গ্রেডের উপর।\n\n" +
             "• Standard Wiring: ৳২৫ / Sq.Ft\n" +
             "• Smart IoT: ৳৪৫ / Sq.Ft\n" +
             "• Solar Add-on: আনুমানিক ৳৩৫ / Sq.Ft\n\n" +
@@ -1272,7 +1300,7 @@ const CHAT_KB = [
         ],
 
         reply:
-            "বুকিং করতে আমাদের Booking Section-এ গিয়ে নাম, ফোন নম্বর, সার্ভিস এবং পছন্দের তারিখ দিন। চাইলে Blueprint বা Wiring Drawing-ও upload করতে পারবেন। 👉 #booking"
+            "বুকিং করতে আমাদের Booking Section-এ গিয়ে নাম, ফোন নম্বর, সার্ভিস এবং পছন্দের তারিখ দিন। চাইলে Blueprint বা Wiring Drawing-ও upload করতে পারবেন। 👉 #booking"
     },
 
     {
@@ -1285,14 +1313,12 @@ const CHAT_KB = [
             "map",
             "location",
             "address",
-            "direction",
-            "thikana kothay",
-            "office location"
+            "direction"
         ],
 
         reply:
-            "ElectroTech-এর contact section-এ অফিসের location এবং Google Map দেওয়া আছে। 👉 #contact\n\n" +
-            "বর্তমান location Dhaka, Bangladesh."
+            "ElectroTech-এর contact section-এ অফিসের location এবং Google Map দেওয়া আছে। 👉 #contact\n\n" +
+            "বর্তমান ওয়েবসাইটে location হিসেবে Dhaka, Bangladesh দেখানো হয়েছে।"
     },
 
     {
@@ -1305,11 +1331,7 @@ const CHAT_KB = [
             "phone",
             "call",
             "whatsapp",
-            "হোয়াটসঅ্যাপ",
-            "jogajog korbo kivabey",
-            "jogajog kortey chai",
-            "kotha boltey chai",
-            "theam ayr sathey kota boltey chai"
+            "হোয়াটসঅ্যাপ"
         ],
 
         reply:
@@ -1327,15 +1349,11 @@ const CHAT_KB = [
             "smart",
             "automation",
             "সেন্সর",
-            "অ্যাপ",
-            "esp32 ki",
-            "iot ki",
-            "otometion ki",
-            "automation ki"
+            "অ্যাপ"
         ],
 
         reply:
-            "Smart Home Automation-এ ESP32 ও IoT ব্যবহার করে লাইট, ফ্যান এবং বিভিন্ন sensor-based system নিয়ন্ত্রণ করা যায়। মোবাইল App/Web বা voice control-এর মতো system ব্যবহার করা যেতে পারে।\n\n" +
+            "Smart Home Automation-এ ESP32 ও IoT ব্যবহার করে লাইট, ফ্যান এবং বিভিন্ন sensor-based system নিয়ন্ত্রণ করা যায়। মোবাইল App/Web বা voice control-এর মতো system ব্যবহার করা যেতে পারে।\n\n" +
             "আমাদের simulator দেখতে 👉 #simulator"
     },
 
@@ -1343,13 +1361,11 @@ const CHAT_KB = [
         keys: [
             "লাইট",
             "light",
-            "বাতি",
-            "lite",
-            "lait"
+            "বাতি"
         ],
 
         reply:
-            "Smart Light automation-এর মাধ্যমে লাইটকে automated বা remote-controlled করা যায়। আমাদের Live Simulator-এ একটি demo দেখতে পারবেন 👉 #simulator"
+            "Smart Light automation-এর মাধ্যমে লাইটকে automated বা remote-controlled করা যায়। আমাদের Live Simulator-এ একটি demo দেখতে পারবেন 👉 #simulator"
     },
 
     {
@@ -1359,7 +1375,7 @@ const CHAT_KB = [
         ],
 
         reply:
-            "Smart Home system-এর মাধ্যমে fan control automation করা যায়। ElectroTech-এর simulator-এ fan control-এর একটি demo আছে 👉 #simulator"
+            "Smart Home system-এর মাধ্যমে fan control automation করা যায়। ElectroTech-এর simulator-এ fan control-এর একটি demo আছে 👉 #simulator"
     },
 
     {
@@ -1369,9 +1385,7 @@ const CHAT_KB = [
             "ওয়্যারিং",
             "wiring",
             "rewiring",
-            "দেয়াল",
-            "old wiring",
-            "porano work"
+            "দেয়াল"
         ],
 
         reply:
@@ -1385,14 +1399,11 @@ const CHAT_KB = [
             "সৌর",
             "বিদ্যুৎ বিল",
             "ব্যাকআপ",
-            "ips",
-            "soler sistam",
-            "soler sistam kortey chai",
-            "soler kortey chai"
+            "ips"
         ],
 
         reply:
-            "ElectroTech-এর estimator-এ Solar System option আছে। Solar select করলে আনুমানিক Solar Add-on cost মোট বাজেটে যোগ হয় 👉 #estimator"
+            "ElectroTech-এর estimator-এ Solar System option আছে। Solar select করলে আনুমানিক Solar Add-on cost মোট বাজেটে যোগ হয় 👉 #estimator"
     },
 
     {
@@ -1405,15 +1416,11 @@ const CHAT_KB = [
             "owner",
             "সাইদুজ্জামান",
             "কে চালায়",
-            "কোম্পানির",
-            "companir malik ke",
-            "malik key",
-            "owner key",
-            "founder key"
+            "কোম্পানির"
         ],
 
         reply:
-            "ElectroTechBD Engineering & Automation-এর প্রতিষ্ঠাতা এইচ. এম. মো. সাইদুজ্জামান। বিস্তারিত দেখতে 👉 #team"
+            "ElectroTech Engineering & Automation-এর website information অনুযায়ী এইচ. এম. মো. সাইদুজ্জামান প্রতিষ্ঠাতা ও প্রধান নির্বাহী হিসেবে উল্লেখ আছেন। বিস্তারিত দেখতে 👉 #team"
     },
 
     {
@@ -1434,17 +1441,11 @@ const CHAT_KB = [
             "লাইসেন্স",
             "license",
             "permit",
-            "অনুমোদন",
-            "onomodon",
-            "parmit",
-            "permition asy",
-            "permision"
+            "অনুমোদন"
         ],
 
         reply:
-            "⚡ Yes\n\n" +
-            "বাংলাদেশ সরকারের অনুমোদিত যোগ্যতাসম্পন্ন ইঞ্জিনিয়ার ও ইলেকট্রিশিয়ান।\n" +
-            "ElectroTechBD-এর License/Permit: E20230043144"
+            "ElectroTech website-এ Chief Electrician-এর জন্য Permit: E20230043144 উল্লেখ করা হয়েছে। লাইসেন্স/permit সম্পর্কিত সিদ্ধান্তের ক্ষেত্রে official verification করা সবচেয়ে ভালো।"
     },
 
     {
@@ -1459,8 +1460,8 @@ const CHAT_KB = [
         ],
 
         reply:
-            "Electrical কাজের ক্ষেত্রে safety সবচেয়ে গুরুত্বপূর্ণ। Live circuit-এ কাজ করার আগে power isolate করা এবং প্রয়োজন অনুযায়ী qualified/licensed electrician-এর সাহায্য নেওয়া উচিত।\n\n" +
-            "⚠️ বিদ্যুৎস্পৃষ্ট হওয়ার ঝুঁকি থাকলে নিজে পরীক্ষা না করে professional help নিন।"
+            "Electrical কাজের ক্ষেত্রে safety সবচেয়ে গুরুত্বপূর্ণ। Live circuit-এ কাজ করার আগে power isolate করা এবং প্রয়োজন অনুযায়ী qualified/licensed electrician-এর সাহায্য নেওয়া উচিত।\n\n" +
+            "⚠️ বিদ্যুৎস্পৃষ্ট হওয়ার ঝুঁকি থাকলে নিজে পরীক্ষা না করে professional help নিন।"
     },
 
     {
@@ -1484,15 +1485,11 @@ const CHAT_KB = [
             "কবে",
             "how long",
             "duration",
-            "time",
-            "kajeyr somoy koto",
-            "kaj kor tey koto din lage",
-            "work time",
-            "working time"
+            "time"
         ],
 
         reply:
-            "কাজের সময় project-এর size, wiring condition এবং service type-এর উপর নির্ভর করে। ছোট automation project তুলনামূলকভাবে দ্রুত শেষ হতে পারে; বড় wiring বা industrial project-এর জন্য site assessment প্রয়োজন।"
+            "কাজের সময় project-এর size, wiring condition এবং service type-এর উপর নির্ভর করে। ছোট automation project তুলনামূলকভাবে দ্রুত শেষ হতে পারে; বড় wiring বা industrial project-এর জন্য site assessment প্রয়োজন।"
     },
 
     {
@@ -1504,12 +1501,7 @@ const CHAT_KB = [
             "hello",
             "hi",
             "hey",
-            "কেমন আছ",
-            "kemon aso",
-            "tomi ke",
-            "who are you",
-            "how are you",
-            "asalamualaikum"
+            "কেমন আছ"
         ],
 
         reply:
@@ -1523,14 +1515,11 @@ const CHAT_KB = [
             "ধন্যবাদ",
             "thanks",
             "thank you",
-            "thnx",
-            "dhonnobad",
-            "donobad",
-            "thans"
+            "thnx"
         ],
 
         reply:
-            "আপনাকেও ধন্যবাদ! ⚡ ইলেকট্রিক্যাল কাজ সম্পর্কে আপনার আরও কোনো প্রশ্ন থাকলে, নির্দ্বিধায় জানাতে পারেন।"
+            "আপনাকেও ধন্যবাদ! ⚡ আরও কোনো প্রশ্ন থাকলে জিজ্ঞাসা করুন।"
     }
 ];
 
@@ -1552,13 +1541,15 @@ const CHAT_CHIPS = [
 
     "বুকিং করব",
 
-    // "অফিস কোথায়?",
+    "অফিস কোথায়?",
+
     "Electrical Safety সম্পর্কে বলুন"
 ];
 
 const chatHistory = [];
 
 function chatEl(id) {
+
     return document.getElementById(id);
 }
 
@@ -1604,9 +1595,12 @@ function chatAddMessage(text, who) {
         `chat-msg ${who}`;
 
     if (who === "bot") {
+
         bubble.innerHTML =
             chatLinkify(text);
+
     } else {
+
         bubble.textContent =
             text;
     }
@@ -1670,14 +1664,17 @@ function chatLocalAnswer(message) {
                 key.toLowerCase();
 
             if (text.includes(keyword)) {
+
                 score +=
                     keyword.length * 2;
             }
         });
 
         if (score > bestScore) {
+
             bestScore =
                 score;
+
             best =
                 item;
         }
@@ -1691,6 +1688,7 @@ function chatLocalAnswer(message) {
 async function chatGetReply(message) {
 
     if (!CHAT_CONFIG.apiUrl) {
+
         return chatLocalAnswer(
             message
         );
@@ -1725,6 +1723,7 @@ async function chatGetReply(message) {
             );
 
         if (!response.ok) {
+
             throw new Error(
                 `HTTP ${response.status}`
             );
@@ -1738,6 +1737,7 @@ async function chatGetReply(message) {
             typeof data.reply === "string" &&
             data.reply.trim()
         ) {
+
             return data.reply.trim();
         }
 
@@ -1763,7 +1763,7 @@ async function chatGetReply(message) {
 
             return (
                 localReply +
-                "\n\n⚠️ AI server বর্তমানে unavailable, তাই local ElectroTech information থেকে উত্তর দেওয়া হয়েছে।"
+                "\n\n⚠️ AI server বর্তমানে unavailable, তাই local ElectroTech information থেকে উত্তর দেওয়া হয়েছে।"
             );
         }
 
@@ -1907,7 +1907,7 @@ function chatToggle(forceClose = false) {
         chatAddMessage(
 
             "আসসালামু আলাইকুম! 👋\n" +
-            "আমি ভোল্ট, ElectroTechBD-এর AI Assistant। ⚡\n\n" +
+            "আমি ভোল্ট — ElectroTech-এর AI Assistant। ⚡\n\n" +
             "Electrical, Smart Home, Solar, Wiring, Budget অথবা Booking সম্পর্কে আপনার প্রশ্ন লিখুন।",
 
             "bot"
@@ -1920,6 +1920,7 @@ function chatToggle(forceClose = false) {
             chatEl("chat-input");
 
         if (input) {
+
             setTimeout(
                 () => input.focus(),
                 100
@@ -1955,6 +1956,7 @@ function initChat() {
     );
 
     if (closeButton) {
+
         closeButton.addEventListener(
             "click",
             () => chatToggle(true)
@@ -1970,6 +1972,7 @@ function initChat() {
                 event.preventDefault();
 
                 if (input) {
+
                     chatSend(
                         input.value
                     );
@@ -2006,6 +2009,7 @@ function initChat() {
             if (
                 event.key === "Escape"
             ) {
+
                 chatToggle(true);
             }
         }
@@ -2034,6 +2038,7 @@ function initChat() {
             chip.addEventListener(
                 "click",
                 () => {
+
                     chatSend(
                         label
                     );
@@ -2091,6 +2096,7 @@ function initModalOutsideClick() {
             if (
                 event.target === modal
             ) {
+
                 closeBookingModal();
             }
         }
@@ -2118,6 +2124,7 @@ function initModalEscape() {
                         "active"
                     )
                 ) {
+
                     closeBookingModal();
                 }
             }
@@ -2159,6 +2166,7 @@ document.addEventListener(
             );
 
         if (fileInput) {
+
             updateFileName(
                 fileInput
             );
