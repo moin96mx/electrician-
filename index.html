@@ -2595,21 +2595,122 @@
       if (window.innerWidth > 900) closeNav();
     });
   }
+
+  const featureScriptPromises = new Map();
+
+  function loadFeatureScript(src) {
+    if (featureScriptPromises.has(src)) {
+      return featureScriptPromises.get(src);
+    }
+
+    const script = document.createElement('script');
+    script.src = src;
+    script.async = true;
+
+    const promise = new Promise((resolve, reject) => {
+      script.addEventListener('load', resolve, { once: true });
+      script.addEventListener('error', () => {
+        featureScriptPromises.delete(src);
+        script.remove();
+        reject(new Error(`Could not load ${src}`));
+      }, { once: true });
+    });
+
+    featureScriptPromises.set(src, promise);
+    document.body.appendChild(script);
+    return promise;
+  }
+
+  const chatFeatureScripts = [
+    'electrotech-ai.js',
+    'electrotech-pro-pack.js',
+    'electrotech-engine-3.js',
+    'electrotech-ultimate.js',
+    'electrotech-smart-system.js',
+    'electrotech-master-router.js'
+  ];
+  let chatFeaturePromise;
+
+  function loadChatFeatures() {
+    if (!chatFeaturePromise) {
+      chatFeaturePromise = (async () => {
+        for (const src of chatFeatureScripts) {
+          await loadFeatureScript(src);
+        }
+      })().catch(error => {
+        chatFeaturePromise = null;
+        console.error('Chat calculator features failed to load:', error);
+        alert('চ্যাটের অতিরিক্ত ক্যালকুলেটর লোড করা যায়নি। ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।');
+      });
+    }
+
+    return chatFeaturePromise;
+  }
+
+  async function openLoadCalculator() {
+    closeNav();
+
+    try {
+      await Promise.all([
+        loadFeatureScript('electrotech-load-form.js'),
+        loadFeatureScript('electrotech-report.js'),
+        loadFeatureScript('electrotech-history.js')
+      ]);
+
+      if (!window.ElectroTechLoadForm) {
+        throw new Error('Load calculator did not initialize');
+      }
+
+      window.ElectroTechLoadForm.open();
+    } catch (error) {
+      console.error('Load calculator failed to load:', error);
+      alert('ক্যালকুলেটর লোড করা যায়নি। ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।');
+    }
+  }
+
+  async function openCalculationHistory() {
+    closeNav();
+
+    try {
+      await loadFeatureScript('electrotech-history.js');
+
+      if (!window.ElectroTechHistory) {
+        throw new Error('Calculation history did not initialize');
+      }
+
+      window.ElectroTechHistory.open();
+    } catch (error) {
+      console.error('Calculation history failed to load:', error);
+      alert('হিসাবের ইতিহাস লোড করা যায়নি। ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।');
+    }
+  }
+
+  document
+    .getElementById('navbar-load-calculator')
+    ?.addEventListener('click', openLoadCalculator);
+
+  document
+    .getElementById('eth-open-history-nav')
+    ?.addEventListener('click', openCalculationHistory);
+
+  document
+    .getElementById('chat-launcher')
+    ?.addEventListener('click', loadChatFeatures);
+
+  document.addEventListener('DOMContentLoaded', () => {
+    if (typeof window.chatSend !== 'function') {
+      return;
+    }
+
+    const sendChatMessage = window.chatSend;
+    window.chatSend = function (message) {
+      return loadChatFeatures().then(() => sendChatMessage(message));
+    };
+  });
 </script>
 
     <iframe name="formsubmit-hidden-frame" style="display:none;" title="form-response"></iframe>
 
     <script src="script.js" defer></script>
-    <script src="electrotech-ai.js" defer></script>
-    <script src="electrotech-pro-pack.js" defer></script>
-    <script src="electrotech-engine-3.js" defer></script>
-    <script src="electrotech-ultimate.js" defer></script>
-    <script src="electrotech-smart-system.js" defer></script>
-
-    <script src="electrotech-master-router.js" defer></script>
-    <script src="electrotech-load-form.js" defer></script>
-    <script src="electrotech-report.js" defer></script>
-    <script src="electrotech-history.js" defer></script>
-
 </body>
 </html>
