@@ -3033,6 +3033,26 @@ section {
 
 .chat-msg a { color: inherit; font-weight: 700; }
 
+.chat-msg.bot .volt-result-card h3 {
+    margin: 0 0 8px;
+    color: var(--accent-cyan);
+    font-size: 1.05em;
+}
+
+.chat-msg.bot .volt-result-card p,
+.chat-msg.bot .volt-result-card ul {
+    margin: 7px 0;
+}
+
+.chat-msg.bot .volt-result-card ul {
+    padding-left: 20px;
+}
+
+.chat-msg.bot .volt-result-card small {
+    display: block;
+    margin-top: 10px;
+}
+
 .chat-typing { display: flex; gap: 5px; align-items: center; }
 
 .chat-typing span {

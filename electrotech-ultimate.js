@@ -236,39 +236,55 @@ Real Power = ${fmt(P / 1000)} kW`
   }
 
   function energyBill(text) {
-    if (
-      !text.includes("bill") &&
-      !text.includes("unit") &&
-      !text.includes("energy") &&
-      !text.includes("বিল") &&
-      !text.includes("ইউনিট")
-    ) {
-      return null;
-    }
+    const powerMatch = text.match(
+      /(\d+(?:\.\d+)?)\s*(kw(?!h)|kilowatts?|watt|watts|w|কিলোওয়াট|ওয়াট)(?![\p{L}\p{N}])/iu
+    );
+    const hoursMatch = text.match(
+      /(\d+(?:\.\d+)?)\s*(?:hours?|h\b|ঘণ্টা|ঘন্টা)/i
+    );
 
-    const n = parseNumbers(text);
-    if (n.length < 2) return null;
+    const asksForEnergy =
+      text.includes("bill") ||
+      text.includes("unit") ||
+      text.includes("energy") ||
+      text.includes("বিল") ||
+      text.includes("ইউনিট") ||
+      Boolean(powerMatch && hoursMatch);
 
-    const powerKW = n[0] / 1000;
-    const hours = n[1];
-    const days = n[2] || 30;
-    const rate = n[3] || 12;
+    if (!asksForEnergy || !powerMatch || !hoursMatch) return null;
+
+    const powerValue = Number(powerMatch[1]);
+    const powerUnit = powerMatch[2].toLowerCase();
+    const powerKW = /^(?:kw|kilowatt|kilowatts|কিলোওয়াট)$/.test(powerUnit)
+      ? powerValue
+      : powerValue / 1000;
+    const hours = Number(hoursMatch[1]);
+    const daysMatch = text.match(
+      /(\d+(?:\.\d+)?)\s*(?:days?|দিন)/i
+    );
+    const monthlyRequest =
+      /monthly|per month|মাসে|মাসিক/.test(text);
+    const days = daysMatch
+      ? Number(daysMatch[1])
+      : monthlyRequest ? 30 : 1;
+    const rateMatch = text.match(
+      /(?:rate|tariff|রেট|প্রতি ইউনিট)\s*(?:is|=|হল|ঃ|:)?\s*(\d+(?:\.\d+)?)/i
+    );
+    const rate = rateMatch ? Number(rateMatch[1]) : null;
 
     const daily = powerKW * hours;
-    const monthly = daily * days;
-    const cost = monthly * rate;
+    const energy = daily * days;
 
     return answer(
       "Energy ও Electricity Bill",
-      `Load = ${fmt(n[0])} W
+      `Load = ${fmt(powerKW)} kW
 Daily Runtime = ${fmt(hours)} hour
-Days = ${fmt(days)}
-Unit Rate = ${fmt(rate)} টাকা
+${days > 1 ? `Days = ${fmt(days)}` : ""}
 
 Daily Energy = ${fmt(daily)} kWh
-Monthly Energy = ${fmt(monthly)} ইউনিট
+${days > 1 ? `Energy for ${fmt(days)} days = ${fmt(energy)} ইউনিট` : ""}
 
-Estimated Bill = ${fmt(cost)} টাকা
+${rate !== null ? `Estimated Bill = ${fmt(energy * rate)} টাকা at ${fmt(rate)} টাকা/unit` : ""}
 
 নোট: এখানে fixed charge, demand charge, VAT, slab tariff বা surcharge ধরা হয়নি।`
     );
@@ -943,11 +959,7 @@ Nearest Common Rating ≈ ${fmt(selected)} A
   }
 
   function kvaKwKvar(text) {
-    if (
-      !text.includes("kva") &&
-      !text.includes("kw") &&
-      !text.includes("kvar")
-    ) {
+    if (!/(?:kva|কেভিএ)(?![\p{L}\p{N}])/iu.test(text)) {
       return null;
     }
 

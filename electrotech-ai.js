@@ -69,9 +69,9 @@ ElectroTechBD | ভোল্ট Electrical Assistant
 
   function extractPower(text) {
     return numberAfter(text, [
-      /(\d+(?:\.\d+)?)\s*(?:kw|কিলোওয়াট)/i,
+      /(\d+(?:\.\d+)?)\s*(?:kw(?!h)|কিলোওয়াট)(?![\p{L}\p{N}])/iu,
       /(?:power|load|লোড|পাওয়ার)\s*(?:is|=|হল|ঃ|:)?\s*(\d+(?:\.\d+)?)/i,
-      /(\d+(?:\.\d+)?)\s*(?:w|ওয়াট)/i
+      /(\d+(?:\.\d+)?)\s*(?:watts?|w|ওয়াট)(?![\p{L}\p{N}])/iu
     ]);
   }
 
@@ -316,11 +316,14 @@ ${safety()}`;
 
     if (power === null || hours === null) return null;
 
-    const energy = power * hours;
+    const powerKW = /(?:^|[^a-z])(?:kw|kilowatt)(?![a-z])|কিলোওয়াট/i.test(text)
+      ? power
+      : power / 1000;
+    const energy = powerKW * hours;
 
     return `${header("Energy Consumption Calculation")}
 
-• Load: ${fmt(power)} kW
+• Load: ${fmt(powerKW)} kW
 • Running Time: ${fmt(hours)} ঘণ্টা
 
 Formula:

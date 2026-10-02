@@ -36,7 +36,7 @@
   };
 
   const P = t => N(t, [
-    /(\d+(?:\.\d+)?)\s*(?:kw|কিলোওয়াট)/i,
+    /(\d+(?:\.\d+)?)\s*(?:kw(?!h)|কিলোওয়াট)(?![\p{L}\p{N}])/iu,
     /(?:load|power|লোড|পাওয়ার)\s*(?:is|=|হল|ঃ|:)?\s*(\d+(?:\.\d+)?)/i
   ]);
 
@@ -213,7 +213,13 @@ ${WARN()}`;
   }
 
   function energy(t) {
-    const p = P(t);
+    const powerMatch = t.match(
+      /(\d+(?:\.\d+)?)\s*(kw(?!h)|kilowatts?|watts?|w|কিলোওয়াট|ওয়াট)(?![\p{L}\p{N}])/iu
+    );
+    const p = powerMatch
+      ? Number(powerMatch[1]) *
+        (/^(?:kw|kilowatt|kilowatts|কিলোওয়াট)$/i.test(powerMatch[2]) ? 1 : 0.001)
+      : P(t);
     const h = N(t, [
       /(\d+(?:\.\d+)?)\s*(?:hour|hours|ঘণ্টা|ঘন্টা)/i
     ]);

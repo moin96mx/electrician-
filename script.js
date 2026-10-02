@@ -1547,6 +1547,7 @@ const CHAT_CHIPS = [
 ];
 
 const chatHistory = [];
+let chatReplyQueue = Promise.resolve();
 
 function chatEl(id) {
 
@@ -1560,6 +1561,12 @@ function chatLinkify(text) {
 
     safeText =
         safeText.replace(
+            /\*\*(.+?)\*\*/g,
+            "<strong>$1</strong>"
+        );
+
+    safeText =
+        safeText.replace(
             /#(estimator|pricing|booking|contact|simulator|team|projects|chief-electrician)/gi,
             '<a href="#$1" class="chat-jump">#$1</a>'
         );
@@ -1567,7 +1574,8 @@ function chatLinkify(text) {
     safeText =
         safeText.replace(
             /(\+880[\s-]?1[3-9]\d{8})/g,
-            '<a href="tel:$1">$1</a>'
+            (phone) =>
+                `<a href="tel:${phone.replace(/[^\d+]/g, "")}">${phone}</a>`
         );
 
     safeText =
@@ -1579,7 +1587,103 @@ function chatLinkify(text) {
     return safeText;
 }
 
-function chatAddMessage(text, who) {
+function chatSanitizeAnswer(value) {
+    const template = document.createElement("template");
+    template.innerHTML = String(value ?? "");
+
+    const fragment = document.createDocumentFragment();
+    const allowedTags = new Set([
+        "a", "b", "blockquote", "br", "code", "div", "em",
+        "h3", "h4", "hr", "i", "li", "ol", "p", "pre",
+        "small", "span", "strong", "sub", "sup", "ul"
+    ]);
+    const blockedTags = new Set([
+        "audio", "button", "embed", "form", "iframe", "img",
+        "input", "link", "math", "meta", "object", "script",
+        "style", "svg", "template", "video"
+    ]);
+    const allowedHashTargets = new Set([
+        "estimator", "pricing", "booking", "contact", "simulator",
+        "team", "projects", "chief-electrician"
+    ]);
+
+    function appendText(text, parent, insideLink) {
+        if (insideLink) {
+            parent.appendChild(document.createTextNode(text));
+            return;
+        }
+
+        const linkedText = document.createElement("template");
+        linkedText.innerHTML = chatLinkify(text);
+        parent.appendChild(linkedText.content);
+    }
+
+    function copyNode(node, parent, insideLink = false) {
+        if (node.nodeType === Node.TEXT_NODE) {
+            appendText(node.nodeValue, parent, insideLink);
+            return;
+        }
+
+        if (node.nodeType !== Node.ELEMENT_NODE) {
+            return;
+        }
+
+        const tagName = node.tagName.toLowerCase();
+
+        if (blockedTags.has(tagName)) {
+            return;
+        }
+
+        if (!allowedTags.has(tagName)) {
+            node.childNodes.forEach(child =>
+                copyNode(child, parent, insideLink)
+            );
+            return;
+        }
+
+        const safeElement = document.createElement(tagName);
+
+        if (tagName === "div" && node.classList.contains("volt-result-card")) {
+            safeElement.className = "volt-result-card";
+        }
+
+        if (tagName === "a") {
+            const href = node.getAttribute("href") || "";
+
+            if (href.startsWith("#") && allowedHashTargets.has(href.slice(1))) {
+                safeElement.setAttribute("href", href);
+                safeElement.className = "chat-jump";
+            } else if (/^tel:\+?[\d\s()-]{8,24}$/i.test(href)) {
+                safeElement.setAttribute("href", `tel:${href.slice(4).replace(/[^\d+]/g, "")}`);
+            } else if (/^https:\/\/[^\s]+$/i.test(href)) {
+                safeElement.setAttribute("href", href);
+                safeElement.setAttribute("target", "_blank");
+                safeElement.setAttribute("rel", "noopener noreferrer");
+            }
+
+            if (!safeElement.hasAttribute("href")) {
+                node.childNodes.forEach(child =>
+                    copyNode(child, parent, insideLink)
+                );
+                return;
+            }
+        }
+
+        node.childNodes.forEach(child =>
+            copyNode(child, safeElement, insideLink || tagName === "a")
+        );
+
+        parent.appendChild(safeElement);
+    }
+
+    template.content.childNodes.forEach(node =>
+        copyNode(node, fragment)
+    );
+
+    return fragment;
+}
+
+function chatAddMessage(text, who, before = null) {
 
     const body =
         chatEl("chat-body");
@@ -1596,8 +1700,9 @@ function chatAddMessage(text, who) {
 
     if (who === "bot") {
 
-        bubble.innerHTML =
-            chatLinkify(text);
+        bubble.appendChild(
+            chatSanitizeAnswer(text)
+        );
 
     } else {
 
@@ -1605,9 +1710,11 @@ function chatAddMessage(text, who) {
             text;
     }
 
-    body.appendChild(
-        bubble
-    );
+    if (before?.parentNode === body) {
+        body.insertBefore(bubble, before);
+    } else {
+        body.appendChild(bubble);
+    }
 
     body.scrollTop =
         body.scrollHeight;
@@ -1650,6 +1757,19 @@ function chatLocalAnswer(message) {
             .toLowerCase()
             .trim();
 
+    function matchesKeyword(keyword) {
+        const normalizedKeyword = keyword.toLowerCase();
+
+        if (/^[a-z0-9]+(?:\s+[a-z0-9]+)*$/i.test(normalizedKeyword)) {
+            const normalizedText = text.replace(/[^a-z0-9]+/g, " ");
+            const paddedText = ` ${normalizedText} `;
+            const paddedKeyword = ` ${normalizedKeyword} `;
+            return paddedText.includes(paddedKeyword);
+        }
+
+        return text.includes(normalizedKeyword);
+    }
+
     let best = null;
 
     let bestScore = 0;
@@ -1663,7 +1783,7 @@ function chatLocalAnswer(message) {
             const keyword =
                 key.toLowerCase();
 
-            if (text.includes(keyword)) {
+            if (matchesKeyword(keyword)) {
 
                 score +=
                     keyword.length * 2;
@@ -1784,17 +1904,10 @@ async function chatSend(message) {
         return;
     }
 
-    chatAddMessage(
+    const userMessage = chatAddMessage(
         text,
         "user"
     );
-
-    chatHistory.push({
-
-        role: "user",
-
-        content: text
-    });
 
     const input =
         chatEl("chat-input");
@@ -1803,50 +1916,51 @@ async function chatSend(message) {
         input.value = "";
     }
 
-    const typing =
-        chatShowTyping();
+    const replyTask = chatReplyQueue.then(async () => {
+        chatHistory.push({
+            role: "user",
+            content: text
+        });
 
-    const reply =
-        await chatGetReply(
-            text
-        );
-
-    setTimeout(
-        () => {
-
-            if (typing) {
-                typing.remove();
-            }
-
-            chatAddMessage(
-                reply,
-                "bot"
+        if (chatHistory.length > CHAT_CONFIG.maxHistory) {
+            chatHistory.splice(
+                0,
+                chatHistory.length - CHAT_CONFIG.maxHistory
             );
+        }
 
-            chatHistory.push({
+        const typing = chatShowTyping();
+        let reply;
 
-                role:
-                    "assistant",
+        try {
+            reply = await chatGetReply(text);
+        } catch (error) {
+            console.error("Volt chat reply failed:", error);
+            reply = "দুঃখিত, এই মুহূর্তে উত্তর তৈরি করা যায়নি। আবার চেষ্টা করুন অথবা +880 1710830391 নম্বরে যোগাযোগ করুন।";
+        } finally {
+            typing?.remove();
+        }
 
-                content:
-                    reply
-            });
+        chatAddMessage(reply, "bot", userMessage?.nextSibling);
 
-            if (
-                chatHistory.length >
-                CHAT_CONFIG.maxHistory
-            ) {
+        chatHistory.push({
+            role: "assistant",
+            content: reply
+        });
 
-                chatHistory.splice(
-                    0,
-                    chatHistory.length -
-                    CHAT_CONFIG.maxHistory
-                );
-            }
+        if (chatHistory.length > CHAT_CONFIG.maxHistory) {
+            chatHistory.splice(
+                0,
+                chatHistory.length - CHAT_CONFIG.maxHistory
+            );
+        }
+    });
 
-        },
-        450
-    );
+    chatReplyQueue = replyTask.catch(error => {
+        console.error("Volt chat queue failed:", error);
+    });
+
+    return replyTask;
 }
 
 function chatToggle(forceClose = false) {

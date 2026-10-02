@@ -60,14 +60,59 @@
     { names: ["exhaust fan", "এক্সহস্ট ফ্যান"], watt: 40, label: "Exhaust Fan" }
   ];
 
-  function findEquipment(text) {
-    return equipmentList.find(item =>
-      item.names.some(name => text.includes(name))
+  function findNameMatch(text, name) {
+    if (/^[a-z0-9 ]+$/i.test(name)) {
+      const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const match = new RegExp(
+        `(?:^|[^a-z0-9])(${escaped})(?:s)?(?=$|[^a-z0-9])`,
+        "i"
+      ).exec(text);
+
+      if (!match) return null;
+
+      const start = match.index + (match[0].length - match[1].length -
+        (match[0].endsWith("s") ? 1 : 0));
+
+      return { start, end: start + match[1].length };
+    }
+
+    const start = text.indexOf(name);
+    return start === -1 ? null : { start, end: start + name.length };
+  }
+
+  function findEquipmentMatch(text) {
+    const matches = equipmentList.flatMap(item =>
+      item.names.flatMap(name => {
+        const range = findNameMatch(text, name);
+        return range ? [{ item, ...range }] : [];
+      })
     );
+
+    matches.sort((a, b) =>
+      a.start - b.start || (b.end - b.start) - (a.end - a.start)
+    );
+
+    const selected = [];
+    for (const match of matches) {
+      if (selected.some(item =>
+        match.start < item.end && match.end > item.start
+      )) {
+        continue;
+      }
+
+      selected.push(match);
+    }
+
+    return selected;
+  }
+
+  function findEquipment(text) {
+    return findEquipmentMatch(normalize(text))[0]?.item;
   }
 
   function smartLoad(text) {
     const t = normalize(text);
+    const equipmentMatches = findEquipmentMatch(t);
 
     if (
       !t.includes("load") &&
@@ -75,8 +120,7 @@
       !t.includes("বাসায়") &&
       !t.includes("বাড়িতে") &&
       !t.includes("equipment") &&
-      !t.includes("ফ্যান") &&
-      !t.includes("লাইট")
+      equipmentMatches.length === 0
     ) {
       return null;
     }
@@ -84,40 +128,61 @@
     const found = [];
     let total = 0;
 
-    for (const item of equipmentList) {
-      for (const name of item.names) {
-        if (t.includes(name)) {
-          const before = t.split(name)[0];
-          const matches = before.match(/(\d+)\s*$/);
-          const quantity = matches ? Number(matches[1]) : 1;
+    for (const match of equipmentMatches) {
+      const before = t.slice(0, match.start);
+      const quantityMatch = before.match(/(\d+)\s*(?:টা|টি)?\s*$/);
+      const quantity = quantityMatch ? Number(quantityMatch[1]) : 1;
+      const already = found.find(item =>
+        item.label === match.item.label
+      );
 
-          const already = found.find(x => x.label === item.label);
-
-          if (!already) {
-            found.push({
-              label: item.label,
-              quantity,
-              watt: item.watt,
-              subtotal: quantity * item.watt
-            });
-
-            total += quantity * item.watt;
-          }
-
-          break;
-        }
+      if (already) {
+        already.quantity += quantity;
+        already.subtotal = already.quantity * already.watt;
+      } else {
+        found.push({
+          label: match.item.label,
+          quantity,
+          watt: match.item.watt,
+          subtotal: quantity * match.item.watt
+        });
       }
     }
 
     if (!found.length) return null;
 
+    total = found.reduce((sum, item) => sum + item.subtotal, 0);
     const current230 = total / 230;
     const demand = total * 0.8;
     const demandCurrent = demand / 230;
     const kva = demand / 0.8 / 1000;
+    const hoursMatch = t.match(
+      /(\d+(?:\.\d+)?)\s*(?:hours?|h\b|ঘণ্টা|ঘন্টা)/i
+    );
+    const daysMatch = t.match(
+      /(\d+(?:\.\d+)?)\s*(?:days?|দিন|মাস)/i
+    );
+    const asksEnergy =
+      /(?:^|[^a-z])(?:energy|unit|units|bill|kwh)(?![a-z])/.test(t) ||
+      /এনার্জি|ইউনিট|বিদ্যুৎ বিল|মাসে|দিনে/.test(t);
+    const days = daysMatch
+      ? Number(daysMatch[1])
+      : /monthly|মাসে|মাসিক/.test(t) ? 30 : 1;
+    const rateMatch = t.match(
+      /(?:rate|tariff|রেট|প্রতি ইউনিট)\s*(?:is|=|হল|ঃ|:)?\s*(\d+(?:\.\d+)?)/i
+    );
+    const rate = rateMatch ? Number(rateMatch[1]) : null;
+    const dailyEnergy = hoursMatch
+      ? total * Number(hoursMatch[1]) / 1000
+      : null;
+    const energy = dailyEnergy === null
+      ? null
+      : dailyEnergy * days;
 
     return result(
-      "Smart Home Load Calculator",
+      asksEnergy && dailyEnergy !== null
+        ? "Smart Home Energy Calculator"
+        : "Smart Home Load Calculator",
       `Equipment List:
 
 ${found
@@ -138,6 +203,13 @@ Demand Current ≈ ${f(demandCurrent)} A
 
 Preliminary Apparent Power ≈ ${f(kva)} kVA
 
+${asksEnergy && dailyEnergy !== null
+  ? `Runtime = ${f(Number(hoursMatch[1]))} hour/day
+Daily Energy = ${f(dailyEnergy)} kWh${days > 1 ? `
+Energy for ${f(days)} days = ${f(energy)} kWh` : ""}
+${rate !== null ? `Estimated Energy Charge = ${f(energy * rate)} টাকা at ${f(rate)} টাকা/unit` : ""}`
+  : ""}
+
 নোট: equipment-এর প্রকৃত nameplate watt ব্যবহার করলে হিসাব আরও নির্ভুল হবে।`
     );
   }
@@ -156,29 +228,44 @@ Preliminary Apparent Power ≈ ${f(kva)} kVA
       return null;
     }
 
+    const powerMatch = t.match(
+      /(\d+(?:\.\d+)?)\s*(kw(?!h)|kilowatts?|watt|watts|w|কিলোওয়াট|ওয়াট)/i
+    );
+    const hoursMatch = t.match(
+      /(\d+(?:\.\d+)?)\s*(?:hours?|h\b|ঘণ্টা|ঘন্টা)/i
+    );
     const n = numbers(t);
-    if (n.length < 2) return null;
 
-    const loadW = n[0];
-    const hours = n[1];
-    const days = n[2] || 30;
-    const rate = n[3] || 12;
+    if (!hoursMatch || (!powerMatch && n.length < 2)) return null;
+
+    const unit = powerMatch?.[2]?.toLowerCase();
+    const loadW = powerMatch
+      ? Number(powerMatch[1]) *
+        (/^(?:kw|kilowatt|kilowatts|কিলোওয়াট)$/.test(unit) ? 1000 : 1)
+      : n[0];
+    const hours = Number(hoursMatch[1]);
+    const daysMatch = t.match(/(\d+(?:\.\d+)?)\s*(?:days?|দিন)/i);
+    const days = daysMatch
+      ? Number(daysMatch[1])
+      : /monthly|মাসে|মাসিক/.test(t) ? 30 : 1;
+    const rateMatch = t.match(
+      /(?:rate|tariff|রেট|প্রতি ইউনিট)\s*(?:is|=|হল|ঃ|:)?\s*(\d+(?:\.\d+)?)/i
+    );
+    const rate = rateMatch ? Number(rateMatch[1]) : null;
 
     const daily = (loadW / 1000) * hours;
-    const monthly = daily * days;
-    const bill = monthly * rate;
+    const totalEnergy = daily * days;
 
     return result(
       "Energy & Bill Calculator",
       `Load = ${f(loadW)} W
 Runtime = ${f(hours)} hour/day
-Days = ${f(days)}
-Unit Rate = ${f(rate)} টাকা
+${days > 1 ? `Days = ${f(days)}` : ""}
 
 Daily Energy = ${f(daily)} kWh
-Monthly Energy = ${f(monthly)} ইউনিট
+${days > 1 ? `Energy for ${f(days)} days = ${f(totalEnergy)} ইউনিট` : ""}
 
-Estimated Bill = ${f(bill)} টাকা
+${rate !== null ? `Estimated Bill = ${f(totalEnergy * rate)} টাকা at ${f(rate)} টাকা/unit` : ""}
 
 এখানে fixed charge, VAT, demand charge এবং slab tariff ধরা হয়নি।`
     );
@@ -842,15 +929,52 @@ Light / Fan / Socket
       : null;
 
   window.chatLocalAnswer = function (message) {
+    const text = normalize(message);
+    const hasApplianceCounts =
+      /\d/.test(text) &&
+      findEquipmentMatch(text).length > 0 &&
+      (/(?:^|[^a-z])(?:load|energy|unit|units|bill|kwh|hours?|h)(?![a-z])/.test(text) ||
+        /লোড|এনার্জি|ইউনিট|বিল|ঘণ্টা|ঘন্টা/.test(text));
+
+    if (hasApplianceCounts) {
+      const applianceAnswer = smartLoad(message);
+      if (applianceAnswer) return applianceAnswer;
+    }
+
+    const hasCalculationIntent =
+      /(?:^|[^a-z])(?:calculate|calculation|convert|how much|what is|current|power|load|energy|unit|bill|voltage drop|rpm|ohm)(?![a-z])/.test(text) ||
+      /কত|হিসাব|ক্যালকুলেট|রূপান্তর|কারেন্ট|পাওয়ার|লোড|ইউনিট|বিল|ভোল্টেজ ড্রপ/.test(text);
+    const hasElectricalValue =
+      /(?:^|[^a-z])(?:kw|kva|kvar|watt|watts|volt|volts|amp|amps|ampere|hp|pf|ohm|ohms|rpm|hz|kwh|ah|sqmm|mm2)(?![a-z])/.test(text) ||
+      /\d/.test(text) && /ফ্যান|লাইট|ভোল্ট|অ্যাম্প|অ্যাম্পিয়ার|ওয়াট|কিলোওয়াট|কেভিএ|মোটর|ব্যাটারি|সোলার|ইউনিট|ওহম/.test(text);
+
+    function getPreviousAnswer() {
+      return oldChatLocalAnswer
+        ? oldChatLocalAnswer(message)
+        : null;
+    }
+
+    function isGenericAnswer(answer) {
+      return typeof answer !== "string" ||
+        !answer.trim() ||
+        /আরও তথ্য প্রয়োজন|আরও তথ্য দরকার/.test(answer.slice(0, 100));
+    }
+
+    if (hasCalculationIntent && hasElectricalValue) {
+      const calculationAnswer = getPreviousAnswer();
+
+      if (!isGenericAnswer(calculationAnswer)) {
+        return calculationAnswer;
+      }
+
+      return smartSystem(message) || calculationAnswer;
+    }
+
     const smartResult = smartSystem(message);
 
     if (smartResult) return smartResult;
 
-    if (oldChatLocalAnswer) {
-      return oldChatLocalAnswer(message);
-    }
-
-    return null;
+    return getPreviousAnswer();
   };
 
   window.ElectroTechSmartSystem = {
