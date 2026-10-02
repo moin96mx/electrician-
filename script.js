@@ -576,7 +576,9 @@ function sendEstimatorLead(price) {
                 : "\u09aa\u09cd\u09b0\u09af\u09cb\u099c\u09cd\u09af \u09a8\u09df",
 
         "\u09b8\u09ae\u09df":
-            new Date().toLocaleString("bn-BD")
+            new Date().toLocaleString("bn-BD", {
+                timeZone: "Asia/Dhaka"
+            })
     };
 
     fetch("https://formsubmit.co/ajax/contact.electrotechbd@gmail.com", {
