@@ -323,6 +323,10 @@ app.get('/admin', (req, res) => {
   res.sendFile(path.join(__dirname, 'admin.html'));
 });
 
+app.get('/privacy-policy', (req, res) => {
+  res.sendFile(path.join(__dirname, 'privacy-policy.html'));
+});
+
 app.use(['/data', '/.env', '/.env.example'], (req, res) => {
   res.status(404).end();
 });
