@@ -23,7 +23,270 @@
 
     <link rel="icon" type="image/png" href="/img/electrotechLogo.png">
 
-    <link rel="stylesheet" href="style.min.css">
+    <style>
+      :root {
+        --bg-dark: #071018;
+        --bg-card: #101d29;
+        --accent-cyan: #19e6c2;
+        --accent-purple: #8d69f5;
+        --text-main: #f4fbfa;
+        --text-muted: #9eb2ba;
+        --line-soft: rgba(159, 206, 211, 0.16);
+        --shadow-soft: 0 18px 48px rgba(0, 0, 0, 0.22);
+      }
+      *, *::before, *::after { box-sizing: border-box; }
+      body {
+        margin: 0;
+        color: var(--text-main);
+        background:
+          radial-gradient(circle at 88% 8%, rgba(25, 230, 194, 0.11), transparent 28rem),
+          radial-gradient(circle at 8% 42%, rgba(141, 105, 245, 0.08), transparent 24rem),
+          var(--bg-dark);
+        font-family: "Manrope", "Noto Sans Bengali", sans-serif;
+        line-height: 1.55;
+      }
+      .container { width: min(94%, 1380px); margin-inline: auto; }
+      .top-bar {
+        padding: 10px 0;
+        color: #c8d9dd;
+        background: rgba(3, 9, 14, 0.86);
+        border-bottom: 1px solid var(--line-soft);
+        font-size: 14px;
+      }
+      .top-bar-flex, .header-flex {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .top-info, .top-contact { display: flex; gap: 15px; }
+      .top-contact a { color: white; text-decoration: none; }
+      .brand-mark { width: 1em; height: 1em; vertical-align: -.125em; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+      .social-glyph { font-family: Arial, sans-serif; font-size: .9em; font-style: normal; font-weight: 800; line-height: 1; }
+      .main-header {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        padding: 15px 0;
+        background: rgba(7, 16, 24, 0.84);
+        border-bottom: 1px solid rgba(25, 230, 194, 0.2);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+      }
+      .header-flex { min-width: 0; gap: 22px; }
+      .logo-box { display: flex; flex: 0 0 auto; align-items: center; gap: 10px; text-decoration: none; }
+      .logo-icon {
+        display: grid;
+        width: 45px;
+        height: 45px;
+        place-items: center;
+        border: 1px solid var(--accent-cyan);
+        border-radius: 10px;
+        color: var(--accent-cyan);
+        font-size: 22px;
+      }
+      .logo-text { display: flex; flex-direction: column; line-height: 1.2; }
+      .brand-name { display: block; color: white; font-size: 24px; font-weight: 700; white-space: nowrap; }
+      .brand-name span { color: var(--accent-cyan); }
+      .brand-sub { color: var(--accent-purple); font-size: 9px; }
+      .mobile-menu-toggle { display: none; }
+      .nav-menu {
+        display: flex;
+        flex: 1 1 auto;
+        min-width: 0;
+        align-items: center;
+        justify-content: flex-end;
+        gap: clamp(13px, 1.25vw, 22px);
+      }
+      .nav-menu a { color: white; text-decoration: none; }
+      .header-action { display: flex; flex: 0 0 auto; align-items: center; }
+      .btn { text-decoration: none; }
+      .btn-glow { padding: 10px 15px; border-radius: 6px; color: white; background: var(--accent-purple); }
+      .hero-section { padding: clamp(72px, 6vw, 96px) 0 78px; }
+      .hero-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(540px, 1fr);
+        align-items: center;
+        gap: 76px;
+      }
+      .hero-content { min-width: 0; max-width: 680px; }
+      .hero-badge { margin-bottom: 20px; color: var(--accent-cyan); }
+      .live-dot {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--accent-cyan);
+      }
+      .hero-title {
+        max-width: 700px;
+        margin: 0;
+        font-size: clamp(50px, 3.7vw, 60px);
+        letter-spacing: -0.02em;
+        line-height: 1.22;
+      }
+      .highlight-text { color: var(--accent-cyan); }
+      .hero-desc { max-width: 680px; margin: 20px 0; color: var(--text-muted); font-size: 16.5px; line-height: 1.7; }
+      .hero-btns { display: flex; flex-wrap: wrap; gap: 15px; }
+      .btn-primary, .btn-outline { padding: 14px 20px; border-radius: 7px; }
+      .btn-primary { color: #061014; background: var(--accent-cyan); }
+      .btn-outline { border: 1px solid white; color: white; }
+      .hero-image-box { position: relative; width: 100%; max-width: 620px; justify-self: end; }
+      .hero-main-img {
+        display: block;
+        width: 100%;
+        height: 470px;
+        border: 1px solid var(--accent-cyan);
+        border-radius: 15px;
+        object-fit: cover;
+        box-shadow: var(--shadow-soft);
+      }
+      .floating-badge {
+        position: absolute;
+        padding: 15px;
+        border: 1px solid var(--accent-cyan);
+        border-radius: 10px;
+        background: rgba(6, 9, 19, 0.91);
+        box-shadow: var(--shadow-soft);
+      }
+      .floating-badge h2, .floating-badge h3 { margin: 0; font-size: 1em; }
+      .top-right { top: -15px; right: -15px; }
+      .bottom-left { bottom: -15px; left: -15px; }
+      .hero-metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; margin-top: 58px; }
+      .metric-box {
+        display: flex;
+        min-height: 116px;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 25px;
+        border: 1px solid var(--line-soft);
+        border-radius: 10px;
+        background: linear-gradient(145deg, rgba(18, 34, 47, 0.92), rgba(10, 21, 30, 0.92));
+        box-shadow: var(--shadow-soft);
+        text-align: center;
+      }
+      .chat-window {
+        position: fixed;
+        right: 22px;
+        bottom: 94px;
+        z-index: 9999;
+        display: flex;
+        width: 370px;
+        max-width: calc(100vw - 30px);
+        height: 520px;
+        max-height: calc(100vh - 130px);
+        flex-direction: column;
+        overflow: hidden;
+        border: 1px solid rgba(0, 255, 204, .3);
+        border-radius: 18px;
+        background: var(--bg-card);
+        box-shadow: 0 25px 60px rgba(0, 0, 0, .6);
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(16px) scale(.97);
+        transition: opacity .22s ease, transform .22s ease, visibility .22s;
+      }
+      .chat-window.active {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0) scale(1);
+      }
+      @media (max-width: 1200px) {
+        .container { width: min(94%, 1380px); }
+        .hero-grid { grid-template-columns: minmax(0, 1.03fr) minmax(500px, .97fr); gap: clamp(55px, 5vw, 82px); }
+        .hero-title { font-size: clamp(46px, 3.65vw, 58px); }
+        .hero-desc { max-width: 650px; font-size: 16px; }
+        .hero-main-img { height: clamp(410px, 31vw, 480px); }
+      }
+      @media (max-width: 900px) {
+        .container { width: min(100% - 32px, 760px); }
+        .header-flex { gap: 12px; }
+        .header-action { display: none; }
+        .mobile-menu-toggle {
+          display: flex;
+          width: 44px;
+          height: 44px;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 5px;
+          padding: 8px;
+          border: 1px solid rgba(0, 255, 204, .3);
+          border-radius: 10px;
+          background: transparent;
+        }
+        .mobile-menu-toggle span { display: block; width: 23px; height: 2px; border-radius: 2px; background: var(--text-main); }
+        .nav-menu {
+          position: fixed;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          z-index: 1100;
+          display: flex !important;
+          width: min(86vw, 340px);
+          height: 100dvh;
+          flex-direction: column;
+          align-items: stretch;
+          justify-content: flex-start;
+          gap: 0;
+          padding: 90px 22px 28px;
+          overflow-y: auto;
+          background: var(--bg-card);
+          box-shadow: -12px 0 35px rgba(0, 0, 0, .5);
+          transform: translateX(110%);
+          visibility: hidden;
+          pointer-events: none;
+        }
+        .nav-menu.active { transform: translateX(0); visibility: visible; pointer-events: auto; }
+        .nav-menu a, .nav-menu button { width: 100%; margin: 0; padding: 14px 10px; border-bottom: 1px solid rgba(255, 255, 255, .1); text-align: left; }
+        .nav-overlay { position: fixed; inset: 0; z-index: 1099; display: block; background: rgba(0, 0, 0, .45); opacity: 0; visibility: hidden; pointer-events: none; }
+        .hero-grid { grid-template-columns: 1fr; gap: 34px; }
+        .hero-section { padding-block: 56px; }
+        .hero-title { font-size: clamp(31px, 9vw, 43px); line-height: 1.22; }
+        .hero-desc { font-size: 14px; }
+        .hero-main-img { height: auto; min-height: 220px; max-height: 360px; }
+      }
+      @media (max-width: 680px) {
+        .container { width: min(100% - 24px, 680px); }
+        .hero-title { font-size: clamp(1.85rem, 8vw, 2.65rem); line-height: 1.18; }
+        .hero-main-img { min-height: 250px; }
+        .hero-metrics { grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 44px; }
+        .metric-box { padding: 17px 10px; }
+        .floating-badge { position: relative !important; inset: auto !important; width: 100%; max-width: 100%; margin-top: 12px; }
+      }
+      @media (max-width: 768px) {
+        .chat-window {
+          right: max(8px, env(safe-area-inset-right));
+          bottom: calc(82px + env(safe-area-inset-bottom));
+          width: min(390px, calc(100vw - 16px));
+          max-width: calc(100vw - 16px);
+          height: min(620px, calc(100dvh - 100px));
+          max-height: calc(100dvh - 100px);
+          border-radius: 16px;
+        }
+      }
+      @media (max-width: 480px) {
+        .container { width: calc(100% - 20px); }
+        .top-bar-flex { flex-wrap: wrap; }
+        .top-info, .top-contact { min-width: 0; max-width: 100%; }
+        .top-info, .top-contact { justify-content: center; flex-wrap: wrap; gap: 6px 10px; text-align: center; }
+        .hero-section { padding-block: 42px; }
+        .hero-title { font-size: clamp(29px, 9.2vw, 38px); }
+        .hero-desc { line-height: 1.75; }
+        .hero-main-img { min-height: 250px; max-height: 360px; border-radius: 12px; }
+      }
+      @media (max-width: 420px) {
+        .container, .main-header .container { width: calc(100% - 24px); }
+        .brand-name { font-size: .92rem; }
+        .brand-sub { font-size: .49rem; }
+      }
+      @media (max-width: 360px) {
+        .hero-title { font-size: 24px; }
+        .container { width: calc(100% - 16px); }
+      }
+    </style>
+    <link rel="stylesheet" href="style.min.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="style.min.css"></noscript>
 
     <!-- Non-blocking: Google Fonts + Font Awesome (swap after first paint) -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" media="print" onload="this.media='all'">
@@ -76,7 +339,10 @@
                 </a>
 
                 <a href="https://wa.me/8801710830391" class="wa-btn" target="_blank" rel="noopener noreferrer">
-                    <i class="fa-brands fa-whatsapp"></i>
+                    <svg class="brand-mark" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M20.2 11.5a8.2 8.2 0 0 1-12.1 7.2L3 20l1.3-4.8A8.2 8.2 0 1 1 20.2 11.5Z"></path>
+                        <path d="M8.2 8.3c.4-.6 1.1-.4 1.3.1l.7 1.5c.2.4 0 .7-.4 1l-.5.4c.6 1.2 1.5 2.1 2.7 2.7l.4-.5c.3-.4.6-.5 1-.3l1.4.7c.5.2.7.9.2 1.3-.6.6-1.5.8-2.3.5-2.7-.9-4.6-2.8-5.4-5.4-.3-.8 0-1.5.9-2Z"></path>
+                    </svg>
                     WhatsApp
                 </a>
             </div>
@@ -2499,10 +2765,10 @@
         শুরু করে ESP32 ভিত্তিক স্মার্ট কন্ট্রোল সিস্টেম, সব এক ছাদের নিচে।
       </p>
       <div class="footer-social">
-        <a href="https://www.facebook.com/profile.php?id=61594442791244" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-        <a href="https://wa.me/8801710830391" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+        <a href="https://www.facebook.com/profile.php?id=61594442791244" aria-label="Facebook"><span class="social-glyph" aria-hidden="true">f</span></a>
+        <a href="https://wa.me/8801710830391" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><svg class="brand-mark" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.2 11.5a8.2 8.2 0 0 1-12.1 7.2L3 20l1.3-4.8A8.2 8.2 0 1 1 20.2 11.5Z"></path><path d="M8.2 8.3c.4-.6 1.1-.4 1.3.1l.7 1.5c.2.4 0 .7-.4 1l-.5.4c.6 1.2 1.5 2.1 2.7 2.7l.4-.5c.3-.4.6-.5 1-.3l1.4.7c.5.2.7.9.2 1.3-.6.6-1.5.8-2.3.5-2.7-.9-4.6-2.8-5.4-5.4-.3-.8 0-1.5.9-2Z"></path></svg></a>
         <!-- <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a> -->
-        <a href="https://www.linkedin.com/in/electrotech-bd-bbb96b437/" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+        <a href="https://www.linkedin.com/in/electrotech-bd-bbb96b437/" aria-label="LinkedIn"><span class="social-glyph" aria-hidden="true">in</span></a>
       </div>
     </div>
 
