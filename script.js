@@ -294,8 +294,9 @@ function refreshClimate(silent) {
 
     if (card) {
         card.classList.remove("pulse-update");
-        void card.offsetWidth;
-        card.classList.add("pulse-update");
+        requestAnimationFrame(() => {
+            card.classList.add("pulse-update");
+        });
     }
 
     logActivity(`Climate reading আপডেট হয়েছে — ${temp}°C, ${humidity}% Humidity`);
@@ -931,6 +932,9 @@ function initFAQ() {
                         ".faq-answer"
                     );
 
+                const targetHeight =
+                    answer ? `${answer.scrollHeight}px` : null;
+
                 document
                     .querySelectorAll(".faq-item")
                     .forEach(item => {
@@ -949,35 +953,20 @@ function initFAQ() {
                             if (otherAnswer) {
 
                                 otherAnswer.style.maxHeight =
-                                    null;
+                                    "0px";
                             }
                         }
                     });
 
+                const isOpen = !faqItem.classList.contains("active");
+
                 faqItem.classList.toggle(
-                    "active"
+                    "active",
+                    isOpen
                 );
 
-                if (
-                    faqItem.classList.contains(
-                        "active"
-                    )
-                ) {
-
-                    if (answer) {
-
-                        answer.style.maxHeight =
-                            answer.scrollHeight +
-                            "px";
-                    }
-
-                } else {
-
-                    if (answer) {
-
-                        answer.style.maxHeight =
-                            null;
-                    }
+                if (answer) {
+                    answer.style.maxHeight = isOpen ? targetHeight : "0px";
                 }
             }
         );
