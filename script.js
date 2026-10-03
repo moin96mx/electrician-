@@ -2119,7 +2119,6 @@ function initChat() {
             }
         }
     );
-
     if (chipBox) {
 
         chipBox.innerHTML = "";
@@ -2278,44 +2277,3 @@ document.addEventListener(
         }
     }
 );
-
-(function () {
-    "use strict";
-
-    function syncVoltChatViewport() {
-        const chat = document.getElementById("chat-window");
-        if (!chat) return;
-
-        const isSmall = window.innerWidth <= 768;
-        if (!isSmall) {
-            chat.style.removeProperty("max-height");
-            chat.style.removeProperty("height");
-            return;
-        }
-
-        const safeHeight = Math.max(
-            300,
-            window.visualViewport
-                ? window.visualViewport.height - 100
-                : window.innerHeight - 100
-        );
-
-        chat.style.maxHeight = safeHeight + "px";
-        chat.style.height = Math.min(620, safeHeight) + "px";
-    }
-
-    window.addEventListener("resize", syncVoltChatViewport, { passive: true });
-    if (window.visualViewport) {
-        window.visualViewport.addEventListener(
-            "resize",
-            syncVoltChatViewport,
-            { passive: true }
-        );
-    }
-
-    if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", syncVoltChatViewport, { once: true });
-    } else {
-        syncVoltChatViewport();
-    }
-})();
