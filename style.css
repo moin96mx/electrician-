@@ -4213,6 +4213,14 @@ th {
         max-width: 100%;
         overflow-wrap: anywhere;
     }
+
+    .top-contact a {
+        display: inline-flex;
+        min-height: 44px;
+        align-items: center;
+        justify-content: center;
+        padding: 8px 10px;
+    }
 }
 
 @media (max-width: 992px) {
