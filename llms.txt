@@ -1,0 +1,24 @@
+# ElectroTechBD
+
+> ElectroTechBD provides licensed electrical engineering, electrical wiring, smart home automation, solar power, and electrical safety services in Bangladesh.
+
+## Website
+
+- [Home](https://electrotechbd.xyz/)
+- [Electrical and automation services](https://electrotechbd.xyz/#electrical)
+- [Smart home simulator](https://electrotechbd.xyz/#simulator)
+- [Cost estimator](https://electrotechbd.xyz/#estimator)
+- [Projects](https://electrotechbd.xyz/#projects)
+- [Booking and consultation](https://electrotechbd.xyz/#booking)
+- [Contact](https://electrotechbd.xyz/#contact)
+- [Frequently asked questions](https://electrotechbd.xyz/#faq)
+- [Privacy policy](https://electrotechbd.xyz/privacy-policy)
+
+## Contact
+
+- Phone and WhatsApp: +880 1710830391
+- Service area: Bangladesh
+
+## AI resource catalog
+
+- [AI catalog manifest](https://electrotechbd.xyz/ai-catalog.json)

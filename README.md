@@ -41,6 +41,11 @@ Node.js hosting-এ repository deploy করে:
 
 Health check URL: `/api/health`
 
+## AI discovery resources
+
+- `https://electrotechbd.xyz/llms.txt` provides an AI-readable overview and links to key site sections.
+- `https://electrotechbd.xyz/ai-catalog.json` publishes the site's service and booking resources using the Agentic Resource Discovery (ARD) catalog format.
+
 ## Important
 
 `.env` কখনো public repository-তে commit করবেন না। Server প্রথমবার চালু হলে `bookings` এবং `contacts` table নিজে তৈরি হবে।
