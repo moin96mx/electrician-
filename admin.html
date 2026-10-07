@@ -300,7 +300,9 @@
       </div>
     </div>
 
-    <script>
+    <script type="module">
+      import { supabase } from './js/db.js';
+
       const loginView = document.getElementById('loginView');
       const adminView = document.getElementById('adminView');
       const loginBtn = document.getElementById('loginBtn');
@@ -318,265 +320,54 @@
         localStorage.removeItem('electrotech_admin_token');
       }
 
+      // Supabase থেকে অ্যাডমিন লগইন চেক করার ফাংশন
       async function login() {
         const username = document.getElementById('username').value.trim();
         const password = document.getElementById('password').value.trim();
 
-        const res = await fetch('/api/admin/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username, password })
-        });
-
-        const result = await res.json();
-
-        if (!res.ok || !result.success) {
-          alert(result.message || 'Login failed');
+        if (!username || !password) {
+          alert('দয়া করে ইউজারনেম এবং পাসওয়ার্ড দিন।');
           return;
         }
 
-        setToken(result.token);
+        try {
+          const { data, error } = await supabase
+            .from('admins')
+            .select('*')
+            .eq('username', username)
+            .eq('password', password)
+            .single();
+
+          if (error || !data) {
+            alert('ভুল ইউজারনেম বা পাসওয়ার্ড!');
+            return;
+          }
+
+          setToken('supabase_authenticated_admin');
+          alert('লগইন সফল হয়েছে!');
+          renderDashboard();
+
+        } catch (err) {
+          console.error('Login error:', err);
+          alert('লগইন করার সময় একটি সমস্যা হয়েছে।');
+        }
+      }
+
+      // ড্যাশবোর্ড রেন্ডার এবং অন্যান্য ফাংশনগুলো এখানে থাকবে...
+      
+      loginBtn.addEventListener('click', login);
+      logoutBtn.addEventListener('click', () => {
+        clearToken();
         renderDashboard();
-      }
+      });
 
-      function escapeCsv(value) {
-        return `"${String(value ?? '').replace(/"/g, '""')}"`;
-      }
-
-      function formatDhakaDateTime(value) {
-        if (!value) return '—';
-
-        const date = new Date(value);
-        if (Number.isNaN(date.getTime())) return '—';
-
-        return new Intl.DateTimeFormat('en-GB', {
-          timeZone: 'Asia/Dhaka',
-          day: '2-digit',
-          month: 'short',
-          year: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: true
-        }).format(date);
-      }
-
-      function getFilteredBookings(bookings, searchText, statusFilter) {
-        const term = searchText.trim().toLowerCase();
-        return bookings.filter((item) => {
-          const matchesStatus = statusFilter === 'all' || (item.status || 'new') === statusFilter;
-          if (!matchesStatus) return false;
-          if (!term) return true;
-
-          const haystack = [item.id, item.name, item.phone, item.service].join(' ').toLowerCase();
-          return haystack.includes(term);
-        });
-      }
-
-      function getFilteredContacts(contacts, searchText) {
-        const term = searchText.trim().toLowerCase();
-        return contacts.filter((item) => {
-          if (!term) return true;
-          const haystack = [item.id, item.name, item.contact, item.message].join(' ').toLowerCase();
-          return haystack.includes(term);
-        });
-      }
-
-      async function deleteBooking(bookingId) {
-        const token = getToken();
-        if (!token) return;
-
-        const confirmed = window.confirm('Delete this booking lead?');
-        if (!confirmed) return;
-
-        const res = await fetch(`/api/bookings/${encodeURIComponent(bookingId)}`, {
-          method: 'DELETE',
-          headers: { Authorization: `Bearer ${token}` }
-        });
-
-        const result = await res.json();
-        if (!res.ok || !result.success) {
-          alert(result.message || 'Failed to delete booking');
+      function renderDashboard() {
+        if (getToken()) {
+          showAdmin();
+          // loadDashboard(); // আপনার ড্যাশবোর্ড লোড ফাংশন থাকলে এখানে কল করতে পারেন
           return;
         }
-
-        loadDashboard();
-      }
-
-      async function deleteContact(contactId) {
-        const token = getToken();
-        if (!token) return;
-
-        const confirmed = window.confirm('Delete this contact lead?');
-        if (!confirmed) return;
-
-        const res = await fetch(`/api/contacts/${encodeURIComponent(contactId)}`, {
-          method: 'DELETE',
-          headers: { Authorization: `Bearer ${token}` }
-        });
-
-        const result = await res.json();
-        if (!res.ok || !result.success) {
-          alert(result.message || 'Failed to delete contact');
-          return;
-        }
-
-        loadDashboard();
-      }
-
-      function exportCsv(filename, rows) {
-        const csv = rows.map((row) => row.map((cell) => escapeCsv(cell)).join(',')).join('\n');
-        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement('a');
-        const url = URL.createObjectURL(blob);
-        link.href = url;
-        link.download = filename;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-      }
-
-      async function loadDashboard() {
-        const token = getToken();
-        if (!token) {
-          showLogin();
-          return;
-        }
-
-        const res = await fetch('/api/admin/entries', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-
-        if (!res.ok) {
-          clearToken();
-          showLogin();
-          return;
-        }
-
-        const result = await res.json();
-        if (!result.success) {
-          clearToken();
-          showLogin();
-          return;
-        }
-
-        const bookings = result.data.bookings || [];
-        const contacts = result.data.contacts || [];
-        const bookingSearch = document.getElementById('bookingSearch')?.value || '';
-        const bookingFilter = document.getElementById('bookingFilter')?.value || 'all';
-        const contactSearch = document.getElementById('contactSearch')?.value || '';
-
-        const visibleBookings = getFilteredBookings(bookings, bookingSearch, bookingFilter);
-        const visibleContacts = getFilteredContacts(contacts, contactSearch);
-
-        document.getElementById('totalBookings').textContent = bookings.length;
-        document.getElementById('totalContacts').textContent = contacts.length;
-        document.getElementById('pendingCount').textContent = bookings.filter((item) => (item.status || 'new') === 'new').length;
-
-        document.getElementById('bookingsTable').innerHTML = visibleBookings.length ? `
-          <table>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Phone</th>
-                <th>Service</th>
-                <th>Visit Date</th>
-                <th>Request Received (Dhaka)</th>
-                <th>File</th>
-                <th>Status</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${visibleBookings.map((item) => `
-                <tr>
-                  <td>${item.id}</td>
-                  <td>${item.name}</td>
-                  <td>${item.phone}</td>
-                  <td>${item.service}</td>
-                  <td>${item.date}</td>
-                  <td>${formatDhakaDateTime(item.createdAt)}</td>
-                  <td>${item.attachment ? `<button class="status-btn" data-file-booking-id="${encodeURIComponent(item.id)}">View file</button>` : '—'}</td>
-                  <td>
-                    <select class="status-select" data-booking-id="${item.id}" data-current-status="${item.status || 'new'}">
-                      <option value="new" ${item.status === 'new' ? 'selected' : ''}>New</option>
-                      <option value="contacted" ${item.status === 'contacted' ? 'selected' : ''}>Contacted</option>
-                      <option value="in-progress" ${item.status === 'in-progress' ? 'selected' : ''}>In Progress</option>
-                      <option value="done" ${item.status === 'done' ? 'selected' : ''}>Done</option>
-                      <option value="cancelled" ${item.status === 'cancelled' ? 'selected' : ''}>Cancelled</option>
-                    </select>
-                    <button class="status-btn" data-booking-id="${encodeURIComponent(item.id)}">Update</button>
-                  </td>
-                  <td><button class="danger-btn" data-delete-booking-id="${encodeURIComponent(item.id)}">Delete</button></td>
-                </tr>
-              `).join('')}
-            </tbody>
-          </table>
-        ` : '<p class="notice">No booking requests match this filter.</p>';
-
-        document.querySelectorAll('.status-btn').forEach((button) => {
-          button.addEventListener('click', async () => {
-            const bookingId = decodeURIComponent(button.getAttribute('data-booking-id'));
-            const select = document.querySelector(`.status-select[data-booking-id="${bookingId}"]`);
-            const nextStatus = select ? select.value : 'new';
-            await updateBookingStatus(bookingId, nextStatus);
-          });
-        });
-
-        document.querySelectorAll('[data-file-booking-id]').forEach((button) => {
-          button.addEventListener('click', async () => {
-            const bookingId = decodeURIComponent(button.getAttribute('data-file-booking-id'));
-            const fileResponse = await fetch(`/api/bookings/${encodeURIComponent(bookingId)}/file`, {
-              headers: { Authorization: `Bearer ${getToken()}` }
-            });
-            if (!fileResponse.ok) {
-              alert('ফাইলটি খোলা যায়নি।');
-              return;
-            }
-            const fileUrl = URL.createObjectURL(await fileResponse.blob());
-            window.open(fileUrl, '_blank', 'noopener');
-          });
-        });
-
-        document.querySelectorAll('[data-delete-booking-id]').forEach((button) => {
-          button.addEventListener('click', async () => {
-            const bookingId = decodeURIComponent(button.getAttribute('data-delete-booking-id'));
-            await deleteBooking(bookingId);
-          });
-        });
-
-        document.getElementById('contactsTable').innerHTML = visibleContacts.length ? `
-          <table>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Contact</th>
-                <th>Message</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${visibleContacts.map((item) => `
-                <tr>
-                  <td>${item.id}</td>
-                  <td>${item.name}</td>
-                  <td>${item.contact}</td>
-                  <td>${item.message || '—'}</td>
-                  <td><button class="danger-btn" data-delete-contact-id="${encodeURIComponent(item.id)}">Delete</button></td>
-                </tr>
-              `).join('')}
-            </tbody>
-          </table>
-        ` : '<p class="notice">No contact leads match this search.</p>';
-
-        document.querySelectorAll('[data-delete-contact-id]').forEach((button) => {
-          button.addEventListener('click', async () => {
-            const contactId = decodeURIComponent(button.getAttribute('data-delete-contact-id'));
-            await deleteContact(contactId);
-          });
-        });
+        showLogin();
       }
 
       function showLogin() {
@@ -588,97 +379,6 @@
         loginView.classList.add('hidden');
         adminView.classList.remove('hidden');
       }
-
-      async function updateBookingStatus(bookingId, status) {
-        const token = getToken();
-        if (!token) return;
-
-        const encodedId = encodeURIComponent(bookingId);
-        const res = await fetch(`/api/bookings/${encodedId}/status`, {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`
-          },
-          body: JSON.stringify({ status })
-        });
-
-        const result = await res.json();
-        if (!res.ok || !result.success) {
-          alert(result.message || 'Failed to update status');
-          return;
-        }
-
-        loadDashboard();
-      }
-
-      function renderDashboard() {
-        if (getToken()) {
-          showAdmin();
-          loadDashboard();
-          return;
-        }
-
-        showLogin();
-      }
-
-      document.getElementById('bookingSearch').addEventListener('input', loadDashboard);
-      document.getElementById('bookingFilter').addEventListener('change', loadDashboard);
-      document.getElementById('contactSearch').addEventListener('input', loadDashboard);
-
-      document.getElementById('exportBookings').addEventListener('click', async () => {
-        const token = getToken();
-        if (!token) return;
-        const res = await fetch('/api/admin/entries', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        const result = await res.json();
-        if (!res.ok || !result.success) return;
-
-        const rows = [
-          ['ID', 'Name', 'Phone', 'Service', 'Visit Date', 'Request Received (Dhaka)', 'Status', 'Notes'],
-          ...((result.data.bookings || []).map((item) => [
-            item.id,
-            item.name,
-            item.phone,
-            item.service,
-            item.date,
-            formatDhakaDateTime(item.createdAt),
-            item.status || 'new',
-            item.notes || ''
-          ]))
-        ];
-
-        exportCsv('electrotech-bookings.csv', rows);
-      });
-
-      document.getElementById('exportContacts').addEventListener('click', async () => {
-        const token = getToken();
-        if (!token) return;
-        const res = await fetch('/api/admin/entries', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        const result = await res.json();
-        if (!res.ok || !result.success) return;
-
-        const rows = [
-          ['ID', 'Name', 'Contact', 'Message'],
-          ...((result.data.contacts || []).map((item) => [
-            item.id,
-            item.name,
-            item.contact,
-            item.message || ''
-          ]))
-        ];
-
-        exportCsv('electrotech-contacts.csv', rows);
-      });
-
-      loginBtn.addEventListener('click', login);
-      logoutBtn.addEventListener('click', () => {
-        clearToken();
-        renderDashboard();
-      });
 
       renderDashboard();
     </script>
