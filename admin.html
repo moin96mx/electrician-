@@ -219,7 +219,7 @@
       </div>
     </div>
 
-    <script type="module">
+   <script type="module">
       import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
       const SUPABASE_URL = 'https://gskxbqbdefkgtycktndc.supabase.co';
@@ -244,33 +244,41 @@
       }
 
       async function login() {
-        const username = document.getElementById('username').value.trim();
-        const password = document.getElementById('password').value.trim();
+        const usernameInput = document.getElementById('username').value.trim();
+        const passwordInput = document.getElementById('password').value.trim();
 
-        if (!username || !password) {
-          alert('দয়া করে ইউজারনেম এবং পাসওয়ার্ড দিন।');
+        if (!usernameInput || !passwordInput) {
+          alert('দয়া করে ইউজারনেম এবং পাসওয়ার্ড দিন।');
           return;
         }
 
         try {
+          // টেবিল থেকে সব অ্যাডমিন ডাটা এনে কোডের মাধ্যমে চেক করা হচ্ছে
           const { data, error } = await supabase
             .from('admins')
-            .select('*')
-            .eq('username', username)
-            .eq('password', password)
-            .single();
+            .select('*');
 
           if (error || !data) {
-            alert('ভুল ইউজারনেম বা পাসওয়ার্ড!');
+            console.error('Database error:', error);
+            alert('ভুল ইউজারনেম বা পাসওয়ার্ড অথবা ডাটাবেজ কানেকশনে সমস্যা!');
+            return;
+          }
+
+          const matchedAdmin = data.find(
+            (admin) => admin.username === usernameInput && admin.password === passwordInput
+          );
+
+          if (!matchedAdmin) {
+            alert('ভুল ইউজারনেম বা পাসওয়ার্ড!');
             return;
           }
 
           setToken('supabase_authenticated_admin');
-          alert('লগইন সফল হয়েছে!');
+          alert('লগইন সফল হয়েছে!');
           renderDashboard();
         } catch (err) {
           console.error('Login error:', err);
-          alert('লগইন করার সময় একটি সমস্যা হয়েছে।');
+          alert('লগইন করার সময় একটি সমস্যা হয়েছে।');
         }
       }
 
@@ -313,7 +321,7 @@
               `).join('')}
             </tbody>
           </table>
-        ` : '<p class="notice">কোনো বুকিং রিকোয়েস্ট নেই।</p>';
+        ` : '<p class="notice">কোনো বুকিং রিকোয়েস্ট নেই।</p>';
 
         document.getElementById('contactsTable').innerHTML = contactList.length ? `
           <table>
