@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 const SUPABASE_URL = 'https://gskxbqbdefkgtycktndc.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_RpOcHAaXMSIyAvKnhan7Bg_am9YiCHm';
@@ -14,7 +14,6 @@ async function initDatabase() {
 }
 
 export { supabase, initDatabase };
-
 
 
 
