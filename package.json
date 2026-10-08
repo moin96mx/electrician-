@@ -1,0 +1,12 @@
+{
+  "name": "electrotechbd-migration",
+  "version": "1.0.0",
+  "description": "Data migration utility for the ElectroTechBD Supabase backend",
+  "scripts": {
+    "migrate:json": "node scripts/migrate-json-to-postgres.js"
+  },
+  "dependencies": {
+    "dotenv": "^18.0.1",
+    "pg": "^8.23.0"
+  }
+}

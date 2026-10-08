@@ -1,0 +1,4 @@
+project_id = "electrotechbd"
+
+[functions.api]
+verify_jwt = false
