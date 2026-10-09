@@ -1,156 +1,407 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="bn">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#071018">
-  <meta name="description" content="ElectroTechBD কী ব্যক্তিগত তথ্য সংগ্রহ করে, কীভাবে ব্যবহার করে এবং আপনার তথ্য-সংক্রান্ত অনুরোধ কীভাবে জানাবেন।">
-  <link rel="canonical" href="https://electrotechbd.xyz/privacy-policy">
-  <title>Privacy Policy | ElectroTechBD</title>
-  <style>
-    :root {
-      color-scheme: dark;
-      font-family: Arial, "Noto Sans Bengali", sans-serif;
-      background: #071018;
-      color: #f4fbfa;
-      font-synthesis: none;
-      text-rendering: optimizeLegibility;
-    }
-    * { box-sizing: border-box; }
-    body { margin: 0; line-height: 1.75; }
-    main { width: min(100% - 32px, 860px); margin: 0 auto; padding: 28px 0 64px; }
-    a { color: #19e6c2; }
-    .back { display: inline-block; margin-bottom: 24px; }
-    article { min-width: 0; max-width: 100%; padding: clamp(20px, 5vw, 48px); overflow-wrap: anywhere; border: 1px solid rgba(159, 206, 211, .2); border-radius: 16px; background: #101d29; }
-    h1, h2 { line-height: 1.3; }
-    h1 { margin-top: 0; font-size: clamp(1.8rem, 6vw, 2.5rem); }
-    h2 { margin-top: 32px; font-size: 1.2rem; color: #19e6c2; }
-    p, li { min-width: 0; color: #d0dddf; overflow-wrap: anywhere; }
-    ul { padding-inline-start: 24px; }
-    a { overflow-wrap: anywhere; }
-    li + li { margin-top: 8px; }
-    .updated { color: #9eb2ba; font-size: .92rem; }
-    @media (max-width: 480px) {
-      main { width: min(100% - 20px, 860px); padding-top: 16px; }
-      article { padding: 20px 16px; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>গোপনীয়তা নীতি (Privacy Policy) | ElectroTechBD</title>
+<meta name="description" content="ElectroTechBD Engineering & Automation কোন তথ্য নেয়, কেন ব্যবহার করে এবং কীভাবে সুরক্ষিত রাখে — গোপনীয়তা নীতি।">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg-dark:#060913;
+  --bg-card:#0f172a;
+  --bg-soft:#0b1222;
+  --accent-cyan:#00ffcc;
+  --accent-purple:#9d4edd;
+  --text-main:#f3f4f6;
+  --text-muted:#9ca3af;
+  --line:rgba(255,255,255,.08);
+  --radius:18px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+body{
+  font-family:'Hind Siliguri','Inter',Arial,sans-serif;
+  background:var(--bg-dark);
+  color:var(--text-main);
+  line-height:1.8;
+  font-size:16.5px;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(700px 400px at 85% -5%,rgba(157,78,221,.18),transparent 60%),
+    radial-gradient(700px 420px at 5% 0%,rgba(0,255,204,.12),transparent 60%);
+}
+a{color:inherit;text-decoration:none}
+
+/* ---------- Top bar ---------- */
+.topbar{
+  position:sticky;top:0;z-index:50;
+  background:rgba(6,9,19,.82);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+}
+.topbar-in{
+  max-width:1180px;margin:auto;padding:14px 20px;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+}
+.brand{display:flex;align-items:center;gap:11px;font-family:'Inter',sans-serif;font-weight:800;font-size:19px;letter-spacing:.2px}
+.brand-logo{
+  width:38px;height:38px;border-radius:11px;display:grid;place-items:center;
+  border:1.5px solid var(--accent-cyan);
+  box-shadow:0 0 18px rgba(0,255,204,.35),inset 0 0 12px rgba(0,255,204,.15);
+}
+.brand-logo svg{width:20px;height:20px;fill:var(--accent-cyan)}
+.brand b{color:var(--accent-cyan)}
+.back{
+  font-size:14.5px;font-weight:600;padding:9px 18px;border-radius:999px;
+  border:1px solid rgba(0,255,204,.45);color:var(--accent-cyan);
+  transition:.25s;white-space:nowrap;
+}
+.back:hover{background:var(--accent-cyan);color:#04120e;box-shadow:0 0 22px rgba(0,255,204,.4)}
+
+/* ---------- Hero ---------- */
+.hero{position:relative;z-index:1;text-align:center;padding:72px 20px 46px;max-width:900px;margin:auto}
+.badge{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:13.5px;font-weight:600;letter-spacing:.4px;
+  padding:7px 16px;border-radius:999px;
+  background:rgba(0,255,204,.08);border:1px solid rgba(0,255,204,.3);color:var(--accent-cyan);
+}
+.badge i{width:7px;height:7px;border-radius:50%;background:var(--accent-cyan);box-shadow:0 0 10px var(--accent-cyan)}
+.hero h1{
+  margin-top:20px;font-size:clamp(32px,6vw,54px);line-height:1.2;font-weight:700;
+  background:linear-gradient(120deg,#fff 20%,var(--accent-cyan) 60%,var(--accent-purple));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.hero h1 small{display:block;font-family:'Inter',sans-serif;font-size:.42em;font-weight:600;letter-spacing:3px;color:var(--text-muted);-webkit-text-fill-color:var(--text-muted);margin-top:10px;text-transform:uppercase}
+.hero p{margin-top:20px;color:var(--text-muted);font-size:17px;max-width:740px;margin-inline:auto}
+.hero p strong{color:var(--text-main);font-weight:600}
+.meta{margin-top:22px;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;font-size:14px;color:var(--text-muted)}
+.meta span{padding:6px 14px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.02)}
+
+/* ---------- Highlights ---------- */
+.highlights{
+  position:relative;z-index:1;max-width:1180px;margin:10px auto 0;padding:0 20px;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:16px;
+}
+.hl{
+  background:linear-gradient(160deg,var(--bg-card),var(--bg-soft));
+  border:1px solid var(--line);border-radius:var(--radius);padding:22px 18px;text-align:center;
+  transition:.3s;
+}
+.hl:hover{transform:translateY(-4px);border-color:rgba(0,255,204,.45);box-shadow:0 14px 40px rgba(0,255,204,.08)}
+.hl .ic{
+  width:44px;height:44px;margin:0 auto 12px;border-radius:13px;display:grid;place-items:center;
+  background:rgba(0,255,204,.08);border:1px solid rgba(0,255,204,.3);
+}
+.hl .ic svg{width:21px;height:21px;fill:none;stroke:var(--accent-cyan);stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.hl .t{font-weight:700;font-size:16.5px;line-height:1.4}
+.hl .lbl{margin-top:6px;font-size:14px;color:var(--text-muted);line-height:1.55}
+
+/* ---------- Layout ---------- */
+.wrap{
+  position:relative;z-index:1;max-width:1180px;margin:48px auto 0;padding:0 20px;
+  display:grid;grid-template-columns:270px 1fr;gap:34px;align-items:start;
+}
+.toc{
+  position:sticky;top:92px;
+  background:var(--bg-card);border:1px solid var(--line);border-radius:var(--radius);padding:20px 14px;
+}
+.toc h4{font-family:'Inter',sans-serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);padding:0 12px 10px}
+.toc a{
+  display:flex;align-items:center;gap:11px;padding:9px 12px;border-radius:11px;
+  font-size:14.8px;color:var(--text-muted);transition:.2s;border:1px solid transparent;
+}
+.toc a em{
+  font-style:normal;font-family:'Inter',sans-serif;font-size:12px;font-weight:700;
+  width:24px;height:24px;border-radius:7px;display:grid;place-items:center;
+  background:rgba(255,255,255,.05);flex:0 0 24px;
+}
+.toc a:hover{color:var(--text-main);background:rgba(255,255,255,.04)}
+.toc a.active{color:var(--accent-cyan);background:rgba(0,255,204,.07);border-color:rgba(0,255,204,.25)}
+.toc a.active em{background:var(--accent-cyan);color:#04120e}
+
+/* ---------- Sections ---------- */
+.content{display:flex;flex-direction:column;gap:20px;min-width:0}
+.card{
+  background:linear-gradient(165deg,var(--bg-card),var(--bg-soft));
+  border:1px solid var(--line);border-radius:var(--radius);padding:30px 32px;
+  position:relative;overflow:hidden;transition:border-color .3s;
+}
+.card::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:linear-gradient(var(--accent-cyan),var(--accent-purple));opacity:.8;
+}
+.card:hover{border-color:rgba(0,255,204,.28)}
+.card-head{display:flex;align-items:center;gap:15px;margin-bottom:16px}
+.idx{
+  font-family:'Inter',sans-serif;font-weight:800;font-size:15px;
+  width:42px;height:42px;border-radius:12px;display:grid;place-items:center;flex:0 0 42px;
+  color:var(--accent-cyan);background:rgba(0,255,204,.08);border:1px solid rgba(0,255,204,.3);
+}
+.card h2{font-size:22px;font-weight:700;line-height:1.35}
+.card p{color:#cdd3dd}
+.card p + p,.card p + ul,.card ul + p,.card p + .note,.card ul + .note{margin-top:12px}
+.card ul{list-style:none;display:flex;flex-direction:column;gap:11px}
+.card li{position:relative;padding-left:30px;color:#cdd3dd}
+.card li::before{
+  content:"";position:absolute;left:2px;top:.72em;width:12px;height:7px;
+  border-left:2px solid var(--accent-cyan);border-bottom:2px solid var(--accent-cyan);
+  transform:rotate(-45deg) translateY(-50%);
+}
+.card strong{color:#fff;font-weight:600}
+.card a.lnk{color:var(--accent-cyan);text-decoration:underline;text-underline-offset:3px}
+.note{
+  padding:14px 18px;border-radius:12px;font-size:15px;
+  background:rgba(157,78,221,.09);border:1px solid rgba(157,78,221,.35);color:#e1d2f5;
+}
+.note.ok{background:rgba(0,255,204,.07);border-color:rgba(0,255,204,.32);color:#c8fff1}
+
+/* data-type blocks (section 1) */
+.dt{display:flex;flex-direction:column;gap:12px}
+.dt .row{
+  padding:14px 18px;border-radius:13px;border:1px solid var(--line);background:rgba(255,255,255,.02);
+}
+.dt .row h3{font-size:16px;font-weight:700;color:var(--accent-cyan);margin-bottom:3px}
+.dt .row p{font-size:15.5px}
+
+/* ---------- Contact ---------- */
+.contact{
+  background:linear-gradient(135deg,rgba(0,255,204,.1),rgba(157,78,221,.14));
+  border:1px solid rgba(0,255,204,.3);border-radius:var(--radius);padding:34px 32px;
+}
+.contact h2{font-size:23px;margin-bottom:6px}
+.contact > p{color:var(--text-muted);margin-bottom:22px}
+.c-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.c-item{
+  background:rgba(6,9,19,.55);border:1px solid var(--line);border-radius:14px;padding:16px 18px;
+  transition:.25s;min-width:0;
+}
+a.c-item:hover{border-color:var(--accent-cyan);transform:translateY(-3px)}
+.c-item small{display:block;font-family:'Inter',sans-serif;font-size:11.5px;letter-spacing:1.6px;text-transform:uppercase;color:var(--text-muted);margin-bottom:5px}
+.c-item span{font-weight:600;font-size:15.5px;word-break:break-word}
+
+/* ---------- Footer ---------- */
+footer{
+  position:relative;z-index:1;margin-top:64px;border-top:1px solid var(--line);
+  padding:30px 20px 38px;text-align:center;color:var(--text-muted);font-size:14.5px;
+}
+footer .row{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-bottom:14px}
+footer button,footer .row a{
+  font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;
+  padding:9px 18px;border-radius:999px;background:transparent;color:var(--text-main);
+  border:1px solid var(--line);transition:.25s;
+}
+footer button:hover,footer .row a:hover{border-color:var(--accent-cyan);color:var(--accent-cyan)}
+
+.to-top{
+  position:fixed;right:20px;bottom:22px;z-index:60;width:46px;height:46px;border-radius:50%;
+  display:grid;place-items:center;cursor:pointer;border:1px solid rgba(0,255,204,.5);
+  background:rgba(6,9,19,.9);color:var(--accent-cyan);
+  opacity:0;pointer-events:none;transform:translateY(10px);transition:.3s;
+}
+.to-top.show{opacity:1;pointer-events:auto;transform:none}
+.to-top svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---------- Responsive ---------- */
+@media (max-width:980px){
+  .wrap{grid-template-columns:1fr}
+  .toc{position:static;display:flex;gap:8px;overflow-x:auto;padding:12px;scrollbar-width:none}
+  .toc::-webkit-scrollbar{display:none}
+  .toc h4{display:none}
+  .toc a{white-space:nowrap;flex:0 0 auto;border:1px solid var(--line)}
+  .highlights{grid-template-columns:repeat(2,1fr)}
+  .c-grid{grid-template-columns:1fr}
+}
+@media (max-width:560px){
+  body{font-size:16px}
+  .hero{padding:48px 16px 32px}
+  .card{padding:22px 18px}
+  .card h2{font-size:19px}
+  .contact{padding:24px 18px}
+  .brand span.full{display:none}
+  .back{padding:8px 14px;font-size:13.5px}
+}
+@media print{
+  body::before,.topbar,.toc,.to-top,footer .row{display:none!important}
+  body{background:#fff;color:#000}
+  .card,.contact,.hl,.dt .row{background:#fff!important;border:1px solid #bbb!important;color:#000!important;break-inside:avoid}
+  .card p,.card li,.hl .lbl,.hero p{color:#222!important}
+  .hero h1{-webkit-text-fill-color:#000;color:#000;background:none}
+  .wrap{display:block}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
 </head>
 <body>
-  <main>
-    <a class="back" href="/">← ElectroTechBD-তে ফিরে যান</a>
-    <article>
-      <h1>Privacy Policy (গোপনীয়তা নীতি)</h1>
-      <p class="updated">সর্বশেষ হালনাগাদ: ২ অক্টোবর ২০২৬</p>
 
-      <p>
-        ElectroTechBD Engineering &amp; Automation (“ElectroTechBD”, “আমরা”)
-        আপনার ব্যক্তিগত তথ্যকে সম্মানের সঙ্গে বিবেচনা করে। এই নীতিতে
-        electrotechbd.xyz ব্যবহার, যোগাযোগ বা সার্ভিস বুক করার সময় কোন তথ্য
-        নেওয়া হয়, কেন ব্যবহার করা হয় এবং কীভাবে আপনার অনুরোধ জানাবেন তা বলা হয়েছে।
-      </p>
+<header class="topbar">
+  <div class="topbar-in">
+    <a href="index.html" class="brand" aria-label="ElectroTechBD">
+      <span class="brand-logo"><svg viewBox="0 0 24 24"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg></span>
+      <span>Electro<b>Tech</b>BD</span>
+    </a>
+    <a href="index.html" class="back">← ElectroTechBD-তে ফিরে যান</a>
+  </div>
+</header>
 
-      <h2>১. আমরা কোন তথ্য নিতে পারি</h2>
-      <ul>
-        <li>
-          <strong>বুকিং ও site-visit request:</strong> আপনার নাম, ফোন নম্বর,
-          পছন্দের সার্ভিস, পছন্দের visit date, project notes এবং ঐচ্ছিক
-          blueprint/drawing attachment।
-        </li>
-        <li>
-          <strong>Contact ও quick-contact form:</strong> আপনার দেওয়া নাম,
-          ফোন নম্বর বা ইমেইল এবং বার্তা/প্রশ্ন।
-        </li>
-        <li>
-          <strong>Estimator request:</strong> আনুমানিক project area, room count,
-          wiring grade, solar নির্বাচন এবং দেখানো cost estimate-সংক্রান্ত তথ্য;
-          consultation request করলে এই তথ্য backend-এ সংরক্ষণ হতে পারে।
-        </li>
-        <li>
-          <strong>প্রযুক্তিগত তথ্য:</strong> সাইট চালানো ও নিরাপত্তার জন্য hosting
-          provider server log-এ IP address, browser/device তথ্য এবং request time
-          রাখতে পারে।
-        </li>
-      </ul>
+<section class="hero">
+  <span class="badge"><i></i> আপনার তথ্য, আপনার আস্থা</span>
+  <h1>গোপনীয়তা নীতি<small>Privacy Policy</small></h1>
+  <p><strong>ElectroTechBD Engineering &amp; Automation</strong> (“ElectroTechBD”, “আমরা”) আপনার ব্যক্তিগত তথ্যকে সম্মানের সঙ্গে বিবেচনা করে। এই নীতিতে <strong>electrotechbd.xyz</strong> ব্যবহার, যোগাযোগ বা সার্ভিস বুক করার সময় কোন তথ্য নেওয়া হয়, কেন ব্যবহার করা হয় এবং কীভাবে আপনার অনুরোধ জানাবেন তা বলা হয়েছে।</p>
+  <div class="meta">
+    <span>সর্বশেষ হালনাগাদ: ২ অক্টোবর ২০২৬</span>
+    <span>electrotechbd.xyz</span>
+  </div>
+</section>
 
-      <h2>২. তথ্য কী কাজে ব্যবহার হয়</h2>
+<section class="highlights" aria-label="এক নজরে">
+  <div class="hl">
+    <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 4.5 3.2 7.8 8 9 4.8-1.2 8-4.5 8-9V6z"/><path d="m9 12 2 2 4-4"/></svg></div>
+    <div class="t">তথ্য বিক্রি হয় না</div>
+    <div class="lbl">আপনার তথ্য বিক্রি করে আমরা অর্থ উপার্জন করি না</div>
+  </div>
+  <div class="hl">
+    <div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m5.6 5.6 12.8 12.8"/></svg></div>
+    <div class="t">বিজ্ঞাপন ট্র্যাকিং নেই</div>
+    <div class="lbl">Google Analytics, Ads tag ও Meta Pixel বর্তমানে সক্রিয় নেই</div>
+  </div>
+  <div class="hl">
+    <div class="ic"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></div>
+    <div class="t">প্রাইভেট ফাইল স্টোরেজ</div>
+    <div class="lbl">আপলোড করা ড্রয়িং সুরক্ষিত স্টোরেজে প্রক্রিয়া হয়</div>
+  </div>
+  <div class="hl">
+    <div class="ic"><svg viewBox="0 0 24 24"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z"/><path d="m14 6 4 4"/></svg></div>
+    <div class="t">আপনার নিয়ন্ত্রণ</div>
+    <div class="lbl">তথ্য দেখা, সংশোধন বা মুছে ফেলার অনুরোধ করতে পারেন</div>
+  </div>
+</section>
+
+<div class="wrap">
+  <nav class="toc" aria-label="সূচিপত্র">
+    <h4>সূচিপত্র</h4>
+    <a href="#p1"><em>১</em>কোন তথ্য নিতে পারি</a>
+    <a href="#p2"><em>২</em>তথ্যের ব্যবহার</a>
+    <a href="#p3"><em>৩</em>প্রক্রিয়াকরণ ও শেয়ার</a>
+    <a href="#p4"><em>৪</em>Storage, Cookies ও বিজ্ঞাপন</a>
+    <a href="#p5"><em>৫</em>তথ্য সংরক্ষণকাল</a>
+    <a href="#p6"><em>৬</em>তথ্যের নিরাপত্তা</a>
+    <a href="#p7"><em>৭</em>আপনার অনুরোধ</a>
+    <a href="#p8"><em>৮</em>নীতির পরিবর্তন</a>
+    <a href="#p9"><em>৯</em>যোগাযোগ</a>
+  </nav>
+
+  <main class="content">
+
+    <section class="card" id="p1">
+      <div class="card-head"><span class="idx">০১</span><h2>আমরা কোন তথ্য নিতে পারি</h2></div>
+      <div class="dt">
+        <div class="row"><h3>বুকিং ও site-visit request</h3><p>আপনার নাম, ফোন নম্বর, পছন্দের সার্ভিস, পছন্দের visit date, project notes এবং ঐচ্ছিক blueprint/drawing attachment।</p></div>
+        <div class="row"><h3>Contact ও quick-contact form</h3><p>আপনার দেওয়া নাম, ফোন নম্বর বা ইমেইল এবং বার্তা/প্রশ্ন।</p></div>
+        <div class="row"><h3>Estimator request</h3><p>আনুমানিক project area, room count, wiring grade, solar নির্বাচন এবং দেখানো cost estimate-সংক্রান্ত তথ্য; consultation request করলে এই তথ্য backend-এ সংরক্ষণ হতে পারে।</p></div>
+        <div class="row"><h3>প্রযুক্তিগত তথ্য</h3><p>সাইট চালানো ও নিরাপত্তার জন্য hosting provider server log-এ IP address, browser/device তথ্য এবং request time রাখতে পারে।</p></div>
+      </div>
+    </section>
+
+    <section class="card" id="p2">
+      <div class="card-head"><span class="idx">০২</span><h2>তথ্য কী কাজে ব্যবহার হয়</h2></div>
       <ul>
         <li>আপনার প্রশ্নের উত্তর, booking যাচাই এবং service নিয়ে যোগাযোগ করতে।</li>
         <li>আপনার দেওয়া project information অনুযায়ী প্রাথমিক estimate বা পরামর্শ দিতে।</li>
         <li>ঐচ্ছিক drawing/attachment দেখে কাজের scope বুঝতে।</li>
         <li>সাইট সচল রাখা, নিরাপত্তা রক্ষা এবং technical সমস্যা সমাধান করতে।</li>
       </ul>
-      <p>আপনার তথ্য বিক্রি করে অর্থ উপার্জন করার জন্য আমরা এটি ব্যবহার করি না।</p>
+      <div class="note ok"><strong>আপনার তথ্য বিক্রি করে অর্থ উপার্জন করার জন্য আমরা এটি ব্যবহার করি না।</strong></div>
+    </section>
 
-      <h2>৩. তথ্য কোথায় প্রক্রিয়াকরণ বা শেয়ার হতে পারে</h2>
-      <p>
-        Booking, contact ও estimator request পরিচালনা করতে তথ্য Supabase-এর
-        Edge Functions, database এবং private file storage-এ প্রক্রিয়াকৃত হয়।
-        Supabase এবং static website hosting provider তাদের নিজস্ব privacy policy
-        অনুযায়ী technical তথ্য প্রক্রিয়া করতে পারে; তাদের server বাংলাদেশে নাও
-        থাকতে পারে। Contact form-এর তথ্য আর FormSubmit-এ পাঠানো হয় না।
-      </p>
-      <p>
-        আপনি নিজে phone বা WhatsApp link ব্যবহার করলে আপনার device সংশ্লিষ্ট
-        phone/WhatsApp service খুলবে। WhatsApp-এ যোগাযোগ করলে আপনার নম্বর ও
-        পাঠানো message WhatsApp-এর কাছে যাবে এবং তাদের নীতিমালা প্রযোজ্য হবে।
-      </p>
-      <p>
-        সাইটে Google Fonts ও Font Awesome-এর মতো third-party design resource
-        লোড হয়; browser সেগুলো আনতে সংশ্লিষ্ট provider-এর সঙ্গে সংযোগ করে।
-      </p>
+    <section class="card" id="p3">
+      <div class="card-head"><span class="idx">০৩</span><h2>তথ্য কোথায় প্রক্রিয়াকরণ বা শেয়ার হতে পারে</h2></div>
+      <p>Booking, contact ও estimator request পরিচালনা করতে তথ্য <strong>Supabase-এর Edge Functions, database এবং private file storage-এ</strong> প্রক্রিয়াকৃত হয়। Supabase এবং static website hosting provider তাদের নিজস্ব privacy policy অনুযায়ী technical তথ্য প্রক্রিয়া করতে পারে; তাদের server বাংলাদেশে নাও থাকতে পারে। Contact form-এর তথ্য আর FormSubmit-এ পাঠানো হয় না।</p>
+      <p>আপনি নিজে phone বা WhatsApp link ব্যবহার করলে আপনার device সংশ্লিষ্ট phone/WhatsApp service খুলবে। WhatsApp-এ যোগাযোগ করলে আপনার নম্বর ও পাঠানো message WhatsApp-এর কাছে যাবে এবং তাদের নীতিমালা প্রযোজ্য হবে।</p>
+      <p>সাইটে Google Fonts ও Font Awesome-এর মতো third-party design resource লোড হয়; browser সেগুলো আনতে সংশ্লিষ্ট provider-এর সঙ্গে সংযোগ করে।</p>
+    </section>
 
-      <h2>৪. Browser storage, cookies ও advertising</h2>
-      <p>
-        Booking confirmation দেখাতে browser-এর local storage-এ সর্বশেষ booking
-        confirmation-এর কিছু তথ্য রাখা হতে পারে। এটি browser থেকে মুছে ফেললে
-        সেখানকার copy-ও মুছে যায়।
-      </p>
-      <p>
-        এই নীতি প্রকাশের সময় সাইটে Google Analytics, Google Ads conversion tag
-        বা Meta Pixel সক্রিয় নেই এবং সেগুলোর advertising cookie দিয়ে visitor
-        track করা হচ্ছে না। ভবিষ্যতে analytics বা advertising tracking চালু করলে,
-        সেই অনুযায়ী এই নীতি হালনাগাদ করা হবে এবং যেখানে প্রয়োজন সেখানে
-        উপযুক্ত notice/consent নেওয়া হবে।
-      </p>
+    <section class="card" id="p4">
+      <div class="card-head"><span class="idx">০৪</span><h2>Browser storage, cookies ও advertising</h2></div>
+      <p>Booking confirmation দেখাতে browser-এর local storage-এ সর্বশেষ booking confirmation-এর কিছু তথ্য রাখা হতে পারে। এটি browser থেকে মুছে ফেললে সেখানকার copy-ও মুছে যায়।</p>
+      <p>এই নীতি প্রকাশের সময় সাইটে <strong>Google Analytics, Google Ads conversion tag বা Meta Pixel সক্রিয় নেই</strong> এবং সেগুলোর advertising cookie দিয়ে visitor track করা হচ্ছে না।</p>
+      <div class="note">ভবিষ্যতে analytics বা advertising tracking চালু করলে, সেই অনুযায়ী এই নীতি হালনাগাদ করা হবে এবং যেখানে প্রয়োজন সেখানে উপযুক্ত notice/consent নেওয়া হবে।</div>
+    </section>
 
-      <h2>৫. তথ্য কতদিন রাখা হয়</h2>
-      <p>
-        আপনার request-এর জবাব, service পরিচালনা, record রাখা এবং প্রযোজ্য
-        আইনি/ব্যবসায়িক প্রয়োজন মেটাতে যতদিন দরকার ততদিন তথ্য রাখা হতে পারে।
-        আর প্রয়োজন না থাকলে তথ্য মুছে ফেলা বা শনাক্ত করা যায় না এমনভাবে
-        সংরক্ষণের জন্য যুক্তিসঙ্গত পদক্ষেপ নেওয়া হবে। Provider-এর নিজস্ব backup
-        বা log-এ মুছে ফেলার পরে কিছু সময় copy থেকে যেতে পারে।
-      </p>
+    <section class="card" id="p5">
+      <div class="card-head"><span class="idx">০৫</span><h2>তথ্য কতদিন রাখা হয়</h2></div>
+      <p>আপনার request-এর জবাব, service পরিচালনা, record রাখা এবং প্রযোজ্য আইনি/ব্যবসায়িক প্রয়োজন মেটাতে যতদিন দরকার ততদিন তথ্য রাখা হতে পারে। আর প্রয়োজন না থাকলে তথ্য মুছে ফেলা বা শনাক্ত করা যায় না এমনভাবে সংরক্ষণের জন্য যুক্তিসঙ্গত পদক্ষেপ নেওয়া হবে।</p>
+      <p>Provider-এর নিজস্ব backup বা log-এ মুছে ফেলার পরে কিছু সময় copy থেকে যেতে পারে।</p>
+    </section>
 
-      <h2>৬. তথ্যের নিরাপত্তা</h2>
-      <p>
-        তথ্য অননুমোদিত ব্যবহার বা প্রকাশ থেকে রক্ষায় যুক্তিসঙ্গত technical ও
-        organizational ব্যবস্থা নেওয়া হয়। ইন্টারনেট বা কোনো storage পদ্ধতিই
-        শতভাগ নিরাপদ—এমন নিশ্চয়তা দেওয়া যায় না।
-      </p>
+    <section class="card" id="p6">
+      <div class="card-head"><span class="idx">০৬</span><h2>তথ্যের নিরাপত্তা</h2></div>
+      <p>তথ্য অননুমোদিত ব্যবহার বা প্রকাশ থেকে রক্ষায় যুক্তিসঙ্গত technical ও organizational ব্যবস্থা নেওয়া হয়। ইন্টারনেট বা কোনো storage পদ্ধতিই শতভাগ নিরাপদ—এমন নিশ্চয়তা দেওয়া যায় না।</p>
+    </section>
 
-      <h2>৭. আপনার অনুরোধ</h2>
-      <p>
-        আপনার request-সংক্রান্ত তথ্য দেখতে, ভুল সংশোধন করতে বা মুছে ফেলার অনুরোধ
-        জানাতে নিচের যোগাযোগের মাধ্যমে লিখুন। অনুরোধটি যাচাই করতে আপনার request-এর
-        সঙ্গে সম্পর্কিত কিছু তথ্য চাইতে পারি।
-      </p>
+    <section class="card" id="p7">
+      <div class="card-head"><span class="idx">০৭</span><h2>আপনার অনুরোধ</h2></div>
+      <p>আপনার request-সংক্রান্ত তথ্য <strong>দেখতে, ভুল সংশোধন করতে বা মুছে ফেলার</strong> অনুরোধ জানাতে নিচের যোগাযোগের মাধ্যমে লিখুন। অনুরোধটি যাচাই করতে আপনার request-এর সঙ্গে সম্পর্কিত কিছু তথ্য চাইতে পারি।</p>
+    </section>
 
-      <h2>৮. নীতির পরিবর্তন</h2>
-      <p>
-        সাইটের form, service বা তথ্য ব্যবহারের পদ্ধতি বদলালে এই নীতি হালনাগাদ
-        হতে পারে। পরিবর্তনের পর এই পাতায় নতুন হালনাগাদের তারিখ দেখানো হবে।
-      </p>
+    <section class="card" id="p8">
+      <div class="card-head"><span class="idx">০৮</span><h2>নীতির পরিবর্তন</h2></div>
+      <p>সাইটের form, service বা তথ্য ব্যবহারের পদ্ধতি বদলালে এই নীতি হালনাগাদ হতে পারে। পরিবর্তনের পর এই পাতায় নতুন হালনাগাদের তারিখ দেখানো হবে।</p>
+      <p>সেবার শর্তাবলী দেখতে <a class="lnk" href="terms-conditions.html">Terms &amp; Conditions</a> পাতাটি দেখুন।</p>
+    </section>
 
-      <h2>৯. যোগাযোগ</h2>
-      <p>
-        Privacy বা তথ্য-সংক্রান্ত অনুরোধ:
-        <a href="mailto:contact.electrotechbd@gmail.com">contact.electrotechbd@gmail.com</a><br>
-        ফোন: <a href="tel:+8801710830391">+880 1710830391</a><br>
-        ঠিকানা/পরিষেবা এলাকা: ঢাকা, বাংলাদেশ।
-      </p>
-    </article>
+    <section class="contact" id="p9">
+      <h2>যোগাযোগ</h2>
+      <p>Privacy বা তথ্য-সংক্রান্ত যেকোনো অনুরোধ ও প্রশ্নের জন্য আমাদের সাথে যোগাযোগ করুন।</p>
+      <div class="c-grid">
+        <a class="c-item" href="mailto:contact.electrotechbd@gmail.com"><small>ইমেইল</small><span>contact.electrotechbd@gmail.com</span></a>
+        <a class="c-item" href="tel:+8801710830391"><small>ফোন</small><span>+880 1710830391</span></a>
+        <div class="c-item"><small>ঠিকানা / সেবা এলাকা</small><span>ঢাকা, বাংলাদেশ</span></div>
+      </div>
+    </section>
+
   </main>
+</div>
+
+<footer>
+  <div class="row">
+    <button type="button" onclick="window.print()">প্রিন্ট / PDF সেভ</button>
+    <a href="terms.html">Terms &amp; Conditions</a>
+    <a href="index.html">হোম পেজ</a>
+  </div>
+  © <span id="yr">2026</span> ElectroTechBD Engineering &amp; Automation · সর্বস্বত্ব সংরক্ষিত
+</footer>
+
+<button class="to-top" id="toTop" aria-label="উপরে যান">
+  <svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+
+<script>
+(function(){
+  var links=[].slice.call(document.querySelectorAll('.toc a'));
+  var secs=links.map(function(a){return document.querySelector(a.getAttribute('href'))});
+  function spy(){
+    var y=window.scrollY+140,cur=0;
+    secs.forEach(function(s,i){if(s&&s.offsetTop<=y)cur=i});
+    links.forEach(function(a,i){a.classList.toggle('active',i===cur)});
+    var act=links[cur];
+    if(act&&window.innerWidth<=980){
+      var box=act.parentNode;
+      box.scrollTo({left:act.offsetLeft-box.clientWidth/2+act.clientWidth/2,behavior:'smooth'});
+    }
+    document.getElementById('toTop').classList.toggle('show',window.scrollY>500);
+  }
+  window.addEventListener('scroll',spy,{passive:true});spy();
+  document.getElementById('toTop').addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'})});
+  document.getElementById('yr').textContent=new Date().getFullYear();
+})();
+</script>
 </body>
 </html>
