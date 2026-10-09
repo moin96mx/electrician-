@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>শর্তাবলী (Terms & Conditions) | ElectroTechBD</title>
+<meta name="description" content="ElectroTechBD Engineering & Automation এর সেবা, পেমেন্ট, ওয়ারেন্টি ও গোপনীয়তা সংক্রান্ত শর্তাবলী।">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg-dark:#060913;
+  --bg-card:#0f172a;
+  --bg-soft:#0b1222;
+  --accent-cyan:#00ffcc;
+  --accent-purple:#9d4edd;
+  --text-main:#f3f4f6;
+  --text-muted:#9ca3af;
+  --line:rgba(255,255,255,.08);
+  --radius:18px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+body{
+  font-family:'Hind Siliguri','Inter',Arial,sans-serif;
+  background:var(--bg-dark);
+  color:var(--text-main);
+  line-height:1.8;
+  font-size:16.5px;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(700px 400px at 85% -5%,rgba(157,78,221,.18),transparent 60%),
+    radial-gradient(700px 420px at 5% 0%,rgba(0,255,204,.12),transparent 60%);
+}
+a{color:inherit;text-decoration:none}
+
+/* ---------- Top bar ---------- */
+.topbar{
+  position:sticky;top:0;z-index:50;
+  background:rgba(6,9,19,.82);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+}
+.topbar-in{
+  max-width:1180px;margin:auto;padding:14px 20px;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+}
+.brand{display:flex;align-items:center;gap:11px;font-family:'Inter',sans-serif;font-weight:800;font-size:19px;letter-spacing:.2px}
+.brand-logo{
+  width:38px;height:38px;border-radius:11px;display:grid;place-items:center;
+  border:1.5px solid var(--accent-cyan);
+  box-shadow:0 0 18px rgba(0,255,204,.35),inset 0 0 12px rgba(0,255,204,.15);
+}
+.brand-logo svg{width:20px;height:20px;fill:var(--accent-cyan)}
+.brand b{color:var(--accent-cyan)}
+.back{
+  font-size:14.5px;font-weight:600;padding:9px 18px;border-radius:999px;
+  border:1px solid rgba(0,255,204,.45);color:var(--accent-cyan);
+  transition:.25s;white-space:nowrap;
+}
+.back:hover{background:var(--accent-cyan);color:#04120e;box-shadow:0 0 22px rgba(0,255,204,.4)}
+
+/* ---------- Hero ---------- */
+.hero{position:relative;z-index:1;text-align:center;padding:72px 20px 46px;max-width:900px;margin:auto}
+.badge{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:13.5px;font-weight:600;letter-spacing:.4px;
+  padding:7px 16px;border-radius:999px;
+  background:rgba(0,255,204,.08);border:1px solid rgba(0,255,204,.3);color:var(--accent-cyan);
+}
+.badge i{width:7px;height:7px;border-radius:50%;background:var(--accent-cyan);box-shadow:0 0 10px var(--accent-cyan)}
+.hero h1{
+  margin-top:20px;font-size:clamp(32px,6vw,54px);line-height:1.2;font-weight:700;
+  background:linear-gradient(120deg,#fff 20%,var(--accent-cyan) 60%,var(--accent-purple));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.hero h1 small{display:block;font-family:'Inter',sans-serif;font-size:.42em;font-weight:600;letter-spacing:3px;color:var(--text-muted);-webkit-text-fill-color:var(--text-muted);margin-top:10px;text-transform:uppercase}
+.hero p{margin-top:20px;color:var(--text-muted);font-size:17px;max-width:720px;margin-inline:auto}
+.hero p strong{color:var(--text-main);font-weight:600}
+.meta{margin-top:22px;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;font-size:14px;color:var(--text-muted)}
+.meta span{padding:6px 14px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.02)}
+
+/* ---------- Highlights ---------- */
+.highlights{
+  position:relative;z-index:1;max-width:1180px;margin:10px auto 0;padding:0 20px;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:16px;
+}
+.hl{
+  background:linear-gradient(160deg,var(--bg-card),var(--bg-soft));
+  border:1px solid var(--line);border-radius:var(--radius);padding:22px 18px;text-align:center;
+  transition:.3s;
+}
+.hl:hover{transform:translateY(-4px);border-color:rgba(0,255,204,.45);box-shadow:0 14px 40px rgba(0,255,204,.08)}
+.hl .num{font-family:'Inter',sans-serif;font-size:30px;font-weight:800;color:var(--accent-cyan);line-height:1.1}
+.hl .lbl{margin-top:8px;font-size:14.5px;color:var(--text-muted);line-height:1.5}
+
+/* ---------- Layout ---------- */
+.wrap{
+  position:relative;z-index:1;max-width:1180px;margin:48px auto 0;padding:0 20px;
+  display:grid;grid-template-columns:270px 1fr;gap:34px;align-items:start;
+}
+.toc{
+  position:sticky;top:92px;
+  background:var(--bg-card);border:1px solid var(--line);border-radius:var(--radius);padding:20px 14px;
+}
+.toc h4{font-family:'Inter',sans-serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);padding:0 12px 10px}
+.toc a{
+  display:flex;align-items:center;gap:11px;padding:9px 12px;border-radius:11px;
+  font-size:14.8px;color:var(--text-muted);transition:.2s;border:1px solid transparent;
+}
+.toc a em{
+  font-style:normal;font-family:'Inter',sans-serif;font-size:12px;font-weight:700;
+  width:24px;height:24px;border-radius:7px;display:grid;place-items:center;
+  background:rgba(255,255,255,.05);flex:0 0 24px;
+}
+.toc a:hover{color:var(--text-main);background:rgba(255,255,255,.04)}
+.toc a.active{color:var(--accent-cyan);background:rgba(0,255,204,.07);border-color:rgba(0,255,204,.25)}
+.toc a.active em{background:var(--accent-cyan);color:#04120e}
+
+/* ---------- Sections ---------- */
+.content{display:flex;flex-direction:column;gap:20px;min-width:0}
+.card{
+  background:linear-gradient(165deg,var(--bg-card),var(--bg-soft));
+  border:1px solid var(--line);border-radius:var(--radius);padding:30px 32px;
+  position:relative;overflow:hidden;transition:border-color .3s;
+}
+.card::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:linear-gradient(var(--accent-cyan),var(--accent-purple));opacity:.8;
+}
+.card:hover{border-color:rgba(0,255,204,.28)}
+.card-head{display:flex;align-items:center;gap:15px;margin-bottom:16px}
+.idx{
+  font-family:'Inter',sans-serif;font-weight:800;font-size:15px;
+  width:42px;height:42px;border-radius:12px;display:grid;place-items:center;flex:0 0 42px;
+  color:var(--accent-cyan);background:rgba(0,255,204,.08);border:1px solid rgba(0,255,204,.3);
+}
+.card h2{font-size:22px;font-weight:700;line-height:1.35}
+.card p{color:#cdd3dd}
+.card p + p,.card p + ul,.card ul + p{margin-top:12px}
+.card ul{list-style:none;display:flex;flex-direction:column;gap:11px}
+.card li{
+  position:relative;padding-left:30px;color:#cdd3dd;
+}
+.card li::before{
+  content:"";position:absolute;left:2px;top:.72em;width:12px;height:7px;
+  border-left:2px solid var(--accent-cyan);border-bottom:2px solid var(--accent-cyan);
+  transform:rotate(-45deg) translateY(-50%);
+}
+.card strong{color:#fff;font-weight:600}
+.note{
+  margin-top:16px;padding:14px 18px;border-radius:12px;font-size:15px;
+  background:rgba(157,78,221,.09);border:1px solid rgba(157,78,221,.35);color:#e1d2f5;
+}
+
+/* ---------- Contact ---------- */
+.contact{
+  background:linear-gradient(135deg,rgba(0,255,204,.1),rgba(157,78,221,.14));
+  border:1px solid rgba(0,255,204,.3);border-radius:var(--radius);padding:34px 32px;
+}
+.contact h2{font-size:23px;margin-bottom:6px}
+.contact > p{color:var(--text-muted);margin-bottom:22px}
+.c-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.c-item{
+  background:rgba(6,9,19,.55);border:1px solid var(--line);border-radius:14px;padding:16px 18px;
+  transition:.25s;min-width:0;
+}
+a.c-item:hover{border-color:var(--accent-cyan);transform:translateY(-3px)}
+.c-item small{display:block;font-family:'Inter',sans-serif;font-size:11.5px;letter-spacing:1.6px;text-transform:uppercase;color:var(--text-muted);margin-bottom:5px}
+.c-item span{font-weight:600;font-size:15.5px;word-break:break-word}
+
+/* ---------- Footer ---------- */
+footer{
+  position:relative;z-index:1;margin-top:64px;border-top:1px solid var(--line);
+  padding:30px 20px 38px;text-align:center;color:var(--text-muted);font-size:14.5px;
+}
+footer .row{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-bottom:14px}
+footer button,footer .row a{
+  font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;
+  padding:9px 18px;border-radius:999px;background:transparent;color:var(--text-main);
+  border:1px solid var(--line);transition:.25s;
+}
+footer button:hover,footer .row a:hover{border-color:var(--accent-cyan);color:var(--accent-cyan)}
+
+.to-top{
+  position:fixed;right:20px;bottom:22px;z-index:60;width:46px;height:46px;border-radius:50%;
+  display:grid;place-items:center;cursor:pointer;border:1px solid rgba(0,255,204,.5);
+  background:rgba(6,9,19,.9);color:var(--accent-cyan);
+  opacity:0;pointer-events:none;transform:translateY(10px);transition:.3s;
+}
+.to-top.show{opacity:1;pointer-events:auto;transform:none}
+.to-top svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---------- Responsive ---------- */
+@media (max-width:980px){
+  .wrap{grid-template-columns:1fr}
+  .toc{position:static;display:flex;gap:8px;overflow-x:auto;padding:12px;scrollbar-width:none}
+  .toc::-webkit-scrollbar{display:none}
+  .toc h4{display:none}
+  .toc a{white-space:nowrap;flex:0 0 auto;border:1px solid var(--line)}
+  .highlights{grid-template-columns:repeat(2,1fr)}
+  .c-grid{grid-template-columns:1fr}
+}
+@media (max-width:560px){
+  body{font-size:16px}
+  .hero{padding:48px 16px 32px}
+  .card{padding:22px 18px}
+  .card h2{font-size:19px}
+  .contact{padding:24px 18px}
+  .hl .num{font-size:25px}
+  .brand span.full{display:none}
+  .back{padding:8px 14px;font-size:13.5px}
+}
+@media print{
+  body::before,.topbar,.toc,.to-top,footer .row{display:none!important}
+  body{background:#fff;color:#000}
+  .card,.contact,.hl{background:#fff!important;border:1px solid #bbb!important;color:#000!important;break-inside:avoid}
+  .card p,.card li,.hl .lbl,.hero p{color:#222!important}
+  .hero h1{-webkit-text-fill-color:#000;color:#000;background:none}
+  .wrap{display:block}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-in">
+    <a href="index.html" class="brand" aria-label="ElectroTechBD">
+      <span class="brand-logo"><svg viewBox="0 0 24 24"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg></span>
+      <span>Electro<b>Tech</b>BD</span>
+    </a>
+    <a href="index.html" class="back">← ElectroTechBD-তে ফিরে যান</a>
+  </div>
+</header>
+
+<section class="hero">
+  <span class="badge"><i></i> আইনি তথ্য</span>
+  <h1>শর্তাবলী<small>Terms &amp; Conditions</small></h1>
+  <p><strong>ElectroTechBD Engineering &amp; Automation</strong> (“ElectroTechBD”, “আমরা”) – Licensed Electrician (Permit: E20230043144)। আমাদের ওয়েবসাইট <strong>electrotechbd.xyz</strong> ব্যবহার ও সেবা বুক করার মাধ্যমে আপনি নিচের শর্তগুলো মেনে নিচ্ছেন।</p>
+  <div class="meta">
+    <span>সর্বশেষ হালনাগাদ: ৬ অক্টোবর ২০২৬</span>
+    <span>লাইসেন্সপ্রাপ্ত ইলেকট্রিশিয়ান</span>
+  </div>
+</section>
+
+<section class="highlights" aria-label="এক নজরে">
+  <div class="hl"><div class="num">৫০%</div><div class="lbl">অগ্রিম পেমেন্টে বুকিং কনফার্ম</div></div>
+  <div class="hl"><div class="num">১ বছর</div><div class="lbl">ওয়্যারিং ও ইন্সটলেশনে সার্ভিস ওয়ারেন্টি</div></div>
+  <div class="hl"><div class="num">২৪ ঘণ্টা</div><div class="lbl">বাতিলের জন্য ভিজিটের আগে জানানো</div></div>
+  <div class="hl"><div class="num">ফ্রি</div><div class="lbl">ঢাকার ভিতরে সাইট ভিজিট</div></div>
+</section>
+
+<div class="wrap">
+  <nav class="toc" aria-label="সূচিপত্র">
+    <h4>সূচিপত্র</h4>
+    <a href="#s1"><em>১</em>সেবার পরিধি ও এরিয়া</a>
+    <a href="#s2"><em>২</em>প্রাইজিং ও কোটেশন</a>
+    <a href="#s3"><em>৩</em>বুকিং ও পেমেন্ট নীতি</a>
+    <a href="#s4"><em>৪</em>ওয়ারেন্টি ও দায়বদ্ধতা</a>
+    <a href="#s5"><em>৫</em>ক্লায়েন্টের দায়িত্ব</a>
+    <a href="#s6"><em>৬</em>ফাইল আপলোড ও গোপনীয়তা</a>
+    <a href="#s7"><em>৭</em>পরিবর্তন</a>
+    <a href="#s8"><em>৮</em>যোগাযোগ</a>
+  </nav>
+
+  <main class="content">
+
+    <section class="card" id="s1">
+      <div class="card-head"><span class="idx">০১</span><h2>সেবার পরিধি ও এরিয়া</h2></div>
+      <p>আমরা ইলেকট্রিক্যাল ওয়্যারিং, স্মার্ট হোম অটোমেশন (ESP32), সোলার পাওয়ার সিস্টেম, প্যানেল বোর্ড ও ২৪/৭ ইমার্জেন্সি সার্ভিস দিই।</p>
+      <p><strong>প্রধান সার্ভিস এরিয়া:</strong> ঢাকা, গাজীপুর, সাভার, টঙ্গী, কোনাবাড়ি, চন্দ্রা, নারায়ণগঞ্জ ও আশেপাশের এলাকা। এর বাইরে বিশেষ অনুরোধে সার্ভিস দেওয়া হতে পারে।</p>
+    </section>
+
+    <section class="card" id="s2">
+      <div class="card-head"><span class="idx">০২</span><h2>প্রাইজিং ও কোটেশন</h2></div>
+      <ul>
+        <li>ওয়েবসাইটে দেখানো প্যাকেজ (যেমন ২৫৳/Sq.Ft Basic, ৪৫৳/Sq.Ft Smart IoT) এবং Cost Estimator এর ফলাফল একটি <strong>প্রাথমিক ধারণা</strong>।</li>
+        <li><strong>চূড়ান্ত কোটেশন</strong> সাইট ভিজিট, লোড ক্যালকুলেশন এবং আপনার আপলোড করা ব্লু-প্রিন্ট / CAD ফাইল দেখার পর দেওয়া হবে।</li>
+        <li>ফ্যাক্টরি / ইন্ডাস্ট্রিয়াল কাজের জন্য কোটেশন কাস্টম হবে।</li>
+      </ul>
+    </section>
+
+    <section class="card" id="s3">
+      <div class="card-head"><span class="idx">০৩</span><h2>বুকিং ও পেমেন্ট নীতি</h2></div>
+      <ul>
+        <li>সকল কাজের জন্য <strong>৫০% অগ্রিম পেমেন্টে</strong> বুকিং কনফার্ম করতে হবে। বাকি ৫০% কাজ সম্পন্ন হওয়ার পর।</li>
+        <li>ঢাকার ভিতরে সাইট ভিজিট <strong>ফ্রি</strong>। তবে ভিজিটের পর কাজ কনফার্ম না করলে ৫০০ টাকা ভিজিট চার্জ প্রযোজ্য হতে পারে।</li>
+        <li>বুকিং বাতিল করতে চাইলে সাইট ভিজিটের <strong>২৪ ঘণ্টা আগে</strong> জানাতে হবে।</li>
+      </ul>
+    </section>
+
+    <section class="card" id="s4">
+      <div class="card-head"><span class="idx">০৪</span><h2>ওয়ারেন্টি ও দায়বদ্ধতা</h2></div>
+      <ul>
+        <li>আমাদের নিজস্ব ওয়্যারিং ও ইন্সটলেশনে <strong>১ বছরের সার্ভিস ওয়ারেন্টি</strong> থাকবে।</li>
+        <li>সকল কাজ বাংলাদেশের বৈদ্যুতিক নিরাপত্তা বিধি মেনে লাইসেন্সপ্রাপ্ত ইলেকট্রিশিয়ান দ্বারা করা হয়।</li>
+      </ul>
+      <div class="note"><strong>ওয়ারেন্টি প্রযোজ্য হবে না:</strong> ওভারলোড, ভুল ব্যবহার, অনুমোদনহীন পরিবর্তন, পানিতে ভেজা বা প্রাকৃতিক দুর্যোগের কারণে সমস্যা হলে।</div>
+    </section>
+
+    <section class="card" id="s5">
+      <div class="card-head"><span class="idx">০৫</span><h2>ক্লায়েন্টের দায়িত্ব</h2></div>
+      <ul>
+        <li>কাজের সময় নিরাপদ পরিবেশ, সঠিক লোডের তথ্য এবং প্রয়োজনীয় ড্রয়িং সরবরাহ করতে হবে।</li>
+        <li>ভুল তথ্য বা ত্রুটিপূর্ণ মালামালের কারণে কোনো ক্ষতি হলে ElectroTechBD দায়ী থাকবে না।</li>
+      </ul>
+    </section>
+
+    <section class="card" id="s6">
+      <div class="card-head"><span class="idx">০৬</span><h2>ফাইল আপলোড ও গোপনীয়তা</h2></div>
+      <p>আপনি বুকিং ফর্মে যে CAD / PDF / ড্রয়িং আপলোড করছেন, তা <strong>সম্পূর্ণ গোপন</strong> রাখা হবে এবং শুধুমাত্র আপনার প্রজেক্টের কোটেশনের জন্য ব্যবহার করা হবে। বিস্তারিত আমাদের <a href="privacy.html" style="color:var(--accent-cyan);text-decoration:underline;text-underline-offset:3px">Privacy Policy</a> তে দেখুন।</p>
+    </section>
+
+    <section class="card" id="s7">
+      <div class="card-head"><span class="idx">০৭</span><h2>পরিবর্তন</h2></div>
+      <p>সার্ভিস, প্রাইজিং বা নীতিমালা পরিবর্তন হলে এই পাতায় হালনাগাদের তারিখ সহ জানানো হবে।</p>
+    </section>
+
+    <section class="contact" id="s8">
+      <h2>যোগাযোগ</h2>
+      <p>শর্তাবলী সংক্রান্ত যেকোনো প্রশ্ন থাকলে আমাদের সাথে যোগাযোগ করুন।</p>
+      <div class="c-grid">
+        <a class="c-item" href="mailto:contact.electrotechbd@gmail.com"><small>ইমেইল</small><span>contact.electrotechbd@gmail.com</span></a>
+        <a class="c-item" href="tel:+8801710830391"><small>ফোন</small><span>+880 1710830391</span></a>
+        <div class="c-item"><small>ঠিকানা</small><span>ঢাকা, বাংলাদেশ</span></div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<footer>
+  <div class="row">
+    <button type="button" onclick="window.print()">প্রিন্ট / PDF সেভ</button>
+    <a href="index.html">হোম পেজ</a>
+  </div>
+  © <span id="yr">2026</span> ElectroTechBD Engineering &amp; Automation · সর্বস্বত্ব সংরক্ষিত
+</footer>
+
+<button class="to-top" id="toTop" aria-label="উপরে যান">
+  <svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+
+<script>
+(function(){
+  var links=[].slice.call(document.querySelectorAll('.toc a'));
+  var secs=links.map(function(a){return document.querySelector(a.getAttribute('href'))});
+  function spy(){
+    var y=window.scrollY+140,cur=0;
+    secs.forEach(function(s,i){if(s&&s.offsetTop<=y)cur=i});
+    links.forEach(function(a,i){a.classList.toggle('active',i===cur)});
+    var act=links[cur];
+    if(act&&window.innerWidth<=980){
+      var box=act.parentNode;
+      box.scrollTo({left:act.offsetLeft-box.clientWidth/2+act.clientWidth/2,behavior:'smooth'});
+    }
+    document.getElementById('toTop').classList.toggle('show',window.scrollY>500);
+  }
+  window.addEventListener('scroll',spy,{passive:true});spy();
+  document.getElementById('toTop').addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'})});
+  document.getElementById('yr').textContent=new Date().getFullYear();
+})();
+</script>
+</body>
+</html>
