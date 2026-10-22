@@ -1,4 +1,4 @@
-// ElectroHubBD - ULTRA STRICT ROUTER v2 - Email check
+// ElectroHubBD - FINAL v1000 - Contact field fixed
 (function(){
   const URL = 'https://xctzrcprhwsawnalbypi.supabase.co';
   const KEY = 'sb_publishable_hAkwDSANcb2xURtd3UKqHg_l0iUMOts';
@@ -10,7 +10,7 @@
       s.onload=init; document.head.appendChild(s); return;
     }
     const sb = window.supabase.createClient(window.SUPABASE_URL||URL, window.SUPABASE_ANON_KEY||KEY);
-    console.log('✅ ULTRA STRICT Router Ready');
+    console.log('✅ FINAL v1000 Router Ready - Contact fixed');
 
     function genID(prefix){ return '#'+prefix+'-'+Math.random().toString(36).substr(2,6).toUpperCase(); }
     function today(){ return new Date().toISOString().split('T')[0]; }
@@ -21,7 +21,6 @@
       const btn = form.querySelector('button[type="submit"]');
       if(!btn) return;
 
-      // Collect all values
       let allValues = [];
       form.querySelectorAll('input, select, textarea').forEach(inp=>{ if(inp.value) allValues.push(inp.value.trim()); });
       const combined = allValues.join(' ').toLowerCase();
@@ -39,21 +38,21 @@
         if(type==='date') visitDateV=v;
       });
 
-      // If name still empty, first non-email text
       if(!nameV){
         for(let v of allValues){ if(v && !v.includes('@') && isNaN(v) && v.length<50){ nameV=v; break; } }
       }
 
-      // ULTRA STRICT DECISION: If email present AND name is email OR name contains @ -> CONTACTS
       let table='bookings';
       if(emailV || (nameV && nameV.includes('@'))){
-        // Check if this is really contact form: if name is email OR combined has email but no service keyword
         const hasService = combined.includes('wiring') || combined.includes('residential') || combined.includes('service') || form.querySelector('select');
         const nameIsEmail = nameV && nameV.includes('@');
-        
         if(nameIsEmail || (emailV && !hasService)){
           table='contacts';
         }
+      }
+      // Ovijog check
+      if(combined.includes('ovijog') || combined.includes('অভিযোগ') || combined.includes('complaint') || form.id.toLowerCase().includes('ovijog')){
+        table='ovijog';
       }
 
       e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
@@ -62,27 +61,38 @@
       try{
         let payload;
         if(table==='contacts'){
+          const finalMessage = messageV || 'Contact enquiry from website';
           payload={
             name: (nameV && !nameV.includes('@')) ? nameV : (emailV ? emailV.split('@')[0] : 'Customer'),
-            email: emailV || nameV, // nameV may actually be email
+            email: emailV || nameV,
             phone: phoneV || '01700000000',
-            message: messageV || 'Contact enquiry from website'
+            message: finalMessage,
+            contact: finalMessage // IMPORTANT: contacts table needs this column!
           };
-          // Try with id if needed
           try{
             payload.id=genID('CON');
             const {error}=await sb.from('contacts').insert([payload]).select();
             if(error) throw error;
           }catch(err){
-            // If id column doesn't exist, retry without id
             delete payload.id;
             const {error}=await sb.from('contacts').insert([payload]).select();
             if(error) throw error;
           }
+        } else if(table==='ovijog'){
+          payload={
+            id: genID('OVI'),
+            name: nameV || 'Customer',
+            phone: phoneV || '01700000000',
+            email: emailV || '',
+            details: messageV || serviceV || 'Ovijog',
+            status: 'pending',
+            created_at: new Date().toISOString()
+          };
+          const {error}=await sb.from('ovijog').insert([payload]).select();
+          if(error) throw error;
         } else {
-          // Bookings
           if(!nameV) nameV='Customer';
-          if(nameV.includes('@')) nameV='Customer'; // Don't allow email as name in bookings
+          if(nameV.includes('@')) nameV='Customer';
           if(!phoneV) phoneV='01700000000';
           if(!serviceV) serviceV='Residential Wiring';
           if(!visitDateV) visitDateV=today();
@@ -108,10 +118,6 @@
         setTimeout(()=>ok.remove(),4000);
         setTimeout(()=>{btn.innerText=orig; btn.disabled=false; btn.style.background=''; form.reset();},2000);
         
-        // Clean bad bookings: delete those where name contains @ (optional auto clean)
-        if(table==='bookings' && payload.name.includes('@')){
-          console.log('Cleaning bad booking...');
-        }
       }catch(err){
         console.error('❌', table, err);
         btn.innerText='❌ '+err.message.slice(0,60);
