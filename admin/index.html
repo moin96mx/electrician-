@@ -2,24 +2,21 @@
 <html lang="bn">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ElectroHubBD - Super Admin</title>
-<link rel="icon" href="/logo.svg">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.js"></script>
+<title>ElectroHubBD - Super Admin (3 Tables)</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
 :root{--bg:#071018;--panel:#0f172a;--line:#1e293b;--text:#e2e8f0;--muted:#94a3b8;--cyan:#00ffcc;--purple:#9d4edd;--red:#ef4444;--yellow:#fbbf24;--green:#34d399}
 *{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text)}
-.container{max-width:1280px;margin:0 auto;padding:32px 20px}
-.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--line)}
+.container{max-width:1300px;margin:0 auto;padding:32px 20px}
 .login-box{max-width:420px;margin:80px auto;padding:28px;background:var(--panel);border:1px solid var(--line);border-radius:16px}
 .field{margin-bottom:16px}.field label{display:block;margin-bottom:8px;color:var(--muted)}
 .field input{width:100%;padding:12px 14px;background:#0b1220;border:1px solid var(--line);border-radius:8px;color:var(--text)}
 .primary{width:100%;background:linear-gradient(135deg,var(--cyan),var(--purple));color:#041019;border:none;border-radius:8px;padding:12px 16px;font-weight:bold;cursor:pointer}
 .hidden{display:none!important}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;padding:20px;margin-bottom:24px;background:var(--panel);border:1px solid var(--line);border-radius:16px}
-@media(max-width:900px){.stats{grid-template-columns:1fr 1fr}}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding:20px;margin-bottom:24px;background:var(--panel);border:1px solid var(--line);border-radius:16px}
 .stat{background:rgba(255,255,255,.02);border:1px solid var(--line);border-radius:12px;padding:16px}.stat .label{color:var(--muted);font-size:12px;margin-bottom:6px}.stat .value{font-size:26px;font-weight:bold;color:var(--cyan)}
-.panel{padding:20px;background:var(--panel);border:1px solid var(--line);border-radius:16px;margin-top:24px}
-table{width:100%;border-collapse:collapse}th,td{padding:10px 8px;border-bottom:1px solid var(--line);font-size:13px;text-align:left;vertical-align:top}th{color:var(--muted);font-size:11px;text-transform:uppercase}
+.panel{padding:20px;background:var(--panel);border:1px solid var(--line);border-radius:16px;margin-top:24px;overflow:auto}
+table{width:100%;border-collapse:collapse}th,td{padding:10px 8px;border-bottom:1px solid var(--line);font-size:13px;text-align:left;vertical-align:top}th{color:var(--muted);font-size:11px;text-transform:uppercase;white-space:nowrap}
 .badge{display:inline-block;padding:4px 8px;border-radius:999px;font-size:11px;background:rgba(52,211,153,.1);color:var(--green)}
 .search{width:100%;padding:10px 12px;background:#0b1220;border:1px solid var(--line);border-radius:8px;color:var(--text);margin-bottom:12px}
 .btn{padding:6px 10px;border-radius:8px;border:1px solid var(--line);cursor:pointer;font-size:12px}
@@ -27,143 +24,113 @@ table{width:100%;border-collapse:collapse}th,td{padding:10px 8px;border-bottom:1
 .logout{padding:10px 16px;background:#1f2937;color:var(--text);border:1px solid var(--line);border-radius:8px;cursor:pointer}
 .tabs{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}.tab{padding:10px 16px;border-radius:999px;border:1px solid var(--line);background:#0b1220;color:var(--muted);cursor:pointer}.tab.active{background:var(--cyan);color:#041019;font-weight:bold;border-color:var(--cyan)}
 .notice{color:var(--muted);font-size:13px}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--line);flex-wrap:wrap;gap:10px}
 </style>
 </head>
 <body>
 <div class="container">
   <div id="loginView">
     <div class="login-box">
-      <h2>Super Admin Login</h2>
-      <p style="color:var(--muted);font-size:12px">Supabase Users > Add user theke jekono email/pass banalei ekhane login hobe.</p>
+      <h2>ElectroHubBD - Super Admin</h2>
+      <p style="color:var(--muted);font-size:12px">3 Tables: bookings, contacts, ovijog</p>
       <div class="field"><label>Email</label><input id="email" type="email" value="info@electrohubbd.com"></div>
-      <div class="field"><label>Password</label><input id="password" type="password" placeholder="Password dao"></div>
+      <div class="field"><label>Password</label><input id="password" type="password" placeholder="Password"></div>
       <button class="primary" id="loginBtn">Login</button>
       <p id="loginError" style="color:#fca5a5;margin-top:10px;font-size:13px"></p>
-      <p id="debug" style="color:var(--muted);font-size:10px;margin-top:8px;word-break:break-all"></p>
     </div>
   </div>
   <div id="adminView" class="hidden">
-    <div class="topbar"><h1>ElectroHubBD - All Leads</h1><div><span id="userEmail" style="color:var(--muted);margin-right:10px"></span><button class="logout" id="logoutBtn">Logout</button></div></div>
+    <div class="topbar"><h1>ElectroHubBD - Dashboard</h1><div><span id="userEmail" style="color:var(--muted);margin-right:10px"></span><button class="logout" id="logoutBtn">Logout</button></div></div>
     <div class="stats">
-      <div class="stat"><div class="label">Total Bookings</div><div class="value" id="statBookings">0</div></div>
-      <div class="stat"><div class="label">Total Contacts</div><div class="value" id="statContacts">0</div></div>
-      <div class="stat"><div class="label">Total Ovijog</div><div class="value" id="statOvijog" style="color:#fca5a5">0</div></div>
-      <div class="stat"><div class="label">Pending Ovijog</div><div class="value" id="statPending" style="color:var(--yellow)">0</div></div>
+      <div class="stat"><div class="label">Total Bookings (bookings)</div><div class="value" id="statBookings">0</div></div>
+      <div class="stat"><div class="label">Total Contacts (contacts)</div><div class="value" id="statContacts">0</div></div>
+      <div class="stat"><div class="label">Total Ovijog (ovijog)</div><div class="value" id="statOvijog" style="color:#fca5a5">0</div></div>
     </div>
     <div class="tabs">
       <button class="tab active" data-tab="bookings">📅 Bookings</button>
       <button class="tab" data-tab="contacts">💬 Contacts</button>
       <button class="tab" data-tab="ovijog">🔴 Ovijog</button>
     </div>
-    <div id="tab-bookings" class="panel"><h3>Booking Requests</h3><input id="searchBookings" class="search" placeholder="Search name, phone, service..."><div id="bookingsTable"><p class="notice">Loading bookings...</p></div></div>
-    <div id="tab-contacts" class="panel hidden"><h3>Contact Leads</h3><input id="searchContacts" class="search" placeholder="Search..."><div id="contactsTable"><p class="notice">Loading contacts...</p></div></div>
-    <div id="tab-ovijog" class="panel hidden"><h3>Ovijog / Complaints</h3><input id="searchOvijog" class="search" placeholder="Search..."><div id="ovijogTable"><p class="notice">Loading ovijog...</p></div></div>
+    <div id="tab-bookings" class="panel"><h3>Bookings Table</h3><input id="searchBookings" class="search" placeholder="Search name, phone, service..."><div id="bookingsTable"><p class="notice">Loading...</p></div></div>
+    <div id="tab-contacts" class="panel hidden"><h3>Contacts Table</h3><input id="searchContacts" class="search" placeholder="Search..."><div id="contactsTable"><p class="notice">Loading...</p></div></div>
+    <div id="tab-ovijog" class="panel hidden"><h3>Ovijog Table</h3><input id="searchOvijog" class="search" placeholder="Search name, area, type..."><div id="ovijogTable"><p class="notice">Loading...</p></div></div>
   </div>
 </div>
 <script>
-// === EXACT CONFIG FROM YOUR PROJECT ===
 const SUPABASE_URL = "https://xctzrcprhwsawnalbypi.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhjdHpyY3ByaHdzYXduYWxieXBpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE0NTYwNDEsImV4cCI6MjEwNzAzMjA0MX0.nYZikfjkTudQxAA8oaeSFFAhJ5RGrGr2oPd--Cc_deQ";
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const loginView = document.getElementById('loginView');
 const adminView = document.getElementById('adminView');
-const debugEl = document.getElementById('debug');
-debugEl.textContent = "URL: " + SUPABASE_URL + " | Key: " + SUPABASE_ANON_KEY.slice(0,20) + "...";
 function showLogin(){loginView.classList.remove('hidden');adminView.classList.add('hidden')}
-function showAdmin(user){
-  loginView.classList.add('hidden');adminView.classList.remove('hidden');
-  document.getElementById('userEmail').textContent=user.email;
-  loadAll();
-}
-async function checkSession(){
-  const {data}=await supabaseClient.auth.getSession();
-  if(data.session) showAdmin(data.session.user); else showLogin();
-}
+function showAdmin(user){loginView.classList.add('hidden');adminView.classList.remove('hidden');document.getElementById('userEmail').textContent=user.email;loadAll();}
+async function checkSession(){const {data}=await supabaseClient.auth.getSession();if(data.session)showAdmin(data.session.user);else showLogin();}
 document.getElementById('loginBtn').addEventListener('click', async()=>{
   const email=document.getElementById('email').value.trim();
   const password=document.getElementById('password').value.trim();
   document.getElementById('loginError').textContent='';
   const btn=document.getElementById('loginBtn');btn.textContent='Logging...';btn.disabled=true;
-  console.log("Trying login with", email);
   const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});
-  if(error){
-    console.error(error);
-    document.getElementById('loginError').textContent=error.message + " (Check anon key & URL)";
-    btn.textContent='Login';btn.disabled=false;return;
-  }
+  if(error){document.getElementById('loginError').textContent=error.message;btn.textContent='Login';btn.disabled=false;return;}
   btn.textContent='Login';btn.disabled=false;showAdmin(data.user);
 });
 document.getElementById('logoutBtn').addEventListener('click', async()=>{await supabaseClient.auth.signOut();showLogin();});
-// TABS
-document.querySelectorAll('.tab').forEach(t=>{
-  t.addEventListener('click',()=>{
-    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));t.classList.add('active');
-    document.querySelectorAll('[id^="tab-"]').forEach(p=>p.classList.add('hidden'));
-    document.getElementById('tab-'+t.dataset.tab).classList.remove('hidden');
-  });
-});
+document.querySelectorAll('.tab').forEach(t=>{t.addEventListener('click',()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));t.classList.add('active');
+  document.querySelectorAll('[id^="tab-"]').forEach(p=>p.classList.add('hidden'));
+  document.getElementById('tab-'+t.dataset.tab).classList.remove('hidden');
+});});
 let cacheBookings=[],cacheContacts=[],cacheOvijog=[];
-async function loadAll(){
-  await Promise.all([loadBookings(),loadContacts(),loadOvijog()]);
-}
+async function loadAll(){await Promise.all([loadBookings(),loadContacts(),loadOvijog()]);}
 async function loadBookings(){
-  const tables=['bookings','booking_requests','leads'];
-  let data=null;
-  for(let tbl of tables){
-    const res=await supabaseClient.from(tbl).select('*').order('created_at',{ascending:false}).limit(200);
-    if(!res.error && res.data){ data=res.data; break; }
-  }
-  cacheBookings=data||[];
-  document.getElementById('statBookings').textContent=cacheBookings.length;
-  renderBookings(cacheBookings);
-  document.getElementById('searchBookings').addEventListener('input',()=>renderBookings(cacheBookings));
+  const {data,error}=await supabaseClient.from('bookings').select('*').order('created_at',{ascending:false}).limit(500);
+  if(error){document.getElementById('bookingsTable').innerHTML=`<p class="notice">Error: ${error.message}</p>`;return;}
+  cacheBookings=data||[];document.getElementById('statBookings').textContent=cacheBookings.length;renderBookings(cacheBookings);
 }
 function renderBookings(list){
   const term=document.getElementById('searchBookings').value.toLowerCase();
-  const filtered=list.filter(i=>{ if(!term) return true; return [i.id,i.name,i.phone,i.service,i.date].join(' ').toLowerCase().includes(term); });
+  const filtered=list.filter(i=>{if(!term)return true;return JSON.stringify(i).toLowerCase().includes(term);});
   const div=document.getElementById('bookingsTable');
-  if(filtered.length===0){div.innerHTML='<p class="notice">No bookings found. Table Editor e table nam check koro.</p>';return;}
-  div.innerHTML=`<table><thead><tr><th>ID</th><th>Name</th><th>Phone</th><th>Service</th><th>Date</th><th>Created</th><th>Action</th></tr></thead><tbody>${filtered.map(i=>`<tr><td>${i.id||''}</td><td>${i.name||''}</td><td>${i.phone||''}</td><td>${i.service||''}</td><td>${i.date||i.visit_date||''}</td><td>${i.created_at?new Date(i.created_at).toLocaleString():''}</td><td><button class="btn btn-red" data-del-booking="${i.id}">Delete</button></td></tr>`).join('')}</tbody></table>`;
-  div.querySelectorAll('[data-del-booking]').forEach(b=>{ b.addEventListener('click', async()=>{ if(!confirm('Delete booking?')) return; const id=b.getAttribute('data-del-booking'); for(let tbl of ['bookings','booking_requests']){ const {error}=await supabaseClient.from(tbl).delete().eq('id',id); if(!error){ loadBookings(); return; } } }); });
+  if(filtered.length===0){div.innerHTML='<p class="notice">No bookings found. Form kaj na korle data asbe na.</p>';return;}
+  const cols=Object.keys(filtered[0]||{});
+  div.innerHTML=`<table><thead><tr>${cols.map(c=>`<th>${c}</th>`).join('')}<th>Action</th></tr></thead><tbody>${filtered.map(i=>`<tr>${cols.map(c=>`<td style="max-width:200px;overflow:hidden;text-overflow:ellipsis">${(i[c]===null?'':String(i[c]).slice(0,200))}</td>`).join('')}<td><button class="btn btn-red" data-del-booking="${i.id}">Delete</button></td></tr>`).join('')}</tbody></table>`;
+  div.querySelectorAll('[data-del-booking]').forEach(b=>{b.addEventListener('click', async()=>{if(!confirm('Delete booking?'))return;const id=b.getAttribute('data-del-booking');const {error}=await supabaseClient.from('bookings').delete().eq('id',id);if(error)alert(error.message);else loadBookings();});});
 }
+document.getElementById('searchBookings').addEventListener('input',()=>renderBookings(cacheBookings));
 async function loadContacts(){
-  const tables=['contacts','contact_leads'];
-  let data=null;
-  for(let tbl of tables){
-    const res=await supabaseClient.from(tbl).select('*').order('created_at',{ascending:false}).limit(200);
-    if(!res.error && res.data){ data=res.data; break; }
-  }
-  cacheContacts=data||[];
-  document.getElementById('statContacts').textContent=cacheContacts.length;
-  renderContacts(cacheContacts);
-  document.getElementById('searchContacts').addEventListener('input',()=>renderContacts(cacheContacts));
+  const {data,error}=await supabaseClient.from('contacts').select('*').order('created_at',{ascending:false}).limit(500);
+  if(error){document.getElementById('contactsTable').innerHTML=`<p class="notice">Error: ${error.message}</p>`;return;}
+  cacheContacts=data||[];document.getElementById('statContacts').textContent=cacheContacts.length;renderContacts(cacheContacts);
 }
 function renderContacts(list){
   const term=document.getElementById('searchContacts').value.toLowerCase();
-  const filtered=list.filter(i=>{ if(!term) return true; return [i.name,i.contact,i.message].join(' ').toLowerCase().includes(term); });
+  const filtered=list.filter(i=>{if(!term)return true;return JSON.stringify(i).toLowerCase().includes(term);});
   const div=document.getElementById('contactsTable');
-  if(filtered.length===0){div.innerHTML='<p class="notice">No contacts found</p>';return;}
-  div.innerHTML=`<table><thead><tr><th>ID</th><th>Name</th><th>Contact</th><th>Message</th><th>Action</th></tr></thead><tbody>${filtered.map(i=>`<tr><td>${i.id||''}</td><td>${i.name||''}</td><td>${i.contact||i.phone||''}</td><td>${(i.message||'').slice(0,150)}</td><td><button class="btn btn-red" data-del-contact="${i.id}">Delete</button></td></tr>`).join('')}</tbody></table>`;
-  div.querySelectorAll('[data-del-contact]').forEach(b=>{ b.addEventListener('click', async()=>{ if(!confirm('Delete?')) return; const id=b.getAttribute('data-del-contact'); for(let tbl of ['contacts','contact_leads']){ const {error}=await supabaseClient.from(tbl).delete().eq('id',id); if(!error){ loadContacts(); return; } } }); });
+  if(filtered.length===0){div.innerHTML='<p class="notice">No contacts</p>';return;}
+  const cols=Object.keys(filtered[0]||{});
+  div.innerHTML=`<table><thead><tr>${cols.map(c=>`<th>${c}</th>`).join('')}<th>Action</th></tr></thead><tbody>${filtered.map(i=>`<tr>${cols.map(c=>`<td style="max-width:200px">${(i[c]===null?'':String(i[c]).slice(0,200))}</td>`).join('')}<td><button class="btn btn-red" data-del-contact="${i.id}">Delete</button></td></tr>`).join('')}</tbody></table>`;
+  div.querySelectorAll('[data-del-contact]').forEach(b=>{b.addEventListener('click', async()=>{if(!confirm('Delete contact?'))return;const id=b.getAttribute('data-del-contact');const {error}=await supabaseClient.from('contacts').delete().eq('id',id);if(error)alert(error.message);else loadContacts();});});
 }
+document.getElementById('searchContacts').addEventListener('input',()=>renderContacts(cacheContacts));
 async function loadOvijog(){
-  const {data,error}=await supabaseClient.from('ovijog').select('*').order('created_at',{ascending:false});
+  const {data,error}=await supabaseClient.from('ovijog').select('*').order('created_at',{ascending:false}).limit(500);
   if(error){document.getElementById('ovijogTable').innerHTML=`<p class="notice">Error: ${error.message}</p>`;return;}
-  cacheOvijog=data||[];
-  document.getElementById('statOvijog').textContent=cacheOvijog.length;
-  document.getElementById('statPending').textContent=cacheOvijog.filter(d=>d.status==='pending').length;
-  renderOvijog(cacheOvijog);
-  document.getElementById('searchOvijog').addEventListener('input',()=>renderOvijog(cacheOvijog));
+  cacheOvijog=data||[];document.getElementById('statOvijog').textContent=cacheOvijog.length;renderOvijog(cacheOvijog);
 }
 function renderOvijog(list){
   const term=document.getElementById('searchOvijog').value.toLowerCase();
-  const filtered=list.filter(i=>{ if(!term) return true; return [i.name,i.phone,i.type,i.area,i.details].join(' ').toLowerCase().includes(term); });
+  const filtered=list.filter(i=>{if(!term)return true;return JSON.stringify(i).toLowerCase().includes(term);});
   const div=document.getElementById('ovijogTable');
-  if(filtered.length===0){div.innerHTML='<p class="notice">No ovijog</p>';return;}
-  div.innerHTML=`<table><thead><tr><th>ID</th><th>Name</th><th>Phone</th><th>Area</th><th>Type</th><th>Details</th><th>Status</th><th>Date</th><th>Action</th></tr></thead><tbody>${filtered.map(i=>`<tr><td>#${String(i.id).padStart(4,'0')}</td><td>${i.is_anonymous?'Anonymous':i.name}</td><td>${i.phone}</td><td>${i.area||''}</td><td><span class="badge">${i.type}</span></td><td style="max-width:200px;white-space:pre-wrap">${(i.details||'').slice(0,150)}</td><td><select class="btn" data-status-id="${i.id}"><option value="pending" ${i.status==='pending'?'selected':''}>pending</option><option value="in-progress" ${i.status==='in-progress'?'selected':''}>in-progress</option><option value="solved" ${i.status==='solved'?'selected':''}>solved</option></select></td><td>${new Date(i.created_at).toLocaleString()}</td><td><div style="display:flex;gap:5px"><button class="btn btn-cyan" data-upd-ovijog="${i.id}">Update</button><button class="btn btn-red" data-del-ovijog="${i.id}">Delete</button></div></td></tr>`).join('')}</tbody></table>`;
-  div.querySelectorAll('[data-upd-ovijog]').forEach(b=>{b.addEventListener('click', async()=>{const id=b.getAttribute('data-upd-ovijog');const sel=div.querySelector(`[data-status-id="${id}"]`);const {error}=await supabaseClient.from('ovijog').update({status:sel.value}).eq('id',id);if(error) alert(error.message); else loadOvijog();})});
-  div.querySelectorAll('[data-del-ovijog]').forEach(b=>{b.addEventListener('click', async()=>{if(!confirm('Delete ovijog?')) return;const id=b.getAttribute('data-del-ovijog');const {error}=await supabaseClient.from('ovijog').delete().eq('id',id);if(error) alert(error.message); else loadOvijog();})});
+  if(filtered.length===0){div.innerHTML='<p class="notice">No ovijog yet</p>';return;}
+  const cols=Object.keys(filtered[0]||{});
+  div.innerHTML=`<table><thead><tr>${cols.map(c=>`<th>${c}</th>`).join('')}<th>Action</th></tr></thead><tbody>${filtered.map(i=>`<tr>${cols.map(c=>{
+    if(c==='status') return `<td><select class="btn" data-status-id="${i.id}"><option value="pending" ${i.status==='pending'?'selected':''}>pending</option><option value="in-progress" ${i.status==='in-progress'?'selected':''}>in-progress</option><option value="solved" ${i.status==='solved'?'selected':''}>solved</option></select></td>`;
+    return `<td style="max-width:200px">${(i[c]===null?'':String(i[c]).slice(0,200))}</td>`;
+  }).join('')}<td><div style="display:flex;gap:5px"><button class="btn btn-cyan" data-upd-ovijog="${i.id}">Update</button><button class="btn btn-red" data-del-ovijog="${i.id}">Delete</button></div></td></tr>`).join('')}</tbody></table>`;
+  div.querySelectorAll('[data-upd-ovijog]').forEach(b=>{b.addEventListener('click', async()=>{const id=b.getAttribute('data-upd-ovijog');const sel=div.querySelector(`[data-status-id="${id}"]`);const {error}=await supabaseClient.from('ovijog').update({status:sel.value}).eq('id',id);if(error)alert(error.message);else loadOvijog();})});
+  div.querySelectorAll('[data-del-ovijog]').forEach(b=>{b.addEventListener('click', async()=>{if(!confirm('Delete ovijog?'))return;const id=b.getAttribute('data-del-ovijog');const {error}=await supabaseClient.from('ovijog').delete().eq('id',id);if(error)alert(error.message);else loadOvijog();})});
 }
+document.getElementById('searchOvijog').addEventListener('input',()=>renderOvijog(cacheOvijog));
 checkSession();
 </script>
 </body>
