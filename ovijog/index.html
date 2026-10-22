@@ -1,1 +1,117 @@
-
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>অভিযোগ জানান | ElectroHubBD</title>
+<meta name="description" content="ElectroHubBD সেবায় অসন্তুষ্ট? আপনার অভিযোগ জানান - ২৪ ঘন্টার মধ্যে সমাধান">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/logo.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@500;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--bg-dark:#060913;--bg-card:#0f172a;--bg-soft:#1e293b;--accent-cyan:#00ffcc;--text-main:#f3f4f6;--text-muted:#9ca3af;--line:rgba(255,255,255,.08);--radius:18px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Hind Siliguri',sans-serif;background:var(--bg-dark);color:var(--text-main);line-height:1.6}
+.container{max-width:900px;margin:0 auto;padding:0 20px}
+.header{padding:18px 0;border-bottom:1px solid var(--line);background:rgba(6,9,19,.8);backdrop-filter:blur(12px);position:sticky;top:0;z-index:20}
+.header-inner{display:flex;justify-content:space-between;align-items:center}
+.logo{font-weight:800;font-size:20px;display:flex;align-items:center;gap:10px}
+.logo span{color:var(--accent-cyan)}
+.hero{padding:60px 0 30px;text-align:center}
+.hero h1{font-size:42px;font-weight:800;line-height:1.2;margin-bottom:12px}
+.hero h1 span{color:var(--accent-cyan)}
+.hero p{color:var(--text-muted);max-width:600px;margin:0 auto;font-size:17px}
+.card{background:var(--bg-card);border:1px solid var(--line);border-radius:var(--radius);padding:32px;margin:30px 0}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:700px){.form-grid{grid-template-columns:1fr}.hero h1{font-size:30px}}
+.form-group{display:flex;flex-direction:column;gap:8px}
+.form-group.full{grid-column:1/-1}
+label{font-weight:600;font-size:14px}
+label span{color:var(--accent-cyan)}
+input,select,textarea{background:var(--bg-soft);border:1px solid var(--line);color:var(--text-main);padding:14px 16px;border-radius:12px;font-family:inherit;font-size:15px;outline:none;transition:.2s}
+input:focus,select:focus,textarea:focus{border-color:var(--accent-cyan);box-shadow:0 0 0 3px rgba(0,255,204,.12)}
+textarea{resize:vertical;min-height:130px}
+.checkbox{display:flex;align-items:center;gap:10px;margin-top:6px;font-size:14px;color:var(--text-muted)}
+.checkbox input{width:18px;height:18px;accent-color:var(--accent-cyan)}
+.btn{width:100%;padding:16px;background:linear-gradient(135deg,var(--accent-cyan),#00d1b2);color:#03120f;font-weight:800;font-size:16px;border:none;border-radius:12px;cursor:pointer;transition:.2s;margin-top:10px}
+.btn:hover{transform:translateY(-1px);box-shadow:0 10px 30px rgba(0,255,204,.25)}
+.btn:disabled{opacity:.6;cursor:not-allowed}
+.notice{background:rgba(0,255,204,.08);border:1px dashed rgba(0,255,204,.25);padding:14px 16px;border-radius:12px;font-size:13px;color:var(--text-muted);margin-top:18px}
+.success{display:none;text-align:center;padding:50px 20px}
+.success h2{font-size:28px;margin-bottom:10px;color:var(--accent-cyan)}
+.badge{display:inline-flex;background:rgba(157,78,221,.15);border:1px solid rgba(157,78,221,.3);color:#c4a7ff;padding:6px 14px;border-radius:100px;font-size:12px;font-weight:600;margin-bottom:14px}
+.footer{text-align:center;padding:40px 0;color:var(--text-muted);font-size:13px;border-top:1px solid var(--line);margin-top:40px}
+</style>
+</head>
+<body>
+<header class="header">
+  <div class="container header-inner">
+    <a href="/" class="logo"><img src="/logo.svg" style="width:32px;height:32px"> Electro<span>HubBD</span></a>
+    <a href="/" style="font-size:14px;color:var(--text-muted)">← হোমে ফিরুন</a>
+  </div>
+</header>
+<section class="hero">
+  <div class="container">
+    <div class="badge">২৪ ঘণ্টার মধ্যে সমাধান</div>
+    <h1>আপনার <span>অভিযোগ</span> জানান</h1>
+    <p>আমাদের সেবায় কোনো ত্রুটি, বিলম্ব বা অসন্তুষ্টি থাকলে নির্দ্বিধায় জানান। আপনার তথ্য ১০০% গোপন থাকবে।</p>
+  </div>
+</section>
+<div class="container">
+  <div class="card">
+    <form id="ovijogForm">
+      <div class="form-grid">
+        <div class="form-group"><label>আপনার নাম <span>*</span></label><input type="text" id="name" required placeholder="যেমন: মোঃ মঈন"></div>
+        <div class="form-group"><label>ফোন / WhatsApp <span>*</span></label><input type="tel" id="phone" required placeholder="01XXXXXXXXX"></div>
+        <div class="form-group"><label>এলাকা / থানা</label><select id="area"><option value="">নির্বাচন করুন</option><option>বাগেরহাট সদর</option><option>মোংলা</option><option>রামপাল</option><option>ফকিরহাট</option><option>মোল্লাহাট</option><option>চিতলমারী</option><option>কচুয়া</option><option>মোড়েলগঞ্জ</option><option>শরণখোলা</option><option>অন্যান্য</option></select></div>
+        <div class="form-group"><label>অভিযোগের ধরণ <span>*</span></label><select id="type" required><option value="">নির্বাচন করুন</option><option>কাজে দেরি হয়েছে</option><option>বিল বেশি নেওয়া হয়েছে</option><option>কাজ ভালো হয়নি</option><option>ব্যবহার খারাপ</option><option>ওয়ারেন্টি সেবা পাইনি</option><option>অন্যান্য</option></select></div>
+        <div class="form-group full"><label>বিস্তারিত অভিযোগ <span>*</span></label><textarea id="details" required placeholder="কি সমস্যা হয়েছে, কবে, কোন টেকনিশিয়ান... বিস্তারিত লিখুন"></textarea></div>
+      </div>
+      <label class="checkbox"><input type="checkbox" id="anonymous"> আমার নাম গোপন রাখুন (Anonymous)</label>
+      <button type="submit" class="btn" id="submitBtn">অভিযোগ জমা দিন →</button>
+      <div class="notice">🔒 আপনার তথ্য Supabase এ নিরাপদে সংরক্ষিত থাকবে। আমরা ২৪ ঘন্টার মধ্যে আপনাকে কল দিয়ে সমাধান করব।</div>
+    </form>
+    <div class="success" id="successBox">
+      <h2>✅ অভিযোগ জমা হয়েছে!</h2>
+      <p>ধন্যবাদ। আপনার অভিযোগ আইডি: <b id="complaintId">#EH-000</b><br>২৪ ঘণ্টার মধ্যে আমাদের টিম আপনাকে কল করবে।</p>
+      <br><a href="/" class="btn" style="display:inline-block;text-align:center;color:#03120f">হোমে ফিরে যান</a>
+    </div>
+  </div>
+</div>
+<div class="footer">© ElectroHubBD - Licensed Electrical & Smart Automation</div>
+<script>
+const SUPABASE_URL = "https://xctzrcprhwsawnalbypi.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhjdHpyY3ByaHdzYXduYWxieXBpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE0NTYwNDEsImV4cCI6MjEwNzAzMjA0MX0.nYZikfjkTudQxAA8oaeSFFAhJ5RGrGr2oPd--Cc_deQ";
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+document.getElementById('ovijogForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true; btn.innerText = "জমা হচ্ছে...";
+  const payload = {
+    name: document.getElementById('name').value,
+    phone: document.getElementById('phone').value,
+    area: document.getElementById('area').value,
+    type: document.getElementById('type').value,
+    details: document.getElementById('details').value,
+    is_anonymous: document.getElementById('anonymous').checked,
+    status: 'pending'
+  };
+  try{
+    const { data, error } = await supabaseClient.from('ovijog').insert([payload]).select();
+    if(error) throw error;
+    document.getElementById('ovijogForm').style.display='none';
+    document.getElementById('successBox').style.display='block';
+    document.getElementById('complaintId').innerText = '#EH-' + (data[0].id.toString().padStart(4,'0'));
+  }catch(err){
+    alert('Error: ' + err.message);
+    console.error(err);
+    btn.disabled = false; btn.innerText = "অভিযোগ জমা দিন →";
+  }
+});
+</script>
+</body>
+</html>
