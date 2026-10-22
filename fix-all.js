@@ -1,39 +1,8 @@
-// ElectroHubBD - GHOST BUSTER FINAL - Kills date column error from ANY file
+// ElectroHubBD - FINAL FINAL - visit_date Fix
 (function(){
   const URL = 'https://xctzrcprhwsawnalbypi.supabase.co';
   const KEY = 'sb_publishable_hAkwDSANcb2xURtd3UKqHg_l0iUMOts';
   
-  console.log('👻 Ghost Buster Loading...');
-  
-  // STEP 1: Kill all old bookings inserts by patching fetch
-  const originalFetch = window.fetch;
-  window.fetch = async function(input, init){
-    try {
-      const url = (typeof input === 'string' ? input : input.url || '').toString();
-      if(url.includes('supabase.co') && url.includes('bookings')){
-        let body = init?.body || (typeof input !== 'string' ? input.body : null);
-        if(body){
-          try {
-            const json = JSON.parse(body);
-            if(Array.isArray(json)){
-              json.forEach(item => { delete item.date; delete item.details; delete item.created_at; });
-            } else if(typeof json === 'object'){
-              delete json.date; delete json.details; delete json.created_at;
-              if(json.record){ delete json.record.date; }
-            }
-            console.log('👻 Ghost Buster: Stripped date column from:', json);
-            if(typeof body === 'string'){
-              if(init) init.body = JSON.stringify(json);
-              else input = new Request(url, { method: 'POST', body: JSON.stringify(json), headers: input.headers });
-            }
-          } catch(e){}
-        }
-      }
-    } catch(e){}
-    return originalFetch.apply(this, arguments);
-  };
-
-  // STEP 2: Load supabase and override
   function init(){
     const finalKey = window.SUPABASE_ANON_KEY || KEY;
     const finalUrl = window.SUPABASE_URL || URL;
@@ -45,62 +14,83 @@
     }
     
     const sb = window.supabase.createClient(finalUrl, finalKey);
-    console.log('✅ Ghost Buster Ready - No more date error!');
-
-    // Override supabase client insert to auto-strip bad columns
-    const originalFrom = sb.from.bind(sb);
-    sb.from = function(table){
-      const builder = originalFrom(table);
-      if(table === 'bookings'){
-        const originalInsert = builder.insert.bind(builder);
-        builder.insert = function(payload){
-          // Strip bad columns
-          const cleanPayload = (Array.isArray(payload) ? payload : [payload]).map(p => {
-            const {date, details, description, message, created_at, ...safe} = p;
-            return safe;
-          });
-          console.log('👻 Cleaned payload:', cleanPayload);
-          return originalInsert(cleanPayload);
-        };
-      }
-      return builder;
-    };
-    window.sb = sb;
-    window.supabaseClient = sb;
+    console.log('✅ visit_date Fix Ready');
 
     function genENG(){ return '#ENG-'+Math.random().toString(36).substr(2,6).toUpperCase(); }
+    
+    function parseDateInput(val){
+      if(!val) return new Date().toISOString().split('T')[0];
+      // Handle YYYY-MM-DD
+      if(/^\d{4}-\d{2}-\d{2}$/.test(val)) return val;
+      // Handle DD/MM/YYYY or MM/DD/YYYY with slashes
+      try {
+        const d = new Date(val);
+        if(!isNaN(d.getTime()) && d.getFullYear() > 1900 && d.getFullYear() < 2100){
+          return d.toISOString().split('T')[0];
+        }
+      } catch(e){}
+      return new Date().toISOString().split('T')[0];
+    }
 
     document.addEventListener('submit', async (e)=>{
       const form = e.target;
       if(!form || form.tagName!=='FORM') return;
       const btn = form.querySelector('button[type="submit"]');
       if(!btn) return;
-      if(!document.body.innerText.includes('প্রয়োজনীয় সার্ভিস')) return;
+      
+      // Only for main booking form
+      if(!form.innerHTML.includes('প্রয়োজনীয় সার্ভিস') && !document.body.innerHTML.includes('প্রয়োজনীয় সার্ভিস')) {
+        // Check if form has our fields
+        if(!form.querySelector('select')) return;
+      }
       
       e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
       
-      let nameV = form.querySelector('input[placeholder*="নাম" i], input[name*="name" i]')?.value || '';
-      let phoneV = form.querySelector('input[type="tel"], input[placeholder*="মোবাইল" i]')?.value || '';
-      let serviceV = form.querySelector('select')?.selectedOptions[0]?.text || '';
-
-      const allInputs = [...form.querySelectorAll('input')].filter(i=>i.type!=='hidden' && i.type!=='submit');
-      if(!nameV && allInputs[0]) nameV = allInputs[0].value;
-      if(!phoneV && allInputs[1]) phoneV = allInputs[1].value;
+      let nameV = '', phoneV = '', serviceV = '', visitDateV = '', detailsV = '';
+      
+      // Find all inputs
+      const inputs = form.querySelectorAll('input, select, textarea');
+      inputs.forEach(inp => {
+        const v = (inp.value||'').trim();
+        if(!v) return;
+        const type = inp.type;
+        const id = (inp.id||'').toLowerCase();
+        const name = (inp.name||'').toLowerCase();
+        const ph = (inp.placeholder||'').toLowerCase();
+        
+        if(type === 'text' && !nameV && (id.includes('name') || name.includes('name') || ph.includes('নাম'))) nameV = v;
+        if((type === 'tel' || type === 'text') && !phoneV && (id.includes('phone') || id.includes('mobile') || name.includes('phone') || ph.includes('মোবাইল'))) phoneV = v;
+        if(type === 'date' || id.includes('visit') || id.includes('date') || name.includes('visit') || name.includes('date')) visitDateV = v;
+        if(inp.tagName === 'SELECT') serviceV = inp.selectedOptions[0]?.text || inp.value;
+        if(inp.tagName === 'TEXTAREA') detailsV = v;
+      });
+      
+      // Fallbacks in order
+      const textInputs = [...form.querySelectorAll('input[type="text"], input[type="tel"]')];
+      if(!nameV && textInputs[0]) nameV = textInputs[0].value;
+      if(!phoneV && textInputs[1]) phoneV = textInputs[1].value;
+      
       if(!nameV) nameV = 'MR MOIN';
       if(!phoneV) phoneV = '01700000000';
-      if(!serviceV) serviceV = 'General Service';
+      if(!serviceV) serviceV = 'Residential Wiring';
+      visitDateV = parseDateInput(visitDateV);
 
       const orig = btn.innerText;
       btn.innerText='⏳ পাঠানো হচ্ছে...'; btn.disabled=true;
 
       try{
+        // Full payload with visit_date
         const payload = {
           id: genENG(),
           name: nameV.trim(),
           phone: phoneV.trim(),
-          service: serviceV.trim()
+          service: serviceV.trim(),
+          visit_date: visitDateV,
+          details: detailsV || 'Website booking',
+          status: 'pending'
         };
 
+        console.log('📦 Inserting with visit_date:', payload);
         const {data, error} = await sb.from('bookings').insert([payload]).select();
         if(error) throw error;
         
@@ -113,11 +103,36 @@
         setTimeout(()=>ok.remove(),4000);
         setTimeout(()=>{ btn.innerText=orig; btn.disabled=false; btn.style.background=''; form.reset(); },2000);
       }catch(err){
-        console.error(err);
-        btn.innerText='❌ '+err.message.slice(0,50);
+        console.error('❌', err);
+        btn.innerText='❌ '+err.message.slice(0,60);
+        const er=document.createElement('div');
+        er.style.cssText='position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#ef4444;color:white;padding:12px 20px;border-radius:8px;z-index:99999;';
+        er.innerText='❌ '+err.message;
+        document.body.appendChild(er);
+        setTimeout(()=>er.remove(),6000);
         setTimeout(()=>{btn.innerText=orig; btn.disabled=false;},4000);
       }
     }, true);
+    
+    // Also patch fetch to auto-add visit_date if missing
+    const origFetch = window.fetch;
+    window.fetch = async function(input, init){
+      try {
+        const url = (typeof input === 'string' ? input : input.url || '').toString();
+        if(url.includes('supabase.co') && url.includes('bookings') && init?.body){
+          try {
+            const json = JSON.parse(init.body);
+            const items = Array.isArray(json) ? json : [json];
+            items.forEach(it => {
+              if(!it.visit_date) it.visit_date = new Date().toISOString().split('T')[0];
+              if(!it.id) it.id = genENG();
+            });
+            init.body = JSON.stringify(Array.isArray(json) ? items : items[0]);
+          } catch(e){}
+        }
+      } catch(e){}
+      return origFetch.apply(this, arguments);
+    };
   }
   init();
 })();
