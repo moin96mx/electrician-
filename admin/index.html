@@ -4,7 +4,7 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ElectroHubBD - Super Admin</title>
 <link rel="icon" href="/logo.svg">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.js"></script>
 <style>
 :root{--bg:#071018;--panel:#0f172a;--line:#1e293b;--text:#e2e8f0;--muted:#94a3b8;--cyan:#00ffcc;--purple:#9d4edd;--red:#ef4444;--yellow:#fbbf24;--green:#34d399}
 *{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text)}
@@ -34,11 +34,12 @@ table{width:100%;border-collapse:collapse}th,td{padding:10px 8px;border-bottom:1
   <div id="loginView">
     <div class="login-box">
       <h2>Super Admin Login</h2>
-      <p style="color:var(--muted);font-size:12px">Supabase Users > Add user theke jekono email/pass banalei ekhane login hobe. Tomar booking, contact, ovijog sob ekhane dekhte parba.</p>
-      <div class="field"><label>Email</label><input id="email" type="email" placeholder="admin@electrohubbd.com"></div>
-      <div class="field"><label>Password</label><input id="password" type="password"></div>
+      <p style="color:var(--muted);font-size:12px">Supabase Users > Add user theke jekono email/pass banalei ekhane login hobe.</p>
+      <div class="field"><label>Email</label><input id="email" type="email" value="info@electrohubbd.com"></div>
+      <div class="field"><label>Password</label><input id="password" type="password" placeholder="Password dao"></div>
       <button class="primary" id="loginBtn">Login</button>
       <p id="loginError" style="color:#fca5a5;margin-top:10px;font-size:13px"></p>
+      <p id="debug" style="color:var(--muted);font-size:10px;margin-top:8px;word-break:break-all"></p>
     </div>
   </div>
   <div id="adminView" class="hidden">
@@ -60,12 +61,14 @@ table{width:100%;border-collapse:collapse}th,td{padding:10px 8px;border-bottom:1
   </div>
 </div>
 <script>
-// CONFIG
+// === EXACT CONFIG FROM YOUR PROJECT ===
 const SUPABASE_URL = "https://xctzrcprhwsawnalbypi.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.[STRIPPED 127 bytes].nYZikfjkTudQxAA8oaeSFFAhJ5RGrGr2oPd--Cc_deQ";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhjdHpyY3ByaHdzYXduYWxieXBpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE0NTYwNDEsImV4cCI6MjEwNzAzMjA0MX0.nYZikfjkTudQxAA8oaeSFFAhJ5RGrGr2oPd--Cc_deQ";
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const loginView = document.getElementById('loginView');
 const adminView = document.getElementById('adminView');
+const debugEl = document.getElementById('debug');
+debugEl.textContent = "URL: " + SUPABASE_URL + " | Key: " + SUPABASE_ANON_KEY.slice(0,20) + "...";
 function showLogin(){loginView.classList.remove('hidden');adminView.classList.add('hidden')}
 function showAdmin(user){
   loginView.classList.add('hidden');adminView.classList.remove('hidden');
@@ -81,8 +84,13 @@ document.getElementById('loginBtn').addEventListener('click', async()=>{
   const password=document.getElementById('password').value.trim();
   document.getElementById('loginError').textContent='';
   const btn=document.getElementById('loginBtn');btn.textContent='Logging...';btn.disabled=true;
+  console.log("Trying login with", email);
   const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});
-  if(error){document.getElementById('loginError').textContent=error.message;btn.textContent='Login';btn.disabled=false;return;}
+  if(error){
+    console.error(error);
+    document.getElementById('loginError').textContent=error.message + " (Check anon key & URL)";
+    btn.textContent='Login';btn.disabled=false;return;
+  }
   btn.textContent='Login';btn.disabled=false;showAdmin(data.user);
 });
 document.getElementById('logoutBtn').addEventListener('click', async()=>{await supabaseClient.auth.signOut();showLogin();});
@@ -99,24 +107,11 @@ async function loadAll(){
   await Promise.all([loadBookings(),loadContacts(),loadOvijog()]);
 }
 async function loadBookings(){
-  // Try multiple possible table names
-  const tables=['bookings','booking_requests','leads','bookings_table'];
+  const tables=['bookings','booking_requests','leads'];
   let data=null;
   for(let tbl of tables){
     const res=await supabaseClient.from(tbl).select('*').order('created_at',{ascending:false}).limit(200);
-    if(!res.error && res.data && res.data.length>=0){ data=res.data; console.log('Bookings found in',tbl); break; }
-  }
-  if(!data){
-    // Fallback to old API
-    try{
-      const apiUrl = (window.ElectroTechSupabase?.apiUrl) ? window.ElectroTechSupabase.apiUrl('admin/entries') : null;
-      if(apiUrl){
-        const token=localStorage.getItem('electrotech_admin_token');
-        const headers={}; if(token) headers['Authorization']=`Bearer ${token}`;
-        const r=await fetch(apiUrl,{headers}); const j=await r.json();
-        if(j.data?.bookings) data=j.data.bookings;
-      }
-    }catch(e){}
+    if(!res.error && res.data){ data=res.data; break; }
   }
   cacheBookings=data||[];
   document.getElementById('statBookings').textContent=cacheBookings.length;
@@ -127,26 +122,16 @@ function renderBookings(list){
   const term=document.getElementById('searchBookings').value.toLowerCase();
   const filtered=list.filter(i=>{ if(!term) return true; return [i.id,i.name,i.phone,i.service,i.date].join(' ').toLowerCase().includes(term); });
   const div=document.getElementById('bookingsTable');
-  if(filtered.length===0){div.innerHTML='<p class="notice">No bookings found. Table name alada hote pare - Supabase Table Editor e table er nam ki? (bookings/contacts)</p>';return;}
-  div.innerHTML=`<table><thead><tr><th>ID</th><th>Name</th><th>Phone</th><th>Service</th><th>Date</th><th>Created</th><th>Status</th><th>Action</th></tr></thead><tbody>${filtered.map(i=>`<tr><td>${i.id||''}</td><td>${i.name||''}</td><td>${i.phone||''}</td><td>${i.service||''}</td><td>${i.date||i.visit_date||''}</td><td>${i.created_at?new Date(i.created_at).toLocaleString():i.createdAt?new Date(i.createdAt).toLocaleString():''}</td><td>${i.status||'new'}</td><td><button class="btn btn-red" data-del-booking="${i.id}">Delete</button></td></tr>`).join('')}</tbody></table>`;
-  div.querySelectorAll('[data-del-booking]').forEach(b=>{
-    b.addEventListener('click', async()=>{
-      if(!confirm('Delete booking?')) return;
-      const id=b.getAttribute('data-del-booking');
-      for(let tbl of ['bookings','booking_requests','leads']){
-        const {error}=await supabaseClient.from(tbl).delete().eq('id',id);
-        if(!error){ loadBookings(); return; }
-      }
-      alert('Delete failed - table name check needed');
-    });
-  });
+  if(filtered.length===0){div.innerHTML='<p class="notice">No bookings found. Table Editor e table nam check koro.</p>';return;}
+  div.innerHTML=`<table><thead><tr><th>ID</th><th>Name</th><th>Phone</th><th>Service</th><th>Date</th><th>Created</th><th>Action</th></tr></thead><tbody>${filtered.map(i=>`<tr><td>${i.id||''}</td><td>${i.name||''}</td><td>${i.phone||''}</td><td>${i.service||''}</td><td>${i.date||i.visit_date||''}</td><td>${i.created_at?new Date(i.created_at).toLocaleString():''}</td><td><button class="btn btn-red" data-del-booking="${i.id}">Delete</button></td></tr>`).join('')}</tbody></table>`;
+  div.querySelectorAll('[data-del-booking]').forEach(b=>{ b.addEventListener('click', async()=>{ if(!confirm('Delete booking?')) return; const id=b.getAttribute('data-del-booking'); for(let tbl of ['bookings','booking_requests']){ const {error}=await supabaseClient.from(tbl).delete().eq('id',id); if(!error){ loadBookings(); return; } } }); });
 }
 async function loadContacts(){
-  const tables=['contacts','contact_leads','contact_messages'];
+  const tables=['contacts','contact_leads'];
   let data=null;
   for(let tbl of tables){
     const res=await supabaseClient.from(tbl).select('*').order('created_at',{ascending:false}).limit(200);
-    if(!res.error && res.data){ data=res.data; console.log('Contacts found in',tbl); break; }
+    if(!res.error && res.data){ data=res.data; break; }
   }
   cacheContacts=data||[];
   document.getElementById('statContacts').textContent=cacheContacts.length;
@@ -159,16 +144,7 @@ function renderContacts(list){
   const div=document.getElementById('contactsTable');
   if(filtered.length===0){div.innerHTML='<p class="notice">No contacts found</p>';return;}
   div.innerHTML=`<table><thead><tr><th>ID</th><th>Name</th><th>Contact</th><th>Message</th><th>Action</th></tr></thead><tbody>${filtered.map(i=>`<tr><td>${i.id||''}</td><td>${i.name||''}</td><td>${i.contact||i.phone||''}</td><td>${(i.message||'').slice(0,150)}</td><td><button class="btn btn-red" data-del-contact="${i.id}">Delete</button></td></tr>`).join('')}</tbody></table>`;
-  div.querySelectorAll('[data-del-contact]').forEach(b=>{
-    b.addEventListener('click', async()=>{
-      if(!confirm('Delete contact?')) return;
-      const id=b.getAttribute('data-del-contact');
-      for(let tbl of ['contacts','contact_leads']){
-        const {error}=await supabaseClient.from(tbl).delete().eq('id',id);
-        if(!error){ loadContacts(); return; }
-      }
-    });
-  });
+  div.querySelectorAll('[data-del-contact]').forEach(b=>{ b.addEventListener('click', async()=>{ if(!confirm('Delete?')) return; const id=b.getAttribute('data-del-contact'); for(let tbl of ['contacts','contact_leads']){ const {error}=await supabaseClient.from(tbl).delete().eq('id',id); if(!error){ loadContacts(); return; } } }); });
 }
 async function loadOvijog(){
   const {data,error}=await supabaseClient.from('ovijog').select('*').order('created_at',{ascending:false});
