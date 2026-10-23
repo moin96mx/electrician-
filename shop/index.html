@@ -235,10 +235,13 @@ async function placeOrder(){
   const name=document.getElementById("cName").value,phone=document.getElementById("cPhone").value,area=document.getElementById("cArea").value;
   if(!name||!phone||!area){alert("Please fill Name, Phone, Area");return}
   let total=Object.entries(cart).reduce((s,[id,q])=>s+PRODUCTS.find(x=>x.id==id).price*q,0)+120;
+  let items=Object.entries(cart).map(([id,q])=>{let p=PRODUCTS.find(x=>x.id==id);return {id:p.id,pid:"#P-"+p.id,name:p.name,price:p.price,qty:q}});
+  let order={no:"#EH-"+Math.floor(1000+Math.random()*9000),name,phone,area,items,total,status:"pending",date:new Date().toLocaleString('en-GB')};
+  let all=JSON.parse(localStorage.getItem("eh_orders")||"[]");all.unshift(order);localStorage.setItem("eh_orders",JSON.stringify(all));
   document.getElementById("orderNo").innerText="#EH-"+Math.floor(1000+Math.random()*9000);
   document.getElementById("checkoutForm").style.display='none';document.getElementById("cartItems").innerHTML='';document.getElementById("successBox").style.display='block';cart={};updateCart();
   // WhatsApp e o pathiye dao jate order miss na hoy
-  let txt="New Order: Name "+name+" Phone "+phone+" Area "+area+" Total ৳"+total;
+  let txt="New Order "+order.no+" | Name "+name+" Phone "+phone+" Area "+area+" | Products: "+items.map(i=>i.pid+" "+i.name+" x"+i.qty).join(", ")+" | Total ৳"+total;
   setTimeout(()=>{window.open(`https://wa.me/8801710830391?text=${encodeURIComponent(txt)}`,'_blank')},800);
 }
 try{brandChips();catRow();render();renderSections();}catch(e){console.log(e); document.getElementById('grid').innerHTML='<p style="color:#fff">Loading...</p>';}
