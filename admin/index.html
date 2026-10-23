@@ -4,9 +4,6 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin Panel</title>
 <link rel="icon" href="/favicon.ico" sizes="any">
-<link rel="icon" href="/logo.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="192x192" href="/img/favicon-192x192.png">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
 :root{--bg:#071018;--panel:#0f172a;--line:#1e293b;--text:#e2e8f0;--muted:#94a3b8;--cyan:#00ffcc;--purple:#9d4edd;--red:#ef4444;--yellow:#fbbf24;--green:#34d399}
@@ -17,52 +14,56 @@
 .field input{width:100%;padding:12px 14px;background:#0b1220;border:1px solid var(--line);border-radius:8px;color:var(--text)}
 .primary{width:100%;background:linear-gradient(135deg,var(--cyan),var(--purple));color:#041019;border:none;border-radius:8px;padding:12px 16px;font-weight:bold;cursor:pointer}
 .hidden{display:none!important}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding:20px;margin-bottom:24px;background:var(--panel);border:1px solid var(--line);border-radius:16px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;padding:20px;margin-bottom:24px;background:var(--panel);border:1px solid var(--line);border-radius:16px}
 .stat{background:rgba(255,255,255,.02);border:1px solid var(--line);border-radius:12px;padding:16px}.stat .label{color:var(--muted);font-size:12px;margin-bottom:6px}.stat .value{font-size:26px;font-weight:bold;color:var(--cyan)}
 .panel{padding:20px;background:var(--panel);border:1px solid var(--line);border-radius:16px;margin-top:24px;overflow:auto}
 table{width:100%;border-collapse:collapse}th,td{padding:10px 8px;border-bottom:1px solid var(--line);font-size:13px;text-align:left;vertical-align:top}th{color:var(--muted);font-size:11px;text-transform:uppercase;white-space:nowrap}
 .badge{display:inline-block;padding:4px 8px;border-radius:999px;font-size:11px;background:rgba(52,211,153,.1);color:var(--green)}
 .search{width:100%;padding:10px 12px;background:#0b1220;border:1px solid var(--line);border-radius:8px;color:var(--text);margin-bottom:12px}
 .btn{padding:6px 10px;border-radius:8px;border:1px solid var(--line);cursor:pointer;font-size:12px}
-.btn-cyan{background:rgba(0,255,204,.08);color:var(--cyan)}.btn-red{background:rgba(239,68,68,.08);color:#fca5a5}
+.btn-cyan{background:rgba(0,255,204,.08);color:var(--cyan)}.btn-red{background:rgba(239,68,68,.08);color:#fca5a5}.btn-green{background:rgba(52,211,153,.15);color:#6ee7b7}
 .logout{padding:10px 16px;background:#1f2937;color:var(--text);border:1px solid var(--line);border-radius:8px;cursor:pointer}
 .tabs{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}.tab{padding:10px 16px;border-radius:999px;border:1px solid var(--line);background:#0b1220;color:var(--muted);cursor:pointer}.tab.active{background:var(--cyan);color:#041019;font-weight:bold;border-color:var(--cyan)}
+.subtabs{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}.subtab{padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:#0b1220;color:var(--text);cursor:pointer;font-size:12px}.subtab.active{background:#FFC107;color:#000;font-weight:bold}
 .notice{color:var(--muted);font-size:13px}
 .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--line);flex-wrap:wrap;gap:10px}
 .pagination{display:flex;gap:8px;justify-content:center;align-items:center;margin-top:16px;flex-wrap:wrap}
 .pag-btn{padding:8px 14px;border-radius:8px;border:1px solid var(--line);background:#0b1220;color:var(--text);cursor:pointer;font-size:13px}
-.pag-btn.active{background:var(--cyan);color:#041019;font-weight:bold}
-.pag-btn:disabled{opacity:.4;cursor:not-allowed}
-.pag-info{color:var(--muted);font-size:12px;margin:0 8px}
+.pag-btn.active{background:var(--cyan);color:#041019;font-weight:bold}.pag-btn:disabled{opacity:.4;cursor:not-allowed}.pag-info{color:var(--muted);font-size:12px;margin:0 8px}
 </style>
 </head>
 <body>
 <div class="container">
-  <div id="loginView">
-    <div class="login-box">
-      <h2>ElectroHubBD - Super Admin</h2>
-      <p style="color:var(--muted);font-size:12px">3 Tables: bookings, contacts, ovijog | Paginated</p>
-      <div class="field"><label>Email</label><input id="email" type="email" value="info@electrohubbd.com"></div>
-      <div class="field"><label>Password</label><input id="password" type="password" placeholder="Password"></div>
-      <button class="primary" id="loginBtn">Login</button>
-      <p id="loginError" style="color:#fca5a5;margin-top:10px;font-size:13px"></p>
-    </div>
-  </div>
+  <div id="loginView"><div class="login-box"><h2>ElectroHubBD - Super Admin</h2><p style="color:var(--muted);font-size:12px">4 Tables: bookings, contacts, ovijog, shop_orders | Paginated</p><div class="field"><label>Email</label><input id="email" type="email" value="info@electrohubbd.com"></div><div class="field"><label>Password</label><input id="password" type="password" placeholder="Password"></div><button class="primary" id="loginBtn">Login</button><p id="loginError" style="color:#fca5a5;margin-top:10px;font-size:13px"></p></div></div>
   <div id="adminView" class="hidden">
     <div class="topbar"><h1>ElectroHubBD - Dashboard</h1><div><span id="userEmail" style="color:var(--muted);margin-right:10px"></span><button class="logout" id="logoutBtn">Logout</button></div></div>
     <div class="stats">
       <div class="stat"><div class="label">Total Bookings (bookings)</div><div class="value" id="statBookings">0</div></div>
       <div class="stat"><div class="label">Total Contacts (contacts)</div><div class="value" id="statContacts">0</div></div>
       <div class="stat"><div class="label">Total Ovijog (ovijog)</div><div class="value" id="statOvijog" style="color:#fca5a5">0</div></div>
+      <div class="stat"><div class="label">🛍️ Total Shop Orders (shop_orders)</div><div class="value" id="statShop" style="color:#FFC107">0</div></div>
     </div>
     <div class="tabs">
       <button class="tab active" data-tab="bookings">📅 Bookings</button>
       <button class="tab" data-tab="contacts">💬 Contacts</button>
       <button class="tab" data-tab="ovijog">🔴 Ovijog</button>
+      <button class="tab" data-tab="shop">🛍️ Shop Orders</button>
     </div>
     <div id="tab-bookings" class="panel"><h3>Bookings Table <span id="bookingsInfo" style="font-size:12px;color:var(--muted);font-weight:normal"></span></h3><input id="searchBookings" class="search" placeholder="Search name, phone, service... (current page)"><div id="bookingsTable"><p class="notice">Loading...</p></div><div id="bookingsPagination" class="pagination"></div></div>
     <div id="tab-contacts" class="panel hidden"><h3>Contacts Table <span id="contactsInfo" style="font-size:12px;color:var(--muted);font-weight:normal"></span></h3><input id="searchContacts" class="search" placeholder="Search..."><div id="contactsTable"><p class="notice">Loading...</p></div><div id="contactsPagination" class="pagination"></div></div>
     <div id="tab-ovijog" class="panel hidden"><h3>Ovijog Table <span id="ovijogInfo" style="font-size:12px;color:var(--muted);font-weight:normal"></span></h3><input id="searchOvijog" class="search" placeholder="Search name, area, type..."><div id="ovijogTable"><p class="notice">Loading...</p></div><div id="ovijogPagination" class="pagination"></div></div>
+    <div id="tab-shop" class="panel hidden">
+      <h3>🛍️ Shop Orders Table <span id="shopInfo" style="font-size:12px;color:var(--muted);font-weight:normal"></span></h3>
+      <p class="notice">💡 Niyom: Pending → Done chaple auto <b>Archived</b> e jabe, Delete hobe na. Jara order korbe na tader Delete korba. Product ID diye khojo - ex: #P-1</p>
+      <div class="subtabs">
+        <button class="subtab active" data-shop="all" onclick="setShopFilter('all',this)">All Orders</button>
+        <button class="subtab" data-shop="pending" onclick="setShopFilter('pending',this)">⏳ Pending</button>
+        <button class="subtab" data-shop="done" onclick="setShopFilter('done',this)">✅ Done</button>
+        <button class="subtab" data-shop="archived" onclick="setShopFilter('archived',this)">📦 Archived (Purano Done)</button>
+      </div>
+      <input id="searchShop" class="search" placeholder="Search: Name, Phone, Order No, Product ID (#P-1), Product Name...">
+      <div id="shopTable"><p class="notice">Loading...</p></div><div id="shopPagination" class="pagination"></div>
+    </div>
   </div>
 </div>
 <script>
@@ -90,60 +91,49 @@ document.querySelectorAll('.tab').forEach(t=>{t.addEventListener('click',()=>{
   document.querySelectorAll('[id^="tab-"]').forEach(p=>p.classList.add('hidden'));
   document.getElementById('tab-'+t.dataset.tab).classList.remove('hidden');
 });});
-// STATE
-let cacheBookings=[], cacheContacts=[], cacheOvijog=[];
-let pageBookings=1, pageContacts=1, pageOvijog=1;
-let totalBookings=0, totalContacts=0, totalOvijog=0;
-async function loadAll(){await Promise.all([loadBookings(1),loadContacts(1),loadOvijog(1)]);}
-// PAGINATION UI BUILDER
+let cacheBookings=[], cacheContacts=[], cacheOvijog=[], cacheShop=[];
+let pageBookings=1, pageContacts=1, pageOvijog=1, pageShop=1;
+let totalBookings=0, totalContacts=0, totalOvijog=0, totalShop=0;
+let shopFilter='all';
+function setShopFilter(f,el){shopFilter=f;document.querySelectorAll('.subtab').forEach(b=>b.classList.remove('active'));el.classList.add('active');renderShop(cacheShop);}
+async function loadAll(){await Promise.all([loadBookings(1),loadContacts(1),loadOvijog(1),loadShop(1)]);}
 function buildPagination(current,total,callbackName){
   if(total<=1) return '';
   let html = `<button class="pag-btn" ${current<=1?'disabled':''} onclick="${callbackName}(${current-1})">Prev</button>`;
-  const maxShow = 5;
-  let start = Math.max(1, current-2);
-  let end = Math.min(total, start+maxShow-1);
+  const maxShow = 5; let start = Math.max(1, current-2); let end = Math.min(total, start+maxShow-1);
   if(end-start < maxShow-1) start = Math.max(1, end-maxShow+1);
   if(start>1) html+= `<button class="pag-btn" onclick="${callbackName}(1)">1</button><span class="pag-info">...</span>`;
-  for(let i=start;i<=end;i++){
-    html+= `<button class="pag-btn ${i===current?'active':''}" onclick="${callbackName}(${i})">${i}</button>`;
-  }
+  for(let i=start;i<=end;i++){ html+= `<button class="pag-btn ${i===current?'active':''}" onclick="${callbackName}(${i})">${i}</button>`; }
   if(end<total) html+= `<span class="pag-info">...</span><button class="pag-btn" onclick="${callbackName}(${total})">${total}</button>`;
   html+= `<button class="pag-btn" ${current>=total?'disabled':''} onclick="${callbackName}(${current+1})">Next</button>`;
   return html;
 }
 async function loadBookings(page=1){
-  pageBookings=page;
-  const from=(page-1)*PER_PAGE;
-  const to=from+PER_PAGE-1;
+  pageBookings=page; const from=(page-1)*PER_PAGE; const to=from+PER_PAGE-1;
   const {data,count,error}=await supabaseClient.from('bookings').select('*', {count:'exact'}).order('created_at',{ascending:false}).range(from,to);
   if(error){document.getElementById('bookingsTable').innerHTML=`<p class="notice">Error: ${error.message}</p>`;return;}
-  cacheBookings=data||[]; totalBookings=count||0;
-  document.getElementById('statBookings').textContent=totalBookings;
+  cacheBookings=data||[]; totalBookings=count||0; document.getElementById('statBookings').textContent=totalBookings;
   document.getElementById('bookingsInfo').textContent=` - Showing ${from+1}-${Math.min(from+PER_PAGE,totalBookings)} of ${totalBookings}`;
-  renderBookings(cacheBookings);
-  const totalPages=Math.ceil(totalBookings/PER_PAGE)||1;
+  renderBookings(cacheBookings); const totalPages=Math.ceil(totalBookings/PER_PAGE)||1;
   document.getElementById('bookingsPagination').innerHTML=buildPagination(page,totalPages,'loadBookings')+`<span class="pag-info">${PER_PAGE}/page</span>`;
 }
 function renderBookings(list){
   const term=document.getElementById('searchBookings').value.toLowerCase();
   const filtered=list.filter(i=>{if(!term)return true;return JSON.stringify(i).toLowerCase().includes(term);});
   const div=document.getElementById('bookingsTable');
-  if(filtered.length===0){div.innerHTML='<p class="notice">No bookings found on this page. Search only this page, change page for more.</p>';return;}
+  if(filtered.length===0){div.innerHTML='<p class="notice">No bookings found on this page.</p>';return;}
   const cols=Object.keys(filtered[0]||{});
-  div.innerHTML=`<table><thead><tr>${cols.map(c=>`<th>${c}</th>`).join('')}<th>Action</th></tr></thead><tbody>${filtered.map(i=>`<tr>${cols.map(c=>`<td style="max-width:200px;overflow:hidden;text-overflow:ellipsis">${(i[c]===null?'':String(i[c]).slice(0,200))}</td>`).join('')}<td><button class="btn btn-red" data-del-booking="${i.id}">Delete</button></td></tr>`).join('')}</tbody></table>`;
+  div.innerHTML=`<table><thead><tr>${cols.map(c=>`<th>${c}</th>`).join('')}<th>Action</th></tr></thead><tbody>${filtered.map(i=>`<tr>${cols.map(c=>`<td style="max-width:200px;overflow:hidden">${(i[c]===null?'':String(i[c]).slice(0,200))}</td>`).join('')}<td><button class="btn btn-red" data-del-booking="${i.id}">Delete</button></td></tr>`).join('')}</tbody></table>`;
   div.querySelectorAll('[data-del-booking]').forEach(b=>{b.addEventListener('click', async()=>{if(!confirm('Delete booking?'))return;const id=b.getAttribute('data-del-booking');const {error}=await supabaseClient.from('bookings').delete().eq('id',id);if(error)alert(error.message);else loadBookings(pageBookings);});});
 }
 document.getElementById('searchBookings').addEventListener('input',()=>renderBookings(cacheBookings));
 async function loadContacts(page=1){
-  pageContacts=page;
-  const from=(page-1)*PER_PAGE; const to=from+PER_PAGE-1;
+  pageContacts=page; const from=(page-1)*PER_PAGE; const to=from+PER_PAGE-1;
   const {data,count,error}=await supabaseClient.from('contacts').select('*',{count:'exact'}).order('created_at',{ascending:false}).range(from,to);
   if(error){document.getElementById('contactsTable').innerHTML=`<p class="notice">Error: ${error.message}</p>`;return;}
-  cacheContacts=data||[]; totalContacts=count||0;
-  document.getElementById('statContacts').textContent=totalContacts;
+  cacheContacts=data||[]; totalContacts=count||0; document.getElementById('statContacts').textContent=totalContacts;
   document.getElementById('contactsInfo').textContent=` - Showing ${from+1}-${Math.min(from+PER_PAGE,totalContacts)} of ${totalContacts}`;
-  renderContacts(cacheContacts);
-  const totalPages=Math.ceil(totalContacts/PER_PAGE)||1;
+  renderContacts(cacheContacts); const totalPages=Math.ceil(totalContacts/PER_PAGE)||1;
   document.getElementById('contactsPagination').innerHTML=buildPagination(page,totalPages,'loadContacts');
 }
 function renderContacts(list){
@@ -157,15 +147,12 @@ function renderContacts(list){
 }
 document.getElementById('searchContacts').addEventListener('input',()=>renderContacts(cacheContacts));
 async function loadOvijog(page=1){
-  pageOvijog=page;
-  const from=(page-1)*PER_PAGE; const to=from+PER_PAGE-1;
+  pageOvijog=page; const from=(page-1)*PER_PAGE; const to=from+PER_PAGE-1;
   const {data,count,error}=await supabaseClient.from('ovijog').select('*',{count:'exact'}).order('created_at',{ascending:false}).range(from,to);
   if(error){document.getElementById('ovijogTable').innerHTML=`<p class="notice">Error: ${error.message}</p>`;return;}
-  cacheOvijog=data||[]; totalOvijog=count||0;
-  document.getElementById('statOvijog').textContent=totalOvijog;
+  cacheOvijog=data||[]; totalOvijog=count||0; document.getElementById('statOvijog').textContent=totalOvijog;
   document.getElementById('ovijogInfo').textContent=` - Showing ${from+1}-${Math.min(from+PER_PAGE,totalOvijog)} of ${totalOvijog}`;
-  renderOvijog(cacheOvijog);
-  const totalPages=Math.ceil(totalOvijog/PER_PAGE)||1;
+  renderOvijog(cacheOvijog); const totalPages=Math.ceil(totalOvijog/PER_PAGE)||1;
   document.getElementById('ovijogPagination').innerHTML=buildPagination(page,totalPages,'loadOvijog');
 }
 function renderOvijog(list){
@@ -182,42 +169,61 @@ function renderOvijog(list){
   div.querySelectorAll('[data-del-ovijog]').forEach(b=>{b.addEventListener('click', async()=>{if(!confirm('Delete ovijog?'))return;const id=b.getAttribute('data-del-ovijog');const {error}=await supabaseClient.from('ovijog').delete().eq('id',id);if(error)alert(error.message);else loadOvijog(pageOvijog);})});
 }
 document.getElementById('searchOvijog').addEventListener('input',()=>renderOvijog(cacheOvijog));
+// ===== SHOP ORDERS (NEW) =====
+async function loadShop(page=1){
+  pageShop=page; const from=(page-1)*PER_PAGE; const to=from+PER_PAGE-1;
+  // Try Supabase shop_orders table first
+  let {data,count,error}=await supabaseClient.from('shop_orders').select('*',{count:'exact'}).order('created_at',{ascending:false}).range(from,to);
+  if(error){
+    // Fallback to localStorage (for shop that uses localStorage)
+    let local=JSON.parse(localStorage.getItem("eh_orders")||"[]");
+    cacheShop=local; totalShop=local.length; document.getElementById('statShop').textContent=totalShop;
+    document.getElementById('shopInfo').textContent=` - Showing ${local.length} orders from browser (Supabase table shop_orders not found yet - create it in Supabase)`;
+    renderShop(cacheShop); document.getElementById('shopPagination').innerHTML='';
+    return;
+  }
+  cacheShop=data||[]; totalShop=count||0; document.getElementById('statShop').textContent=totalShop;
+  document.getElementById('shopInfo').textContent=` - Showing ${from+1}-${Math.min(from+PER_PAGE,totalShop)} of ${totalShop}`;
+  renderShop(cacheShop); const totalPages=Math.ceil(totalShop/PER_PAGE)||1;
+  document.getElementById('shopPagination').innerHTML=buildPagination(page,totalPages,'loadShop');
+}
+function renderShop(list){
+  const term=document.getElementById('searchShop').value.toLowerCase();
+  let filtered=list.filter(i=>{
+    if(shopFilter!=='all' && (i.status||'pending')!==shopFilter) return false;
+    if(!term) return true; return JSON.stringify(i).toLowerCase().includes(term);
+  });
+  const div=document.getElementById('shopTable');
+  if(filtered.length===0){div.innerHTML='<p class="notice">No shop orders in this tab. Try All Orders.</p>';return;}
+  div.innerHTML=`<table><thead><tr><th>Order No</th><th>Customer</th><th>Product (ID)</th><th>Total</th><th>Status</th><th>Action</th></tr></thead><tbody>${filtered.map(o=>`<tr>
+    <td><b>${o.order_no||o.no||o.id}</b><br><span style="color:#94a3b8">${o.created_at||o.date||''}</span></td>
+    <td>${o.customer_name||o.name||''}<br>${o.phone||''}<br>${o.area||o.address||''}</td>
+    <td style="max-width:320px">${(o.items||[]).map? (o.items.map? o.items.map(it=>`<div><b>${it.pid||('#P-'+it.id)}</b> ${it.name} <span style="color:#94a3b8">x${it.qty} • ৳${it.price}</span></div>`).join('') : o.items) : (o.items||o.product_name||'')}</td>
+    <td>৳${o.total||o.grand_total||''}</td>
+    <td><span class="badge">${o.status||'pending'}</span></td>
+    <td><div style="display:flex;gap:6px;flex-wrap:wrap">${(o.status||'pending')==='pending'?`<button class="btn btn-green" data-done-shop="${o.id}">✅ Done</button>`:''}<button class="btn btn-red" data-del-shop="${o.id}">Delete</button></div></td>
+  </tr>`).join('')}</tbody></table>`;
+  div.querySelectorAll('[data-done-shop]').forEach(b=>{b.addEventListener('click', async()=>{
+    const id=b.getAttribute('data-done-shop');
+    // If localStorage mode, move to archived locally
+    if(!String(id).match(/^[0-9a-f-]{36}$/)){
+      let local=JSON.parse(localStorage.getItem("eh_orders")||"[]"); let idx=local.findIndex(x=>String(x.no)===String(id)||String(x.id)===String(id)); if(idx>=0){local[idx].status='archived';localStorage.setItem("eh_orders",JSON.stringify(local));} loadShop(pageShop); return;
+    }
+    const {error}=await supabaseClient.from('shop_orders').update({status:'archived'}).eq('id',id); if(error)alert(error.message); else loadShop(pageShop);
+  })});
+  div.querySelectorAll('[data-del-shop]').forEach(b=>{b.addEventListener('click', async()=>{
+    if(!confirm('Delete this order? Eta ar paba na!'))return;
+    const id=b.getAttribute('data-del-shop');
+    if(!String(id).match(/^[0-9a-f-]{36}$/)){ let local=JSON.parse(localStorage.getItem("eh_orders")||"[]"); local=local.filter(x=>String(x.no)!==String(id)&&String(x.id)!==String(id)); localStorage.setItem("eh_orders",JSON.stringify(local)); loadShop(pageShop); return;}
+    const {error}=await supabaseClient.from('shop_orders').delete().eq('id',id); if(error)alert(error.message); else loadShop(pageShop);
+  })});
+}
+document.getElementById('searchShop').addEventListener('input',()=>renderShop(cacheShop));
 checkSession();
 </script>
-  <script>
-  setInterval(()=>{
-    document.querySelectorAll('td').forEach(td=>{
-      const t = td.textContent.trim();
-      if(t.startsWith('https://') && t.includes('booking-files')){
-        if(td.querySelector('a')) return;
-        const low = t.toLowerCase();
-        const a = document.createElement('a');
-        a.href = t; a.target = "_blank";
-        a.style = "color:#00ffcc;text-decoration:underline;font-weight:700;";
-        if(low.match(/\.(jpg|jpeg|png|gif|webp)$/)) a.textContent = "🖼 IMG দেখুন - Click";
-        else if(low.endsWith('.pdf')) a.textContent = "📄 PDF দেখুন - Click";
-        else if(low.match(/\.(dwg|drg|dxf)$/)) a.textContent = "📐 CAD (DRG/DWG) - Download";
-        else if(low.includes('tec')) a.textContent = "📋 TEC File - Download";
-        else a.textContent = "📁 File দেখুন - Click";
-        td.innerHTML = ""; td.appendChild(a);
-      }
-    });
-  },1000);
-</script>
-  <script>
-  setInterval(()=>{
-    document.querySelectorAll('td').forEach(td=>{
-      const txt = td.textContent.trim();
-      if(txt.includes('T') && txt.includes('+00:00')){
-        try{
-          const d = new Date(txt);
-          if(isNaN(d)) return;
-          const bd = d.toLocaleString('en-GB', { timeZone: 'Asia/Dhaka', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true });
-          if(!td.dataset.bd){ td.textContent = bd + ' (BD)'; td.dataset.bd = '1'; td.style.color = '#00ffcc'; }
-        }catch(e){}
-      }
-    });
-  },1000);
+<script>
+setInterval(()=>{document.querySelectorAll('td').forEach(td=>{const t=td.textContent.trim(); if(t.startsWith('https://')&&t.includes('booking-files')){if(td.querySelector('a'))return; const low=t.toLowerCase(); const a=document.createElement('a'); a.href=t; a.target="_blank"; a.style="color:#00ffcc;text-decoration:underline;font-weight:700;"; if(low.match(/\.(jpg|jpeg|png|gif|webp)$/)) a.textContent="🖼 IMG দেখুন - Click"; else if(low.endsWith('.pdf')) a.textContent="📄 PDF দেখুন - Click"; else a.textContent="📁 File দেখুন - Click"; td.innerHTML=""; td.appendChild(a);}})},1000);
+setInterval(()=>{document.querySelectorAll('td').forEach(td=>{const txt=td.textContent.trim(); if(txt.includes('T')&&txt.includes('+00:00')){try{const d=new Date(txt); if(isNaN(d))return; const bd=d.toLocaleString('en-GB',{timeZone:'Asia/Dhaka',day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit',hour12:true}); if(!td.dataset.bd){td.textContent=bd+' (BD)'; td.dataset.bd='1'; td.style.color='#00ffcc';}}catch(e){}}})},1000);
 </script>
 </body>
 </html>
