@@ -134,20 +134,31 @@ document.getElementById('searchOvijog').addEventListener('input',()=>renderOvijo
 checkSession();
 </script>
   <script>
-  // File preview clickable koro
+  // Sob file type preview - PDF, IMG, DRG, TEC
   setInterval(()=>{
     document.querySelectorAll('td').forEach(td=>{
-      const t=td.textContent.trim();
+      const t = td.textContent.trim();
       if(t.startsWith('https://') && t.includes('booking-files')){
-        if(!td.querySelector('a')){
-          const a = document.createElement('a');
-          a.href = t;
-          a.target = "_blank";
-          a.style = "color:#00ffcc;text-decoration:underline;font-weight:700;";
+        if(td.querySelector('a')) return;
+        const low = t.toLowerCase();
+        const a = document.createElement('a');
+        a.href = t;
+        a.target = "_blank";
+        a.style = "color:#00ffcc;text-decoration:underline;font-weight:700;";
+        
+        if(low.match(/\.(jpg|jpeg|png|gif|webp)$/)){
+          a.textContent = "🖼️ IMG দেখুন - Click";
+        } else if(low.endsWith('.pdf')){
           a.textContent = "📄 PDF দেখুন - Click";
-          td.innerHTML = "";
-          td.appendChild(a);
+        } else if(low.match(/\.(dwg|drg|dxf)$/)){
+          a.textContent = "📐 CAD (DRG/DWG) - Download";
+        } else if(low.includes('tec')){
+          a.textContent = "📋 TEC File - Download";
+        } else {
+          a.textContent = "📁 File দেখুন - Click";
         }
+        td.innerHTML = "";
+        td.appendChild(a);
       }
     });
   },1000);
