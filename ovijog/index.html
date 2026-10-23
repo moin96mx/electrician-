@@ -45,6 +45,8 @@ textarea{resize:vertical;min-height:130px}
 .success h2{font-size:28px;margin-bottom:10px;color:var(--accent-cyan)}
 .badge{display:inline-flex;background:rgba(157,78,221,.15);border:1px solid rgba(157,78,221,.3);color:#c4a7ff;padding:6px 14px;border-radius:100px;font-size:12px;font-weight:600;margin-bottom:14px}
 .footer{text-align:center;padding:40px 0;color:var(--text-muted);font-size:13px;border-top:1px solid var(--line);margin-top:40px}
+optgroup{font-weight:700;color:var(--accent-cyan);background:#0f172a}
+optgroup option{color:#f3f4f6;font-weight:500;padding:6px}
 </style>
 </head>
 <body>
@@ -67,8 +69,74 @@ textarea{resize:vertical;min-height:130px}
       <div class="form-grid">
         <div class="form-group"><label>আপনার নাম <span>*</span></label><input type="text" id="name" required placeholder="যেমন: মোঃ মঈন"></div>
         <div class="form-group"><label>ফোন / WhatsApp <span>*</span></label><input type="tel" id="phone" required placeholder="01XXXXXXXXX"></div>
-        <div class="form-group"><label>এলাকা / থানা</label><select id="area"><option value="">নির্বাচন করুন</option><option>বাগেরহাট সদর</option><option>মোংলা</option><option>রামপাল</option><option>ফকিরহাট</option><option>মোল্লাহাট</option><option>চিতলমারী</option><option>কচুয়া</option><option>মোড়েলগঞ্জ</option><option>শরণখোলা</option><option>অন্যান্য</option></select></div>
-        <div class="form-group"><label>অভিযোগের ধরণ <span>*</span></label><select id="type" required><option value="">নির্বাচন করুন</option><option>কাজে দেরি হয়েছে</option><option>বিল বেশি নেওয়া হয়েছে</option><option>কাজ ভালো হয়নি</option><option>ব্যবহার খারাপ</option><option>ওয়ারেন্টি সেবা পাইনি</option><option>অন্যান্য</option></select></div>
+        <div class="form-group">
+          <label>এলাকা / থানা <span>*</span></label>
+          <select id="area" required>
+            <option value="">নির্বাচন করুন - আপনার এলাকা</option>
+            
+            <optgroup label="📍 DHAKA CITY - ঢাকা সিটি">
+              <option value="Dhaka - Mirpur">Mirpur - মিরপুর</option>
+              <option value="Dhaka - Uttara">Uttara - উত্তরা</option>
+              <option value="Dhaka - Gulshan">Gulshan - গুলশান</option>
+              <option value="Dhaka - Banani">Banani - বনানী</option>
+              <option value="Dhaka - Dhanmondi">Dhanmondi - ধানমন্ডি</option>
+              <option value="Dhaka - Mohammadpur">Mohammadpur - মোহাম্মদপুর</option>
+              <option value="Dhaka - Motijheel">Motijheel - মতিঝিল</option>
+              <option value="Dhaka - Jatrabari">Jatrabari - যাত্রাবাড়ী</option>
+              <option value="Dhaka - Badda">Badda - বাড্ডা</option>
+              <option value="Dhaka - Tejgaon">Tejgaon - তেজগাঁও</option>
+              <option value="Dhaka - Pallabi">Pallabi - পল্লবী</option>
+              <option value="Dhaka - Khilgaon">Khilgaon - খিলগাঁও</option>
+            </optgroup>
+            <optgroup label="📍 SAVAR - সাভার (আপনার মেইন এরিয়া)">
+              <option value="Savar - Savar Sadar">Savar Sadar - সাভার সদর</option>
+              <option value="Savar - Ashulia">Ashulia - আশুলিয়া</option>
+              <option value="Savar - Hemayetpur">Hemayetpur - হেমায়েতপুর</option>
+              <option value="Savar - Dhamrai">Dhamrai - ধামরাই</option>
+              <option value="Savar - EPZ">Savar EPZ - সাভার ইপিজেড</option>
+              <option value="Savar - Jahangirnagar">Jahangirnagar - জাহাঙ্গীরনগর</option>
+              <option value="Savar - Aminbazar">Aminbazar - আমিনবাজার</option>
+              <option value="Savar - Birulia">Birulia - বিরুলিয়া</option>
+            </optgroup>
+            <optgroup label="📍 GAZIPUR - গাজীপুর">
+              <option value="Gazipur - Gazipur Sadar">Gazipur Sadar - গাজীপুর সদর</option>
+              <option value="Gazipur - Tongi">Tongi - টঙ্গী</option>
+              <option value="Gazipur - Kaliakoir">Kaliakoir - কালিয়াকৈর</option>
+              <option value="Gazipur - Kapasia">Kapasia - কাপাসিয়া</option>
+              <option value="Gazipur - Sreepur">Sreepur - শ্রীপুর</option>
+              <option value="Gazipur - Kaliganj">Kaliganj - কালীগঞ্জ</option>
+              <option value="Gazipur - Konabari">Konabari - কোনাবাড়ি</option>
+              <option value="Gazipur - Board Bazar">Board Bazar - বোর্ড বাজার</option>
+            </optgroup>
+            <optgroup label="📍 KERANIGANJ - কেরানীগঞ্জ">
+              <option value="Keraniganj - Model Town">Keraniganj Model - মডেল টাউন</option>
+              <option value="Keraniganj - South Keraniganj">South Keraniganj - দক্ষিণ কেরানীগঞ্জ</option>
+              <option value="Keraniganj - Jinjira">Jinjira - জিনজিরা</option>
+              <option value="Keraniganj - Aganagar">Aganagar - আগানগর</option>
+              <option value="Keraniganj - Kalatia">Kalatia - কালাতিয়া</option>
+              <option value="Keraniganj - Tegharia">Tegharia - তেঘরিয়া</option>
+              <option value="Keraniganj - Chunkutia">Chunkutia - চুনকুটিয়া</option>
+              <option value="Keraniganj - Zinjira">Hasnabad - হাসনাবাদ</option>
+            </optgroup>
+            <optgroup label="📍 OTHER - অন্যান্য">
+              <option value="Other">Other / অন্যান্য এলাকা</option>
+            </optgroup>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>অভিযোগের ধরণ <span>*</span></label>
+          <select id="type" required>
+            <option value="">নির্বাচন করুন</option>
+            <option value="Kaje Deri">⏰ কাজে দেরি হয়েছে</option>
+            <option value="Bill Beshi">💰 বিল বেশি নেওয়া হয়েছে</option>
+            <option value="Kaj Valo Hoyni">🔧 কাজ ভালো হয়নি / ত্রুটিপূর্ণ</option>
+            <option value="Bebohar Kharap">😡 ব্যবহার খারাপ</option>
+            <option value="Warranty Paini">🛡️ ওয়ারেন্টি সেবা পাইনি</option>
+            <option value="Safety Issue">⚠️ নিরাপত্তা ঝুঁকি</option>
+            <option value="Technician Absent">👷 টেকনিশিয়ান আসেনি</option>
+            <option value="Other">📝 অন্যান্য</option>
+          </select>
+        </div>
         <div class="form-group full"><label>বিস্তারিত অভিযোগ <span>*</span></label><textarea id="details" required placeholder="কি সমস্যা হয়েছে, কবে, কোন টেকনিশিয়ান... বিস্তারিত লিখুন"></textarea></div>
       </div>
       <label class="checkbox"><input type="checkbox" id="anonymous"> আমার নাম গোপন রাখুন (Anonymous)</label>
@@ -82,7 +150,7 @@ textarea{resize:vertical;min-height:130px}
     </div>
   </div>
 </div>
-<div class="footer">© ElectroHubBD - Licensed Electrical & Smart Automation</div>
+<div class="footer">© ElectroHubBD - Licensed Electrical & Smart Automation | Dhaka | Savar | Gazipur | Keraniganj</div>
 <script>
 const SUPABASE_URL = "https://xctzrcprhwsawnalbypi.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhjdHpyY3ByaHdzYXduYWxieXBpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE0NTYwNDEsImV4cCI6MjEwNzAzMjA0MX0.nYZikfjkTudQxAA8oaeSFFAhJ5RGrGr2oPd--Cc_deQ";
