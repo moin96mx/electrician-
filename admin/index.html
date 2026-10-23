@@ -25,6 +25,11 @@ table{width:100%;border-collapse:collapse}th,td{padding:10px 8px;border-bottom:1
 .tabs{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}.tab{padding:10px 16px;border-radius:999px;border:1px solid var(--line);background:#0b1220;color:var(--muted);cursor:pointer}.tab.active{background:var(--cyan);color:#041019;font-weight:bold;border-color:var(--cyan)}
 .notice{color:var(--muted);font-size:13px}
 .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--line);flex-wrap:wrap;gap:10px}
+.pagination{display:flex;gap:8px;justify-content:center;align-items:center;margin-top:16px;flex-wrap:wrap}
+.pag-btn{padding:8px 14px;border-radius:8px;border:1px solid var(--line);background:#0b1220;color:var(--text);cursor:pointer;font-size:13px}
+.pag-btn.active{background:var(--cyan);color:#041019;font-weight:bold}
+.pag-btn:disabled{opacity:.4;cursor:not-allowed}
+.pag-info{color:var(--muted);font-size:12px;margin:0 8px}
 </style>
 </head>
 <body>
@@ -32,7 +37,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:10px 8px;border-bottom:1
   <div id="loginView">
     <div class="login-box">
       <h2>ElectroHubBD - Super Admin</h2>
-      <p style="color:var(--muted);font-size:12px">3 Tables: bookings, contacts, ovijog</p>
+      <p style="color:var(--muted);font-size:12px">3 Tables: bookings, contacts, ovijog | Paginated</p>
       <div class="field"><label>Email</label><input id="email" type="email" value="info@electrohubbd.com"></div>
       <div class="field"><label>Password</label><input id="password" type="password" placeholder="Password"></div>
       <button class="primary" id="loginBtn">Login</button>
@@ -51,15 +56,16 @@ table{width:100%;border-collapse:collapse}th,td{padding:10px 8px;border-bottom:1
       <button class="tab" data-tab="contacts">💬 Contacts</button>
       <button class="tab" data-tab="ovijog">🔴 Ovijog</button>
     </div>
-    <div id="tab-bookings" class="panel"><h3>Bookings Table</h3><input id="searchBookings" class="search" placeholder="Search name, phone, service..."><div id="bookingsTable"><p class="notice">Loading...</p></div></div>
-    <div id="tab-contacts" class="panel hidden"><h3>Contacts Table</h3><input id="searchContacts" class="search" placeholder="Search..."><div id="contactsTable"><p class="notice">Loading...</p></div></div>
-    <div id="tab-ovijog" class="panel hidden"><h3>Ovijog Table</h3><input id="searchOvijog" class="search" placeholder="Search name, area, type..."><div id="ovijogTable"><p class="notice">Loading...</p></div></div>
+    <div id="tab-bookings" class="panel"><h3>Bookings Table <span id="bookingsInfo" style="font-size:12px;color:var(--muted);font-weight:normal"></span></h3><input id="searchBookings" class="search" placeholder="Search name, phone, service... (current page)"><div id="bookingsTable"><p class="notice">Loading...</p></div><div id="bookingsPagination" class="pagination"></div></div>
+    <div id="tab-contacts" class="panel hidden"><h3>Contacts Table <span id="contactsInfo" style="font-size:12px;color:var(--muted);font-weight:normal"></span></h3><input id="searchContacts" class="search" placeholder="Search..."><div id="contactsTable"><p class="notice">Loading...</p></div><div id="contactsPagination" class="pagination"></div></div>
+    <div id="tab-ovijog" class="panel hidden"><h3>Ovijog Table <span id="ovijogInfo" style="font-size:12px;color:var(--muted);font-weight:normal"></span></h3><input id="searchOvijog" class="search" placeholder="Search name, area, type..."><div id="ovijogTable"><p class="notice">Loading...</p></div><div id="ovijogPagination" class="pagination"></div></div>
   </div>
 </div>
 <script>
 const SUPABASE_URL = "https://xctzrcprhwsawnalbypi.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhjdHpyY3ByaHdzYXduYWxieXBpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE0NTYwNDEsImV4cCI6MjEwNzAzMjA0MX0.nYZikfjkTudQxAA8oaeSFFAhJ5RGrGr2oPd--Cc_deQ";
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const PER_PAGE = 25;
 const loginView = document.getElementById('loginView');
 const adminView = document.getElementById('adminView');
 function showLogin(){loginView.classList.remove('hidden');adminView.classList.add('hidden')}
@@ -80,27 +86,61 @@ document.querySelectorAll('.tab').forEach(t=>{t.addEventListener('click',()=>{
   document.querySelectorAll('[id^="tab-"]').forEach(p=>p.classList.add('hidden'));
   document.getElementById('tab-'+t.dataset.tab).classList.remove('hidden');
 });});
-let cacheBookings=[],cacheContacts=[],cacheOvijog=[];
-async function loadAll(){await Promise.all([loadBookings(),loadContacts(),loadOvijog()]);}
-async function loadBookings(){
-  const {data,error}=await supabaseClient.from('bookings').select('*').order('created_at',{ascending:false}).limit(500);
+// STATE
+let cacheBookings=[], cacheContacts=[], cacheOvijog=[];
+let pageBookings=1, pageContacts=1, pageOvijog=1;
+let totalBookings=0, totalContacts=0, totalOvijog=0;
+async function loadAll(){await Promise.all([loadBookings(1),loadContacts(1),loadOvijog(1)]);}
+// PAGINATION UI BUILDER
+function buildPagination(current,total,callbackName){
+  if(total<=1) return '';
+  let html = `<button class="pag-btn" ${current<=1?'disabled':''} onclick="${callbackName}(${current-1})">Prev</button>`;
+  const maxShow = 5;
+  let start = Math.max(1, current-2);
+  let end = Math.min(total, start+maxShow-1);
+  if(end-start < maxShow-1) start = Math.max(1, end-maxShow+1);
+  if(start>1) html+= `<button class="pag-btn" onclick="${callbackName}(1)">1</button><span class="pag-info">...</span>`;
+  for(let i=start;i<=end;i++){
+    html+= `<button class="pag-btn ${i===current?'active':''}" onclick="${callbackName}(${i})">${i}</button>`;
+  }
+  if(end<total) html+= `<span class="pag-info">...</span><button class="pag-btn" onclick="${callbackName}(${total})">${total}</button>`;
+  html+= `<button class="pag-btn" ${current>=total?'disabled':''} onclick="${callbackName}(${current+1})">Next</button>`;
+  return html;
+}
+async function loadBookings(page=1){
+  pageBookings=page;
+  const from=(page-1)*PER_PAGE;
+  const to=from+PER_PAGE-1;
+  const {data,count,error}=await supabaseClient.from('bookings').select('*', {count:'exact'}).order('created_at',{ascending:false}).range(from,to);
   if(error){document.getElementById('bookingsTable').innerHTML=`<p class="notice">Error: ${error.message}</p>`;return;}
-  cacheBookings=data||[];document.getElementById('statBookings').textContent=cacheBookings.length;renderBookings(cacheBookings);
+  cacheBookings=data||[]; totalBookings=count||0;
+  document.getElementById('statBookings').textContent=totalBookings;
+  document.getElementById('bookingsInfo').textContent=` - Showing ${from+1}-${Math.min(from+PER_PAGE,totalBookings)} of ${totalBookings}`;
+  renderBookings(cacheBookings);
+  const totalPages=Math.ceil(totalBookings/PER_PAGE)||1;
+  document.getElementById('bookingsPagination').innerHTML=buildPagination(page,totalPages,'loadBookings')+`<span class="pag-info">${PER_PAGE}/page</span>`;
 }
 function renderBookings(list){
   const term=document.getElementById('searchBookings').value.toLowerCase();
   const filtered=list.filter(i=>{if(!term)return true;return JSON.stringify(i).toLowerCase().includes(term);});
   const div=document.getElementById('bookingsTable');
-  if(filtered.length===0){div.innerHTML='<p class="notice">No bookings found. Form kaj na korle data asbe na.</p>';return;}
+  if(filtered.length===0){div.innerHTML='<p class="notice">No bookings found on this page. Search only this page, change page for more.</p>';return;}
   const cols=Object.keys(filtered[0]||{});
   div.innerHTML=`<table><thead><tr>${cols.map(c=>`<th>${c}</th>`).join('')}<th>Action</th></tr></thead><tbody>${filtered.map(i=>`<tr>${cols.map(c=>`<td style="max-width:200px;overflow:hidden;text-overflow:ellipsis">${(i[c]===null?'':String(i[c]).slice(0,200))}</td>`).join('')}<td><button class="btn btn-red" data-del-booking="${i.id}">Delete</button></td></tr>`).join('')}</tbody></table>`;
-  div.querySelectorAll('[data-del-booking]').forEach(b=>{b.addEventListener('click', async()=>{if(!confirm('Delete booking?'))return;const id=b.getAttribute('data-del-booking');const {error}=await supabaseClient.from('bookings').delete().eq('id',id);if(error)alert(error.message);else loadBookings();});});
+  div.querySelectorAll('[data-del-booking]').forEach(b=>{b.addEventListener('click', async()=>{if(!confirm('Delete booking?'))return;const id=b.getAttribute('data-del-booking');const {error}=await supabaseClient.from('bookings').delete().eq('id',id);if(error)alert(error.message);else loadBookings(pageBookings);});});
 }
 document.getElementById('searchBookings').addEventListener('input',()=>renderBookings(cacheBookings));
-async function loadContacts(){
-  const {data,error}=await supabaseClient.from('contacts').select('*').order('created_at',{ascending:false}).limit(500);
+async function loadContacts(page=1){
+  pageContacts=page;
+  const from=(page-1)*PER_PAGE; const to=from+PER_PAGE-1;
+  const {data,count,error}=await supabaseClient.from('contacts').select('*',{count:'exact'}).order('created_at',{ascending:false}).range(from,to);
   if(error){document.getElementById('contactsTable').innerHTML=`<p class="notice">Error: ${error.message}</p>`;return;}
-  cacheContacts=data||[];document.getElementById('statContacts').textContent=cacheContacts.length;renderContacts(cacheContacts);
+  cacheContacts=data||[]; totalContacts=count||0;
+  document.getElementById('statContacts').textContent=totalContacts;
+  document.getElementById('contactsInfo').textContent=` - Showing ${from+1}-${Math.min(from+PER_PAGE,totalContacts)} of ${totalContacts}`;
+  renderContacts(cacheContacts);
+  const totalPages=Math.ceil(totalContacts/PER_PAGE)||1;
+  document.getElementById('contactsPagination').innerHTML=buildPagination(page,totalPages,'loadContacts');
 }
 function renderContacts(list){
   const term=document.getElementById('searchContacts').value.toLowerCase();
@@ -109,13 +149,20 @@ function renderContacts(list){
   if(filtered.length===0){div.innerHTML='<p class="notice">No contacts</p>';return;}
   const cols=Object.keys(filtered[0]||{});
   div.innerHTML=`<table><thead><tr>${cols.map(c=>`<th>${c}</th>`).join('')}<th>Action</th></tr></thead><tbody>${filtered.map(i=>`<tr>${cols.map(c=>`<td style="max-width:200px">${(i[c]===null?'':String(i[c]).slice(0,200))}</td>`).join('')}<td><button class="btn btn-red" data-del-contact="${i.id}">Delete</button></td></tr>`).join('')}</tbody></table>`;
-  div.querySelectorAll('[data-del-contact]').forEach(b=>{b.addEventListener('click', async()=>{if(!confirm('Delete contact?'))return;const id=b.getAttribute('data-del-contact');const {error}=await supabaseClient.from('contacts').delete().eq('id',id);if(error)alert(error.message);else loadContacts();});});
+  div.querySelectorAll('[data-del-contact]').forEach(b=>{b.addEventListener('click', async()=>{if(!confirm('Delete contact?'))return;const id=b.getAttribute('data-del-contact');const {error}=await supabaseClient.from('contacts').delete().eq('id',id);if(error)alert(error.message);else loadContacts(pageContacts);});});
 }
 document.getElementById('searchContacts').addEventListener('input',()=>renderContacts(cacheContacts));
-async function loadOvijog(){
-  const {data,error}=await supabaseClient.from('ovijog').select('*').order('created_at',{ascending:false}).limit(500);
+async function loadOvijog(page=1){
+  pageOvijog=page;
+  const from=(page-1)*PER_PAGE; const to=from+PER_PAGE-1;
+  const {data,count,error}=await supabaseClient.from('ovijog').select('*',{count:'exact'}).order('created_at',{ascending:false}).range(from,to);
   if(error){document.getElementById('ovijogTable').innerHTML=`<p class="notice">Error: ${error.message}</p>`;return;}
-  cacheOvijog=data||[];document.getElementById('statOvijog').textContent=cacheOvijog.length;renderOvijog(cacheOvijog);
+  cacheOvijog=data||[]; totalOvijog=count||0;
+  document.getElementById('statOvijog').textContent=totalOvijog;
+  document.getElementById('ovijogInfo').textContent=` - Showing ${from+1}-${Math.min(from+PER_PAGE,totalOvijog)} of ${totalOvijog}`;
+  renderOvijog(cacheOvijog);
+  const totalPages=Math.ceil(totalOvijog/PER_PAGE)||1;
+  document.getElementById('ovijogPagination').innerHTML=buildPagination(page,totalPages,'loadOvijog');
 }
 function renderOvijog(list){
   const term=document.getElementById('searchOvijog').value.toLowerCase();
@@ -127,14 +174,13 @@ function renderOvijog(list){
     if(c==='status') return `<td><select class="btn" data-status-id="${i.id}"><option value="pending" ${i.status==='pending'?'selected':''}>pending</option><option value="in-progress" ${i.status==='in-progress'?'selected':''}>in-progress</option><option value="solved" ${i.status==='solved'?'selected':''}>solved</option></select></td>`;
     return `<td style="max-width:200px">${(i[c]===null?'':String(i[c]).slice(0,200))}</td>`;
   }).join('')}<td><div style="display:flex;gap:5px"><button class="btn btn-cyan" data-upd-ovijog="${i.id}">Update</button><button class="btn btn-red" data-del-ovijog="${i.id}">Delete</button></div></td></tr>`).join('')}</tbody></table>`;
-  div.querySelectorAll('[data-upd-ovijog]').forEach(b=>{b.addEventListener('click', async()=>{const id=b.getAttribute('data-upd-ovijog');const sel=div.querySelector(`[data-status-id="${id}"]`);const {error}=await supabaseClient.from('ovijog').update({status:sel.value}).eq('id',id);if(error)alert(error.message);else loadOvijog();})});
-  div.querySelectorAll('[data-del-ovijog]').forEach(b=>{b.addEventListener('click', async()=>{if(!confirm('Delete ovijog?'))return;const id=b.getAttribute('data-del-ovijog');const {error}=await supabaseClient.from('ovijog').delete().eq('id',id);if(error)alert(error.message);else loadOvijog();})});
+  div.querySelectorAll('[data-upd-ovijog]').forEach(b=>{b.addEventListener('click', async()=>{const id=b.getAttribute('data-upd-ovijog');const sel=div.querySelector(`[data-status-id="${id}"]`);const {error}=await supabaseClient.from('ovijog').update({status:sel.value}).eq('id',id);if(error)alert(error.message);else loadOvijog(pageOvijog);})});
+  div.querySelectorAll('[data-del-ovijog]').forEach(b=>{b.addEventListener('click', async()=>{if(!confirm('Delete ovijog?'))return;const id=b.getAttribute('data-del-ovijog');const {error}=await supabaseClient.from('ovijog').delete().eq('id',id);if(error)alert(error.message);else loadOvijog(pageOvijog);})});
 }
 document.getElementById('searchOvijog').addEventListener('input',()=>renderOvijog(cacheOvijog));
 checkSession();
 </script>
   <script>
-  // Sob file type preview - PDF, IMG, DRG, TEC
   setInterval(()=>{
     document.querySelectorAll('td').forEach(td=>{
       const t = td.textContent.trim();
@@ -142,29 +188,19 @@ checkSession();
         if(td.querySelector('a')) return;
         const low = t.toLowerCase();
         const a = document.createElement('a');
-        a.href = t;
-        a.target = "_blank";
+        a.href = t; a.target = "_blank";
         a.style = "color:#00ffcc;text-decoration:underline;font-weight:700;";
-        
-        if(low.match(/\.(jpg|jpeg|png|gif|webp)$/)){
-          a.textContent = "🖼️ IMG দেখুন - Click";
-        } else if(low.endsWith('.pdf')){
-          a.textContent = "📄 PDF দেখুন - Click";
-        } else if(low.match(/\.(dwg|drg|dxf)$/)){
-          a.textContent = "📐 CAD (DRG/DWG) - Download";
-        } else if(low.includes('tec')){
-          a.textContent = "📋 TEC File - Download";
-        } else {
-          a.textContent = "📁 File দেখুন - Click";
-        }
-        td.innerHTML = "";
-        td.appendChild(a);
+        if(low.match(/\.(jpg|jpeg|png|gif|webp)$/)) a.textContent = "🖼 IMG দেখুন - Click";
+        else if(low.endsWith('.pdf')) a.textContent = "📄 PDF দেখুন - Click";
+        else if(low.match(/\.(dwg|drg|dxf)$/)) a.textContent = "📐 CAD (DRG/DWG) - Download";
+        else if(low.includes('tec')) a.textContent = "📋 TEC File - Download";
+        else a.textContent = "📁 File দেখুন - Click";
+        td.innerHTML = ""; td.appendChild(a);
       }
     });
   },1000);
 </script>
   <script>
-  // Bangladesh time e convert
   setInterval(()=>{
     document.querySelectorAll('td').forEach(td=>{
       const txt = td.textContent.trim();
@@ -172,16 +208,8 @@ checkSession();
         try{
           const d = new Date(txt);
           if(isNaN(d)) return;
-          const bd = d.toLocaleString('en-GB', { 
-            timeZone: 'Asia/Dhaka',
-            day: '2-digit', month: '2-digit', year: 'numeric',
-            hour: '2-digit', minute: '2-digit', hour12: true
-          });
-          if(!td.dataset.bd){
-            td.textContent = bd + ' (BD)';
-            td.dataset.bd = '1';
-            td.style.color = '#00ffcc';
-          }
+          const bd = d.toLocaleString('en-GB', { timeZone: 'Asia/Dhaka', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true });
+          if(!td.dataset.bd){ td.textContent = bd + ' (BD)'; td.dataset.bd = '1'; td.style.color = '#00ffcc'; }
         }catch(e){}
       }
     });
