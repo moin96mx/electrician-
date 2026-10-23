@@ -70,8 +70,44 @@ optgroup option{color:#f3f4f6;font-weight:500;padding:6px}
         <div class="form-group"><label>আপনার নাম <span>*</span></label><input type="text" id="name" required placeholder="যেমন: মোঃ মঈন"></div>
         <div class="form-group"><label>ফোন / WhatsApp <span>*</span></label><input type="tel" id="phone" required placeholder="01XXXXXXXXX"></div>
         <div class="form-group">
-          <label>এলাকা / থানা <span>*</span></label>
-          <select id="area" required>
+          <label>জেলা / এরিয়া <span>*</span></label>
+          <select id="district" required>
+            <option value="">প্রথমে জেলা নির্বাচন করুন</option>
+            <option value="Dhaka">📍 Dhaka City - ঢাকা</option>
+            <option value="Savar">📍 Savar - সাভার (Main)</option>
+            <option value="Gazipur">📍 Gazipur - গাজীপুর</option>
+            <option value="Keraniganj">📍 Keraniganj - কেরানীগঞ্জ</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>থানা / এলাকা <span>*</span></label>
+          <select id="area" required disabled>
+            <option value="">আগে জেলা নির্বাচন করুন</option>
+          </select>
+        </div>
+        <script>
+        const areaData = {
+          "Dhaka": ["Mirpur - মিরপুর","Uttara - উত্তরা","Gulshan - গুলশান","Banani - বনানী","Dhanmondi - ধানমন্ডি","Mohammadpur - মোহাম্মদপুর","Motijheel - মতিঝিল","Jatrabari - যাত্রাবাড়ী","Badda - বাড্ডা","Tejgaon - তেজগাঁও","Pallabi - পল্লবী","Khilgaon - খিলগাঁও"],
+          "Savar": ["Savar Sadar - সাভার সদর","Ashulia - আশুলিয়া","Hemayetpur - হেমায়েতপুর","Dhamrai - ধামরাই","Savar EPZ - ইপিজেড","Jahangirnagar - জাহাঙ্গীরনগর","Aminbazar - আমিনবাজার","Birulia - বিরুলিয়া"],
+          "Gazipur": ["Gazipur Sadar - সদর","Tongi - টঙ্গী","Kaliakoir - কালিয়াকৈর","Kapasia - কাপাসিয়া","Sreepur - শ্রীপুর","Kaliganj - কালীগঞ্জ","Konabari - কোনাবাড়ি","Board Bazar - বোর্ড বাজার"],
+          "Keraniganj": ["Keraniganj Model - মডেল টাউন","South Keraniganj - দক্ষিণ","Jinjira - জিনজিরা","Aganagar - আগানগর","Kalatia - কালাতিয়া","Tegharia - তেঘরিয়া","Chunkutia - চুনকুটিয়া","Hasnabad - হাসনাবাদ"]
+        };
+        document.getElementById('district').addEventListener('change', function(){
+          const d = this.value;
+          const areaSel = document.getElementById('area');
+          areaSel.innerHTML = '<option value="">থানা নির্বাচন করুন</option>';
+          if(!d){ areaSel.disabled=true; return; }
+          areaData[d].forEach(a=>{
+            const opt = document.createElement('option');
+            opt.value = d + ' - ' + a;
+            opt.textContent = a;
+            areaSel.appendChild(opt);
+          });
+          areaSel.disabled=false;
+          areaSel.focus();
+        });
+        </script>
+        <div class="form-group" style="display:none"><select id="old_area">
             <option value="">নির্বাচন করুন - আপনার এলাকা</option>
             
             <optgroup label="📍 DHAKA CITY - ঢাকা সিটি">
