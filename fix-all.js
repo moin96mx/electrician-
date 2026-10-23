@@ -74,7 +74,19 @@
         if(inp.tagName==='TEXTAREA') messageV=v; if(type==='date') visitDateV=v;
       });
       if(!nameV){ for(let v of allValues){ if(v && !v.includes('@') && isNaN(v) && v.length<50){ nameV=v; break; } } }
-      let table='bookings';
+      let table = 'bookings';
+      // FOOTER FIX - Newsletter er number booking e jabe na
+      const isFooter = form.closest('footer') || allValues.length <= 2;
+      if(isFooter && !emailV){
+        e.preventDefault();
+        alert('দয়া করে সঠিক ইমেইল দিন! যেমন: info@gmail.com');
+        btn.innerText = 'পাঠানো হচ্ছে...';
+        btn.disabled = false;
+        return;
+      }
+      if(isFooter && emailV){
+        table = 'contacts';
+      }
       if(emailV || (nameV && nameV.includes('@'))){ const hasService = combined.includes('wiring') || combined.includes('residential') || combined.includes('service') || form.querySelector('select'); const nameIsEmail = nameV && nameV.includes('@'); if(nameIsEmail || (emailV && !hasService)){ table='contacts'; } }
       if(combined.includes('ovijog') || combined.includes('অভিযোগ') || combined.includes('complaint') || form.id.toLowerCase().includes('ovijog')){ table='ovijog'; }
       e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
