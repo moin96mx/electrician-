@@ -1,1 +1,87 @@
+<!DOCTYPE html>
+<html lang="bn"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Shop | ElectroHubBD - Licensed Electrical & Electronics</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&family=Inter:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+/* ===== EASY EDIT GUIDE (Tumi sudhu PRODUCTS section edit korba) =====
+   PRODUCT ADD KORAR NIYOM:
+   1. niche const PRODUCTS = [
+  // ============================================================
+  // 🔰 EXAMPLE PRODUCTS - TUMI SUDHU EI GULO COPY-EDIT KORBA
+  // Prottek line e: name, price, img change korlei hobe
+  // img: https://... photo link | price: 1850 (number, comma chara)
+  // ============================================================
+  // --- ABB (MCB & Protection) ---
+  {id:1, brand:"ABB", cat:"MCB & Protection", name:"ABB MCB 32A Single Pole - Original", price:1850, old:2400, rating:4.9, reviews:128, img:"https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=600&q=80", warranty:"1 Year"},
+  {id:2, brand:"ABB", cat:"MCB & Protection", name:"ABB MCB 63A Double Pole - Main Switch", price:2950, old:3600, rating:4.8, reviews:67, img:"https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=600&q=80", warranty:"1 Year"},
+  {id:3, brand:"ABB", cat:"MCB & Protection", name:"ABB RCCB 40A - Safety Breaker", price:4450, old:5200, rating:5.0, reviews:45, img:"https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=600&q=80", warranty:"2 Years"},
+  // --- BRB CABLE (Cable & Wire) ---
+  {id:4, brand:"BRB Cable", cat:"Cable & Wire", name:"BRB Cable 2.5rm - 100m Coil (Original)", price:8500, old:9800, rating:5.0, reviews:214, img:"https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=600&q=80", warranty:"2 Years"},
+  {id:5, brand:"BRB Cable", cat:"Cable & Wire", name:"BRB Cable 1.5rm - 100m Coil", price:5900, old:6800, rating:4.9, reviews:89, img:"https://images.unsplash.com/photo-1613665813446-82a78c468a1d?w=600&q=80", warranty:"2 Years"},
+  {id:6, brand:"BRB Cable", cat:"Cable & Wire", name:"BRB Cable 4.0rm - 100m Coil - AC Line", price:12500, old:14200, rating:4.9, reviews:112, img:"https://images.unsplash.com/photo-1613665813446-82a78c468a1d?w=600&q=80", warranty:"2 Years"},
+  // --- HAVELLS (Fan / Switch) ---
+  {id:7, brand:"HAVELLS", cat:"Fan & Light", name:"Havells Ceiling Fan 56\" - Premium Copper", price:3200, old:4100, rating:4.7, reviews:156, img:"https://images.unsplash.com/photo-1565814329452-e1efa11c5b89?w=600&q=80", warranty:"2 Years"},
+  {id:8, brand:"HAVELLS", cat:"Switch & Socket", name:"Havells Switch + Socket Combo - 4 Gang", price:1450, old:1800, rating:4.8, reviews:98, img:"https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80", warranty:"1 Year"},
+  {id:9, brand:"HAVELLS", cat:"Fan & Light", name:"Havells LED Batten 20W - Bright White", price:1150, old:1450, rating:4.6, reviews:73, img:"https://images.unsplash.com/photo-1565538810643-b5bdb714032a?w=600&q=80", warranty:"1 Year"},
+  // --- WALTON (Appliances) ---
+  {id:10, brand:"WALTON", cat:"Appliances", name:"Walton LED TV 32\" Smart - Official", price:28500, old:32500, rating:4.8, reviews:342, img:"https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=600&q=80", warranty:"3 Years"},
+  {id:11, brand:"WALTON", cat:"Appliances", name:"Walton Refrigerator 12 CFT - Inverter", price:42500, old:48500, rating:4.9, reviews:187, img:"https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?w=600&q=80", warranty:"5 Years"},
+  {id:12, brand:"WALTON", cat:"Appliances", name:"Walton Washing Machine 7kg - Top Load", price:24500, old:28500, rating:4.7, reviews:98, img:"https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?w=600&q=80", warranty:"3 Years"},
+  // --- SSG (Lighting) ---
+  {id:13, brand:"SSG", cat:"Fan & Light", name:"SSG LED Panel Light 18W - Cool White", price:950, old:1250, rating:4.6, reviews:74, img:"https://images.unsplash.com/photo-1565538810643-b5bdb714032a?w=600&q=80", warranty:"1 Year"},
+  {id:14, brand:"SSG", cat:"Switch & Socket", name:"SSG Gang Switch 3 Pin Socket - White", price:650, old:850, rating:4.5, reviews:56, img:"https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80", warranty:"6 Months"},
+  {id:15, brand:"SSG", cat:"Fan & Light", name:"SSG LED Bulb 15W - Pack of 2", price:550, old:720, rating:4.7, reviews:89, img:"https://images.unsplash.com/photo-1565814329452-e1efa11c5b89?w=600&q=80", warranty:"1 Year"},
+  // --- VISION (Appliances) ---
+  {id:16, brand:"VISION", cat:"Appliances", name:"Vision Rice Cooker 2.8L - Non Stick", price:2950, old:3600, rating:4.7, reviews:145, img:"https://images.unsplash.com/photo-1585515320310-259814833e62?w=600&q=80", warranty:"1 Year"},
+  {id:17, brand:"VISION", cat:"Fan & Light", name:"Vision LED Bulb 12W - Pack of 4", price:750, old:980, rating:4.5, reviews:210, img:"https://images.unsplash.com/photo-1565814329452-e1efa11c5b89?w=600&q=80", warranty:"6 Months"},
+  {id:18, brand:"VISION", cat:"Appliances", name:"Vision Electric Kettle 1.7L - Steel", price:1850, old:2250, rating:4.6, reviews:132, img:"https://images.unsplash.com/photo-1594213114663-d94db9b17125?w=600&q=80", warranty:"1 Year"},
+  // --- SINGER (Appliances) ---
+  {id:19, brand:"SINGER", cat:"Appliances", name:"Singer Stand Fan 16\" - High Speed", price:3650, old:4200, rating:4.6, reviews:112, img:"https://images.unsplash.com/photo-1578932750294-f5075e85f44a?w=600&q=80", warranty:"1 Year"},
+  {id:20, brand:"SINGER", cat:"Appliances", name:"Singer Iron - Steam Iron 1200W", price:2250, old:2800, rating:4.5, reviews:76, img:"https://images.unsplash.com/photo-1574269909862-7e1d70bb8078?w=600&q=80", warranty:"1 Year"},
+  {id:21, brand:"SINGER", cat:"Appliances", name:"Singer Table Fan 12\" - Low Noise", price:2450, old:2950, rating:4.7, reviews:64, img:"https://images.unsplash.com/photo-1565151443833-29bf1c1e5b5f?w=600&q=80", warranty:"1 Year"},
+  // --- Energypac (Power) ---
+  {id:22, brand:"Energypac", cat:"MCB & Protection", name:"Energypac IPS 1000VA - Pure Sine Wave", price:18500, old:21500, rating:4.9, reviews:89, img:"https://images.unsplash.com/photo-1593941707882-a5bba14938c7?w=600&q=80", warranty:"2 Years"},
+  {id:23, brand:"Energypac", cat:"MCB & Protection", name:"Energypac Stabilizer 1000VA - AC Safety", price:6850, old:7900, rating:4.8, reviews:54, img:"https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=600&q=80", warranty:"2 Years"},
+  {id:24, brand:"Energypac", cat:"Cable & Wire", name:"Energypac Generator 3KW - Petrol", price:48500, old:56000, rating:4.9, reviews:38, img:"https://images.unsplash.com/photo-1613665813446-82a78c468a1d?w=600&q=80", warranty:"1 Year"},
+];
+const SUPABASE_URL="https://xctzrcprhwsawnalbypi.supabase.co";
+const SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.[STRIPPED 127 bytes].nYZikfjkTudQxAA8oaeSFFAhJ5RGrGr2oPd--Cc_deQ";
+const supabase = window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+let cart={}, activeBrand="All", activeCat="All", search="";
+const brands=["All","ABB","BRB Cable","HAVELLS","WALTON","SSG","VISION","SINGER","Energypac"];
+const cats=["All","MCB & Protection","Cable & Wire","Fan & Light","Switch & Socket","Appliances"];
+function brandChips(){document.getElementById("brandChips").innerHTML=brands.map(b=>`<button class="chip ${b===activeBrand?'active':''}" onclick="setBrand('${b}')">${b}</button>`).join("")}
+function catRow(){document.getElementById("catRow").innerHTML=cats.map(c=>`<button class="${c===activeCat?'active':''}" onclick="setCat('${c}')">${c}</button>`).join("")}
+function setBrand(b){activeBrand=b;brandChips();render()} function setCat(c){activeCat=c;catRow();render()}
+function render(){
+  search=document.getElementById("searchInput").value.toLowerCase();
+  const list=PRODUCTS.filter(p=>(activeBrand==="All"||p.brand===activeBrand)&&(activeCat==="All"||p.cat===activeCat)&&(p.name.toLowerCase().includes(search)||p.brand.toLowerCase().includes(search)));
+  document.getElementById("grid").innerHTML=list.length?list.map(p=>{
+    const off=p.old?Math.round((1-p.price/p.old)*100):0;
+    return `<div class="card"><img src="${p.img}" alt="${p.name}" loading="lazy"><div class="card-body"><div class="brand">${p.brand} • ${p.warranty} WARRANTY</div><h3>${p.name}</h3><div class="rate">★★★★★ ${p.rating} <span>(${p.reviews} reviews)</span></div><div class="price-row"><span class="price">৳${p.price.toLocaleString()}</span>${p.old?`<span class="old">৳${p.old.toLocaleString()}</span><span class="off">-${off}%</span>`:''}</div><div class="meta"><span class="stock">● In Stock</span><span>• ${p.cat}</span></div><div class="btn-row"><button class="btn btn-add" onclick="addToCart(${p.id})">Add to Cart</button><button class="btn btn-wa" onclick="buyNow(${p.id})">WhatsApp</button></div></div></div>`}).join(""):`<p style="grid-column:1/-1;text-align:center;color:#94A3B8;padding:40px">No product found. Try another brand / search.</p>`;
+}
+function addToCart(id){cart[id]=(cart[id]||0)+1;updateCart();openCart()}
+function buyNow(id){const p=PRODUCTS.find(x=>x.id===id);window.open(`https://wa.me/8801710830391?text=${encodeURIComponent('Ami '+p.name+' ('+p.brand+') kinte chai. Price: ৳'+p.price)}`,'_blank')}
+function updateCart(){let count=Object.values(cart).reduce((a,b)=>a+b,0);document.getElementById("cartCount").innerText=count;let html="";let sub=0;for(let id in cart){let p=PRODUCTS.find(x=>x.id==id);let q=cart[id];sub+=p.price*q;html+=`<div class="c-item"><img src="${p.img}"><div style="flex:1"><b style="font-size:13px">${p.name}</b><div style="color:#94A3B8;font-size:12px">৳${p.price} x ${q}</div><div class="qty"><button onclick="changeQty(${id},-1)">-</button><span>${q}</span><button onclick="changeQty(${id},1)">+</button></div></div><b>৳${(p.price*q).toLocaleString()}</b></div>`}
+  document.getElementById("cartItems").innerHTML=html||'<p style="color:#94A3B8;padding:20px;text-align:center">Cart empty. Product add korun.</p>';
+  document.getElementById("checkoutForm").style.display=count?'block':'none';
+  document.getElementById("subTotal").innerText='৳'+sub.toLocaleString();document.getElementById("grandTotal").innerText='৳'+(sub+120).toLocaleString();
+}
+function changeQty(id,d){cart[id]+=d;if(cart[id]<=0)delete cart[id];updateCart()}
+function openCart(){document.getElementById("drawer").classList.add("open");updateCart()} function closeCart(){document.getElementById("drawer").classList.remove("open");document.getElementById("successBox").style.display='none'}
+function orderWhatsApp(){let txt="New Order from ElectroHubBD Shop:\n";for(let id in cart){let p=PRODUCTS.find(x=>x.id==id);txt+=`- ${p.name} x ${cart[id]} = ৳${p.price*cart[id]}\n`}txt+=`Name: ${document.getElementById("cName").value}\nPhone: ${document.getElementById("cPhone").value}\nArea: ${document.getElementById("cArea").value}`;window.open(`https://wa.me/8801710830391?text=${encodeURIComponent(txt)}`,'_blank')}
+async function placeOrder(){
+  const name=document.getElementById("cName").value,phone=document.getElementById("cPhone").value,area=document.getElementById("cArea").value;
+  if(!name||!phone||!area){alert("Please fill Name, Phone, Area");return}
+  let items=Object.entries(cart).map(([id,q])=>{let p=PRODUCTS.find(x=>x.id==id);return p.name+" x"+q});
+  let total=Object.entries(cart).reduce((s,[id,q])=>s+PRODUCTS.find(x=>x.id==id).price*q,0)+120;
+  const {data,error}=await supabase.from("orders").insert([{customer_name:name,phone:phone,area:area,address:document.getElementById("cNote").value,items:items.join(", "),total:total,status:"Pending"}]).select();
+  if(error){alert("Order error: "+error.message+" - WhatsApp e order korun");orderWhatsApp();return}
+  document.getElementById("orderNo").innerText="#EH-"+String(data[0].id).padStart(4,'0');
+  document.getElementById("checkoutForm").style.display='none';document.getElementById("cartItems").innerHTML='';document.getElementById("successBox").style.display='block';cart={};updateCart();
+}
+brandChips();catRow();render();
+</script>
+</body></html>
 
