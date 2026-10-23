@@ -77,10 +77,11 @@ optgroup option{color:#f3f4f6;font-weight:500;padding:6px}
             <option value="Savar">📍 Savar - সাভার (Main)</option>
             <option value="Gazipur">📍 Gazipur - গাজীপুর</option>
             <option value="Keraniganj">📍 Keraniganj - কেরানীগঞ্জ</option>
+            <option value="Other">📍 Other - অন্যান্য এলাকা (এরিয়ার বাইরে)</option>
           </select>
         </div>
         <div class="form-group">
-          <label>থানা / এলাকা <span>*</span></label>
+          <label>থানা / এলাকা <span>*</span> <span style="font-weight:400;font-size:12px;color:#9ca3af">(বাইরের হলে Other)</span></label>
           <select id="area" required disabled>
             <option value="">আগে জেলা নির্বাচন করুন</option>
           </select>
@@ -90,6 +91,7 @@ optgroup option{color:#f3f4f6;font-weight:500;padding:6px}
           "Dhaka": ["Mirpur - মিরপুর","Uttara - উত্তরা","Gulshan - গুলশান","Banani - বনানী","Dhanmondi - ধানমন্ডি","Mohammadpur - মোহাম্মদপুর","Motijheel - মতিঝিল","Jatrabari - যাত্রাবাড়ী","Badda - বাড্ডা","Tejgaon - তেজগাঁও","Pallabi - পল্লবী","Khilgaon - খিলগাঁও"],
           "Savar": ["Savar Sadar - সাভার সদর","Ashulia - আশুলিয়া","Hemayetpur - হেমায়েতপুর","Dhamrai - ধামরাই","Savar EPZ - ইপিজেড","Jahangirnagar - জাহাঙ্গীরনগর","Aminbazar - আমিনবাজার","Birulia - বিরুলিয়া"],
           "Gazipur": ["Gazipur Sadar - সদর","Tongi - টঙ্গী","Kaliakoir - কালিয়াকৈর","Kapasia - কাপাসিয়া","Sreepur - শ্রীপুর","Kaliganj - কালীগঞ্জ","Konabari - কোনাবাড়ি","Board Bazar - বোর্ড বাজার"],
+          "Other": ["Other - অন্যান্য এলাকা", "Dhaka Outside - ঢাকার বাইরে", "Narayanganj - নারায়ণগঞ্জ", "Munshiganj - মুন্সিগঞ্জ", "Manikganj - মানিকগঞ্জ"],
           "Keraniganj": ["Keraniganj Model - মডেল টাউন","South Keraniganj - দক্ষিণ","Jinjira - জিনজিরা","Aganagar - আগানগর","Kalatia - কালাতিয়া","Tegharia - তেঘরিয়া","Chunkutia - চুনকুটিয়া","Hasnabad - হাসনাবাদ"]
         };
         document.getElementById('district').addEventListener('change', function(){
