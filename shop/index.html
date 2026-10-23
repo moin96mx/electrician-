@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="bn"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Shop | ElectroHubBD - Licensed Electrical & Electronics</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&family=Inter:wght@500;700;800&display=swap" rel="stylesheet">
 <style>
 /* Shop Style - Premium ElectroHubBD */
@@ -134,10 +133,7 @@ const PRODUCTS = [
   {id:23, brand:"Energypac", cat:"MCB & Protection", name:"Energypac Stabilizer 1000VA - AC Safety", price:6850, old:7900, rating:4.8, reviews:54, img:"https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=600&q=80", warranty:"2 Years"},
   {id:24, brand:"Energypac", cat:"Cable & Wire", name:"Energypac Generator 3KW - Petrol", price:48500, old:56000, rating:4.9, reviews:38, img:"https://images.unsplash.com/photo-1613665813446-82a78c468a1d?w=600&q=80", warranty:"1 Year"},
 ];
-const SUPABASE_URL="https://xctzrcprhwsawnalbypi.supabase.co";
-const SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.[STRIPPED 127 bytes].nYZikfjkTudQxAA8oaeSFFAhJ5RGrGr2oPd--Cc_deQ";
-let supabase=null;
-try{ if(window.supabase) supabase=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY); }catch(e){ console.log("Supabase offline, shop still works"); }
+let supabase=null; // No Supabase needed - WhatsApp order only, 100% works offline
 let cart={}, activeBrand="All", activeCat="All", search="";
 const brands=["All","ABB","BRB Cable","HAVELLS","WALTON","SSG","VISION","SINGER","Energypac"];
 const cats=["All","MCB & Protection","Cable & Wire","Fan & Light","Switch & Socket","Appliances"];
@@ -164,14 +160,13 @@ function orderWhatsApp(){let txt="New Order from ElectroHubBD Shop:\n";for(let i
 async function placeOrder(){
   const name=document.getElementById("cName").value,phone=document.getElementById("cPhone").value,area=document.getElementById("cArea").value;
   if(!name||!phone||!area){alert("Please fill Name, Phone, Area");return}
-  let items=Object.entries(cart).map(([id,q])=>{let p=PRODUCTS.find(x=>x.id==id);return p.name+" x"+q});
   let total=Object.entries(cart).reduce((s,[id,q])=>s+PRODUCTS.find(x=>x.id==id).price*q,0)+120;
-  if(!supabase){ alert("Internet slow - WhatsApp e order korchi"); orderWhatsApp(); return; }
-  const {data,error}=await supabase.from("orders").insert([{customer_name:name,phone:phone,area:area,address:document.getElementById("cNote").value,items:items.join(", "),total:total,status:"Pending"}]).select();
-  if(error){alert("Order error: "+error.message+" - WhatsApp e order korun");orderWhatsApp();return}
-  document.getElementById("orderNo").innerText="#EH-"+String(data[0].id).padStart(4,'0');
+  document.getElementById("orderNo").innerText="#EH-"+Math.floor(1000+Math.random()*9000);
   document.getElementById("checkoutForm").style.display='none';document.getElementById("cartItems").innerHTML='';document.getElementById("successBox").style.display='block';cart={};updateCart();
+  // WhatsApp e o pathiye dao jate order miss na hoy
+  let txt="New Order: Name "+name+" Phone "+phone+" Area "+area+" Total ৳"+total;
+  setTimeout(()=>{window.open(`https://wa.me/8801710830391?text=${encodeURIComponent(txt)}`,'_blank')},800);
 }
 try{brandChips();catRow();render();}catch(e){console.log(e); document.getElementById('grid').innerHTML='<p style="color:#fff">Loading...</p>';}
 </script>
-</body></html>
+<script>console.log('PRODUCTS count', PRODUCTS.length); setTimeout(()=>{ if(document.getElementById('grid').innerHTML.trim()===''){ document.getElementById('grid').innerHTML='<p style="color:white">Loading products...</p>'; render(); } },500);</script></body></html>
