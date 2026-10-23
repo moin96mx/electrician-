@@ -237,7 +237,7 @@ async function placeOrder(){
   let total=Object.entries(cart).reduce((s,[id,q])=>s+PRODUCTS.find(x=>x.id==id).price*q,0)+120;
   let items=Object.entries(cart).map(([id,q])=>{let p=PRODUCTS.find(x=>x.id==id);return {id:p.id,pid:"#P-"+p.id,name:p.name,price:p.price,qty:q}});
   let order={no:"#EH-"+Math.floor(1000+Math.random()*9000),name,phone,area,items,total,status:"pending",date:new Date().toLocaleString('en-GB')};
-  let all=JSON.parse(localStorage.getItem("eh_orders")||"[]");all.unshift(order);localStorage.setItem("eh_orders",JSON.stringify(all));
+  let all=JSON.parse(localStorage.getItem("eh_orders")||"[]");all.unshift(order);localStorage.setItem("eh_orders",JSON.stringify(all)); try{await supabaseClient.from('shop_orders').insert([{order_no:order.no,customer_name:name,phone:phone,area:area,items:items,total:total,status:'pending'}]);}catch(e){console.log(e)}
   document.getElementById("orderNo").innerText="#EH-"+Math.floor(1000+Math.random()*9000);
   document.getElementById("checkoutForm").style.display='none';document.getElementById("cartItems").innerHTML='';document.getElementById("successBox").style.display='block';cart={};updateCart();
   // WhatsApp e o pathiye dao jate order miss na hoy
