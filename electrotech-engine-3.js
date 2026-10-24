@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const BRAND = "ElectroTechBD | ভোল্ট";
+  const BRAND = "ElectroHubBD | ভোল্ট";
 
   const clean = v => String(v || "")
     .toLowerCase()
@@ -513,5 +513,5 @@ ${warning}`
     window.__ElectroTechEngine3Attached = true;
   }
 
-  console.log("ElectroTechBD Engine 3 loaded.");
+  console.log("ElectroHubBD Engine 3 loaded.");
 })();
