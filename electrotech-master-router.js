@@ -3,12 +3,12 @@
 (function () {
     "use strict";
 
-    if (window.ElectroTechMasterRouterLoaded) {
-        console.warn("ElectroTech Master Router already loaded.");
+    if (window.ElectroHubMasterRouterLoaded) {
+        console.warn("ElectroHub Master Router already loaded.");
         return;
     }
 
-    window.ElectroTechMasterRouterLoaded = true;
+    window.ElectroHubMasterRouterLoaded = true;
 
     const CONFIG = {
         assistantName: "ভোল্ট",
@@ -46,7 +46,7 @@
 
     function log(...args) {
         if (CONFIG.enableLogs) {
-            console.log("[ElectroTech Router]", ...args);
+            console.log("[ElectroHub Router]", ...args);
         }
     }
 
@@ -55,7 +55,7 @@
             return handler(text, context);
         } catch (error) {
             console.error(
-                "[ElectroTech Router] Handler error:",
+                "[ElectroHub Router] Handler error:",
                 error
             );
 
@@ -70,7 +70,7 @@
             typeof handler !== "function"
         ) {
             console.warn(
-                "[ElectroTech Router] Invalid handler registration:",
+                "[ElectroHub Router] Invalid handler registration:",
                 name
             );
 
@@ -167,7 +167,7 @@
         return null;
     }
 
-    window.ElectroTechRouter = {
+    window.ElectroHubRouter = {
         register,
         unregister,
         listHandlers,
@@ -351,7 +351,7 @@
     );
 
     console.log(
-        "⚡ ElectroTechBD Master Router loaded successfully."
+        "⚡ ElectroHubBD Master Router loaded successfully."
     );
 
     console.log(
