@@ -1,15 +1,15 @@
 {
   "specVersion": "1.0",
   "host": {
-    "displayName": "ElectroTechBD Engineering & Automation",
-    "documentationUrl": "https://electrotechbd.xyz/"
+    "displayName": "ElectroHubBD Engineering & Automation",
+    "documentationUrl": "https://electrohubbd.com/"
   },
   "entries": [
     {
-      "identifier": "urn:air:electrotechbd.xyz:service:electrical-automation",
+      "identifier": "urn:air:electrohubbd.com:service:electrical-automation",
       "displayName": "Electrical and Smart Automation Services",
       "type": "text/html",
-      "url": "https://electrotechbd.xyz/#electrical",
+      "url": "https://electrohubbd.com/#electrical",
       "description": "Information about electrical wiring, smart home automation, solar power, and electrical safety services in Bangladesh.",
       "tags": [
         "electrical wiring",
@@ -20,14 +20,14 @@
       ],
       "representativeQueries": [
         "Find electrical wiring and smart home automation services in Bangladesh.",
-        "What solar power and electrical safety services does ElectroTechBD provide?"
+        "What solar power and electrical safety services does ElectroHubBD provide?"
       ]
     },
     {
-      "identifier": "urn:air:electrotechbd.xyz:service:booking-consultation",
+      "identifier": "urn:air:electrohubbd.com:service:booking-consultation",
       "displayName": "Electrical Project Booking and Consultation",
       "type": "text/html",
-      "url": "https://electrotechbd.xyz/#booking",
+      "url": "https://electrohubbd.com/#booking",
       "description": "Booking and consultation information for electrical, automation, and solar projects.",
       "tags": [
         "booking",
@@ -35,7 +35,7 @@
         "electrical project"
       ],
       "representativeQueries": [
-        "How can I book an electrical project consultation with ElectroTechBD?",
+        "How can I book an electrical project consultation with ElectroHubBD?",
         "Where can I request a site visit for electrical or solar work?"
       ]
     }
