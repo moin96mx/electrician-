@@ -3,8 +3,8 @@
 (() => {
   "use strict";
 
-  if (window.__ElectroTechSmartSystemLoaded) return;
-  window.__ElectroTechSmartSystemLoaded = true;
+  if (window.__ElectroHubSmartSystemLoaded) return;
+  window.__ElectroHubSmartSystemLoaded = true;
 
   const BOT = "ভোল্ট";
 
@@ -873,7 +873,7 @@ Light / Fan / Socket
       text.includes("what can you do")
     ) {
       return result(
-        "ElectroTechBD Smart System",
+        "ElectroHubBD Smart System",
         `আমি করতে পারি:
 
 ১. Smart Home Load Calculation
@@ -977,7 +977,7 @@ Light / Fan / Socket
     return getPreviousAnswer();
   };
 
-  window.ElectroTechSmartSystem = {
+  window.ElectroHubSmartSystem = {
     calculate: smartSystem,
     help: () =>
       smartSystem("সব program দেখাও"),
@@ -985,7 +985,7 @@ Light / Fan / Socket
   };
 
   console.log(
-    "%c ElectroTechBD Smart System Loaded ",
+    "%c ElectroHubBD Smart System Loaded ",
     "background:#00e5ff;color:#001018;font-weight:bold;padding:6px"
   );
 })();
