@@ -3,20 +3,20 @@
 (function () {
     "use strict";
 
-    if (window.ElectroTechReportLoaded) {
+    if (window.ElectroHubReportLoaded) {
         console.warn(
-            "ElectroTech Report already loaded."
+            "ElectroHub Report already loaded."
         );
         return;
     }
 
-    window.ElectroTechReportLoaded = true;
+    window.ElectroHubReportLoaded = true;
 
     const MODAL_ID =
-        "electrotech-professional-report";
+        "electrohub-professional-report";
 
     const STYLE_ID =
-        "electrotech-professional-report-style";
+        "electrohub-professional-report-style";
 
     let lastReportData = null;
 
@@ -640,13 +640,13 @@
 
     function getDataFromGlobalAPI() {
         if (
-            window.ElectroTechLoadForm &&
-            typeof window.ElectroTechLoadForm.getData ===
+            window.ElectroHubLoadForm &&
+            typeof window.ElectroHubLoadForm.getData ===
                 "function"
         ) {
             try {
                 const data =
-                    window.ElectroTechLoadForm.getData();
+                    window.ElectroHubLoadForm.getData();
 
                 if (data) {
                     return normalizeData(
@@ -1016,7 +1016,7 @@
                         <div
                             id="etr-report-title"
                             class="etr-report-brand">
-                            ⚡ ElectroTechBD
+                            ⚡ ElectroHubBD
                             Electrical Report
                         </div>
 
@@ -1335,7 +1335,7 @@
             <div class="etr-report-footer">
                 <div>
                     Prepared by:
-                    ElectroTechBD
+                    ElectroHubBD
                 </div>
 
                 <div>
@@ -1347,7 +1347,7 @@
 
     function buildReportText(data) {
         let text =
-            "ElectroTechBD Electrical Load Report\n";
+            "ElectroHubBD Electrical Load Report\n";
 
         text +=
             "========================================\n\n";
@@ -1800,7 +1800,7 @@
         if (!parent) {
             parent =
                 document.querySelector(
-                    "#electrotech-load-calculator-app"
+                    "#electrohub-load-calculator-app"
                 );
         }
 
@@ -1842,7 +1842,7 @@
         );
     }
 
-    window.ElectroTechReport = {
+    window.ElectroHubReport = {
         open: openReport,
 
         close: closeReport,
@@ -1868,7 +1868,7 @@
         addViewReportButton();
 
         console.log(
-            "📊 ElectroTechBD Professional Report Loaded Successfully."
+            "📊 ElectroHubBD Professional Report Loaded Successfully."
         );
     }
 
