@@ -3,20 +3,20 @@
 (function () {
     "use strict";
 
-    if (window.ElectroTechLoadFormLoaded) {
+    if (window.ElectroHubLoadFormLoaded) {
         console.warn(
-            "ElectroTech Load Form already loaded."
+            "ElectroHub Load Form already loaded."
         );
         return;
     }
 
-    window.ElectroTechLoadFormLoaded = true;
+    window.ElectroHubLoadFormLoaded = true;
 
     const APP_ID =
-        "electrotech-load-calculator-app";
+        "electrohub-load-calculator-app";
 
     const STYLE_ID =
-        "electrotech-load-calculator-styles";
+        "electrohub-load-calculator-styles";
 
     const NAVBAR_BUTTON_ID =
         "navbar-load-calculator";
@@ -554,7 +554,7 @@
         let report = "";
 
         report +=
-            "ElectroTechBD Electrical Load Report\n";
+            "ElectroHubBD Electrical Load Report\n";
 
         report +=
             "====================================\n\n";
@@ -784,7 +784,7 @@
                 <meta charset="UTF-8">
 
                 <title>
-                    ElectroTechBD Load Report
+                    ElectroHubBD Load Report
                 </title>
 
                 <style>
@@ -831,7 +831,7 @@
 
             <body>
                 <h1>
-                    ElectroTechBD Electrical Load Report
+                    ElectroHubBD Electrical Load Report
                 </h1>
 
                 <p>
@@ -2289,7 +2289,7 @@
         );
     }
 
-    window.ElectroTechLoadForm = {
+    window.ElectroHubLoadForm = {
         open: openCalculator,
         close: closeCalculator,
         toggle: toggleCalculator,
@@ -2331,7 +2331,7 @@
         createApp();
 
         console.log(
-            "⚡ ElectroTechBD Load Calculator Loaded Successfully."
+            "⚡ ElectroHubBD Load Calculator Loaded Successfully."
         );
     }
 
