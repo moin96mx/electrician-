@@ -3,8 +3,8 @@
 (() => {
   "use strict";
 
-  if (window.__ElectroTechUltimateLoaded) return;
-  window.__ElectroTechUltimateLoaded = true;
+  if (window.__ElectroHubUltimateLoaded) return;
+  window.__ElectroHubUltimateLoaded = true;
 
   const NAME = "ভোল্ট";
 
@@ -90,7 +90,7 @@
 
   const help = () =>
     answer(
-      "ElectroTechBD Ultimate Electrical Calculator",
+      "ElectroHubBD Ultimate Electrical Calculator",
       `আমি নিচের electrical হিসাব করতে পারি:
 
 ১. Ohm’s Law
@@ -1250,7 +1250,7 @@ RPM = ${fmt(rpm)}`
     return null;
   }
 
-  window.ElectroTechUltimate = {
+  window.ElectroHubUltimate = {
     calculate,
     help,
     version: "Ultimate-1.0"
@@ -1276,7 +1276,7 @@ RPM = ${fmt(rpm)}`
   window.electricalCalculator = calculate;
 
   console.log(
-    "%c ElectroTechBD Ultimate Electrical Engine Loaded ",
+    "%c ElectroHubBD Ultimate Electrical Engine Loaded ",
     "background:#00d4ff;color:#001018;font-weight:bold;padding:5px"
   );
 })();
