@@ -464,14 +464,14 @@ ${warning}`
     );
   }
 
-  window.ElectroTechEngine3 = Object.freeze({
+  window.ElectroHubEngine3 = Object.freeze({
     answer: engine,
     version: "3.0.0"
   });
 
   if (
     typeof window.chatLocalAnswer === "function" &&
-    !window.__ElectroTechEngine3Attached
+    !window.__ElectroHubEngine3Attached
   ) {
     const previous = window.chatLocalAnswer;
 
@@ -510,7 +510,7 @@ ${warning}`
       return previous(message);
     };
 
-    window.__ElectroTechEngine3Attached = true;
+    window.__ElectroHubEngine3Attached = true;
   }
 
   console.log("ElectroHubBD Engine 3 loaded.");
