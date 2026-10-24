@@ -4,10 +4,10 @@
   "use strict";
 
   const CONFIG = {
-    brand: "ElectroTechBD",
+    brand: "ElectroHubBD",
     assistant: "ভোল্ট",
     phone: "+8801710830391",
-    website: "https://electrotechbd.xyz",
+    website: "https://electrohubbd.com",
     language: "Bangla",
     maxHistory: 20
   };
@@ -62,7 +62,7 @@ Supply isolate, lockout/tagout এবং test-before-touch অনুসরণ �
   function header(title) {
     return `⚡ ${title}
 
-ElectroTechBD | ভোল্ট Electrical Assistant
+ElectroHubBD | ভোল্ট Electrical Assistant
 
 `;
   }
@@ -962,6 +962,6 @@ motor, transformer, generator, cable এবং troubleshooting
   }
 
   console.log(
-    "ElectroTechBD Advanced Bangla Electrical Assistant Loaded Successfully."
+    "ElectroHubBD Advanced Bangla Electrical Assistant Loaded Successfully."
   );
 })();
