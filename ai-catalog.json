@@ -1,43 +1,330 @@
 {
   "specVersion": "1.0",
+  "lastUpdated": "2026-10-25",
+  "version": "Premium 3.0",
   "host": {
     "displayName": "ElectroHubBD Engineering & Automation",
-    "documentationUrl": "https://electrohubbd.com/"
+    "legalName": "ElectroHubBD Engineering & Automation",
+    "website": "https://electrohubbd.com/",
+    "documentationUrl": "https://electrohubbd.com/",
+    "logo": "https://electrohubbd.com/logo.png",
+    "tagline": "Bangladesh's Most Trusted Licensed Electrical & Smart Home Solution",
+    "description": "ElectroHubBD is Bangladesh's premium licensed electrical engineering company. Founded & led by Chief Licensed Electrician H.M. Md. Saiduzzaman with 30+ years experience. Licensed Electrician Permit: E20230043144. Head Office: Madhya Badda, Gulshan-Badda Link Road, Dhaka-1212. Service Area: All Bangladesh. We provide safe wiring, Smart Home IoT (ESP32 + KNX), Solar & IPS, Industrial 3-Phase, Smart Simulator, AI Load Calculator & Transparent Pricing. 100% Safety Focused, 24/7 Support.",
+    "contact": {
+      "email": "info@electrohubbd.com",
+      "phone": "+8801710830391",
+      "whatsapp": "+8801710830391",
+      "address": "Madhya Badda, Gulshan-Badda Link Road, Dhaka-1212, Bangladesh",
+      "headOffice": "Madhya Badda, Gulshan-Badda Link Road, Dhaka-1212",
+      "serviceArea": "All Bangladesh",
+      "serviceHours": "24/7 Support - Emergency Electrical Call 24 Hours"
+    },
+    "founder": {
+      "name": "H.M. Md. Saiduzzaman",
+      "role": "Chief Licensed Electrician, CEO & Founder",
+      "experience": "30+ Years",
+      "qualities": [
+        "Licensed Expert",
+        "Safety First",
+        "Hands-on Expertise",
+        "Practical Solutions"
+      ]
+    },
+    "credentials": {
+      "license": "Licensed Electrician - Permit: E20230043144",
+      "experience": "30+ Years",
+      "safety": "100% Safety Focused, BNBC & International Standard Compliant",
+      "support": "24/7 Support"
+    },
+    "languages": [
+      "bn",
+      "en"
+    ],
+    "aiAssistant": {
+      "name": "Volt",
+      "role": "AI Electrical Assistant",
+      "capabilities": [
+        "Load Current",
+        "Cable Size",
+        "Breaker Selection",
+        "kW to kVA",
+        "Electricity Bill",
+        "Safety Guide"
+      ]
+    },
+    "trustedBrands": [
+      "ABB",
+      "Energypac",
+      "BRB Cable",
+      "HAVELLS",
+      "WALTON",
+      "SSG",
+      "VISION",
+      "SINGER",
+      "KNX"
+    ],
+    "brandPromise": [
+      "Quality Focused",
+      "Safety First",
+      "Professional Work",
+      "Industry Awareness",
+      "Quality • Safety • Reliability"
+    ]
   },
-  "entries": [
+  "packages": [
     {
-      "identifier": "urn:air:electrohubbd.com:service:electrical-automation",
-      "displayName": "Electrical and Smart Automation Services",
-      "type": "text/html",
-      "url": "https://electrohubbd.com/#electrical",
-      "description": "Information about electrical wiring, smart home automation, solar power, and electrical safety services in Bangladesh.",
-      "tags": [
-        "electrical wiring",
-        "smart home",
-        "automation",
-        "solar",
-        "Bangladesh"
-      ],
-      "representativeQueries": [
-        "Find electrical wiring and smart home automation services in Bangladesh.",
-        "What solar power and electrical safety services does ElectroHubBD provide?"
+      "name": "Basic Wiring",
+      "price": "৳25 / Sq.Ft",
+      "for": "Sadhararon Apartment o Basa Barir Jonno",
+      "features": [
+        "Standard Safety Wiring",
+        "Sagroi Wiring Materials",
+        "Circuit Breaker Setup",
+        "Licensed Technician"
       ]
     },
     {
-      "identifier": "urn:air:electrohubbd.com:service:booking-consultation",
-      "displayName": "Electrical Project Booking and Consultation",
+      "name": "Smart Home IoT - MOST POPULAR",
+      "price": "৳45 / Sq.Ft",
+      "for": "Adhunik Smart Bari o Remote Automation",
+      "features": [
+        "Full Wiring + ESP32 + KNX IoT Setup",
+        "Mobile App o Voice Control",
+        "Sensor Security System",
+        "1 Year Free Support"
+      ]
+    },
+    {
+      "name": "Industrial / Commercial",
+      "price": "Custom Budget",
+      "for": "Factory o Banijjik Protisthaner Jonno",
+      "features": [
+        "3-Phase Sub-station & HT/LT Panel",
+        "Automatic Load Balancing",
+        "Licensed Industrial Service",
+        "Full Safety Audit",
+        "24/7 Support"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "name": "Smart Duplex Home Automation",
+      "location": "Gulshan, Dhaka",
+      "tech": "ESP32 + KNX + Blynk Smart Home Setup",
+      "type": "Residential Smart Home"
+    },
+    {
+      "name": "Industrial 3-Phase Control Panel",
+      "location": "Gazipur",
+      "tech": "High Capacity Industrial Power Panel",
+      "type": "Industrial"
+    },
+    {
+      "name": "Smart Hybrid Solar Grid",
+      "location": "Uttara, Dhaka",
+      "capacity": "10 KVA",
+      "tech": "Hybrid Solar + Grid",
+      "type": "Solar"
+    }
+  ],
+  "testimonials": [
+    {
+      "name": "Rahim Uddin",
+      "location": "Gulshan, Dhaka",
+      "rating": 5,
+      "text": "Puro basar wiring o smart light system khub professional vabe kore diyeche. Kajer man o somoy moto delivery durdanto."
+    },
+    {
+      "name": "Kamrul Hasan",
+      "location": "Gazipur",
+      "rating": 5,
+      "text": "Factoryr 3-phase panel upgrade korar por load-shedding er somossa onektai kome geche. Team khub dokkho o obhiggo."
+    },
+    {
+      "name": "Nasrin Akter",
+      "location": "Uttara, Dhaka",
+      "rating": 5,
+      "text": "Solar system install korar por theke electricity bill onek kome geche. Jogajog o support khub responsive."
+    }
+  ],
+  "entries": [
+    {
+      "identifier": "urn:air:electrohubbd.com:service:electrical-wiring",
+      "displayName": "Premium Electrical Wiring & Installation",
+      "type": "text/html",
+      "url": "https://electrohubbd.com/#electrical",
+      "description": "Complete house, office & industrial wiring by licensed electricians. Concealed wiring, DB board, earthing, lightning protection, safety audit. Head Office Dhaka, service All Bangladesh.",
+      "tags": [
+        "electrical wiring",
+        "house wiring",
+        "licensed electrician",
+        "Dhaka",
+        "All Bangladesh",
+        "safety"
+      ],
+      "representativeQueries": [
+        "Best licensed electrician in Dhaka for house wiring?",
+        "House wiring cost per sq ft in Bangladesh?",
+        "Basa wiring er jonno valo electrician kothay pabo?",
+        "Licensed electrician keno guruttupurno?"
+      ]
+    },
+    {
+      "identifier": "urn:air:electrohubbd.com:service:smart-home-simulator",
+      "displayName": "Smart Home & IoT Automation with Live Simulator",
+      "type": "text/html",
+      "url": "https://electrohubbd.com/#simulator",
+      "description": "Smart Home IoT with Live Simulator: Smart Light, Smart Fan, Smart AC 24°C, Motion Sensor, Climate Sensor 22.8°C 80% Humidity, Voice Assistant, Live Energy Usage. ESP32 + KNX based. Try demo online.",
+      "tags": [
+        "smart home",
+        "IoT",
+        "simulator",
+        "ESP32 + KNX",
+        "smart fan",
+        "smart AC",
+        "All Bangladesh",
+        "KNX",
+        "KNX Automation"
+      ],
+      "representativeQueries": [
+        "Smart home simulator Bangladesh?",
+        "ESP32 + KNX smart home automation kivabe kaj kore?",
+        "Mobile diye fan light control kora jay?",
+        "Smart home automation cost in Bangladesh?"
+      ]
+    },
+    {
+      "identifier": "urn:air:electrohubbd.com:service:booking",
+      "displayName": "Free Consultation & Project Booking",
       "type": "text/html",
       "url": "https://electrohubbd.com/#booking",
-      "description": "Booking and consultation information for electrical, automation, and solar projects.",
+      "description": "Free consultation & site visit booking. Upload blueprint PDF CAD. Address: Madhya Badda, Gulshan-Badda Link Road, Dhaka-1212. Phone +8801710830391 Email info@electrohubbd.com",
       "tags": [
         "booking",
         "consultation",
-        "electrical project"
+        "site visit",
+        "blueprint",
+        "All Bangladesh"
       ],
       "representativeQueries": [
-        "How can I book an electrical project consultation with ElectroHubBD?",
-        "Where can I request a site visit for electrical or solar work?"
+        "How to book ElectroHubBD?",
+        "Free consultation for electrical work?",
+        "Site visit er jonno booking kivabe korbo?"
       ]
+    },
+    {
+      "identifier": "urn:air:electrohubbd.com:service:cost-estimator",
+      "displayName": "AI Powered Smart Cost Estimator",
+      "type": "text/html",
+      "url": "https://electrohubbd.com/#estimator",
+      "description": "Smart Cost Estimator: Example 1200 Sq.Ft = ৳50,025 - Materials ৳34,500 + Engineering & Labor ৳15,525. Standard & Smart IoT options, Solar add-on. Supports both ESP32 (budget-friendly) and KNX (premium professional standard) automation.",
+      "tags": [
+        "estimator",
+        "cost",
+        "pricing",
+        "1200 sq ft cost",
+        "All Bangladesh"
+      ],
+      "representativeQueries": [
+        "1200 sq ft wiring cost koto?",
+        "Wiring estimator Bangladesh?",
+        "Smart cost estimator kivabe kaj kore?",
+        "KNX smart home automation kivabe kaj kore?",
+        "ESP vs KNX konta valo? ElectroHubBD konta use kore?"
+      ]
+    },
+    {
+      "identifier": "urn:air:electrohubbd.com:service:load-calculator",
+      "displayName": "AI Load Calculator - Volt Assistant",
+      "type": "text/html",
+      "url": "https://electrohubbd.com/#calculator",
+      "description": "Free AI Load Calculator by Volt: load current, cable size, MCB MCCB RCCB, kW to kVA, voltage drop, capacitor, electricity bill. Bangla + English.",
+      "tags": [
+        "load calculator",
+        "cable size",
+        "Volt AI",
+        "All Bangladesh"
+      ],
+      "representativeQueries": [
+        "5 kW load er current koto?",
+        "Cable size kivabe ber korbo?",
+        "Load calculator Bangladesh in Bangla"
+      ]
+    },
+    {
+      "identifier": "urn:air:electrohubbd.com:service:pricing",
+      "displayName": "Transparent Pricing Packages",
+      "type": "text/html",
+      "url": "https://electrohubbd.com/#pricing",
+      "description": "Basic Wiring ৳25/Sq.Ft, Smart Home IoT ৳45/Sq.Ft MOST POPULAR, Industrial Custom. No hidden charge, warranty included.",
+      "tags": [
+        "pricing",
+        "package",
+        "transparent pricing",
+        "All Bangladesh"
+      ],
+      "representativeQueries": [
+        "Wiring cost per sq ft in Bangladesh?",
+        "Smart home IoT package price?",
+        "Industrial wiring custom budget koto?"
+      ]
+    },
+    {
+      "identifier": "urn:air:electrohubbd.com:service:solar-ips",
+      "displayName": "Solar System, IPS & Backup Power",
+      "type": "text/html",
+      "url": "https://electrohubbd.com/#electrical",
+      "description": "Solar panel, IPS, hybrid solar 10 KVA, backup for home & office. Reduce bill, 24/7 backup. Projects: Gulshan, Gazipur, Uttara.",
+      "tags": [
+        "solar",
+        "IPS",
+        "hybrid solar",
+        "backup",
+        "All Bangladesh"
+      ],
+      "representativeQueries": [
+        "Solar system lagate koto khoroch?",
+        "10 KVA solar setup price?",
+        "IPS setup Bangladesh"
+      ]
+    },
+    {
+      "identifier": "urn:air:electrohubbd.com:service:safety",
+      "displayName": "Electrical Safety & Compliance",
+      "type": "text/html",
+      "url": "https://electrohubbd.com/#electrical",
+      "description": "Safety audit, fault diagnosis, earthing test, BNBC compliance. Licensed & insured work.",
+      "tags": [
+        "safety",
+        "audit",
+        "earthing",
+        "compliance",
+        "All Bangladesh"
+      ],
+      "representativeQueries": [
+        "Electrical safety audit kivabe korbo?",
+        "RCCB bar bar trip korche keno?",
+        "Purono wiring ki smart home e poriborton kora somvob?"
+      ]
+    }
+  ],
+  "faqs": [
+    {
+      "q": "Licensed Electrician keno guruttupurno?",
+      "a": "Safety, legal compliance, and insurance. ElectroHubBD Licensed Permit E20230043144."
+    },
+    {
+      "q": "ESP32 + KNX Smart Home Automation kivabe kaj kore?",
+      "a": "ESP32 + KNX + IoT + Mobile App + Voice Control diye fan light AC control."
+    },
+    {
+      "q": "Purono wiring ki smart home e poriborton kora somvob?",
+      "a": "Ha, purono wiring ke smart e upgrade kora jay, free consultation e check kora hoy."
+    },
+    {
+      "q": "ElectroHubBD er office kothay?",
+      "a": "Madhya Badda, Gulshan-Badda Link Road, Dhaka-1212. Service All Bangladesh."
     }
   ]
 }
