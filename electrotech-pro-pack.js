@@ -2,7 +2,7 @@
   "use strict";
 
   const E = Object.freeze({
-    n: "ElectroTechBD",
+    n: "ElectroHubBD",
     a: "ভোল্ট",
     v: 230,
     v3: 400,
@@ -18,7 +18,7 @@
     .replace(/\s+/g, " ")
     .trim();
 
-  const H = t => `⚡ ${t}\n\nElectroTechBD | ভোল্ট\n\n`;
+  const H = t => `⚡ ${t}\n\nElectroHubBD | ভোল্ট\n\n`;
 
   const F = (n, d = 2) =>
     Number.isFinite(n)
@@ -483,14 +483,14 @@ ${WARN()}`
     );
   }
 
-  window.ElectroTechPro = Object.freeze({
+  window.ElectroHubPro = Object.freeze({
     answer: route,
     version: "2.0.0"
   });
 
   if (
     typeof window.chatLocalAnswer === "function" &&
-    !window.__ElectroTechProAttached
+    !window.__ElectroHubProAttached
   ) {
     const old = window.chatLocalAnswer;
 
@@ -532,8 +532,8 @@ ${WARN()}`
       return old(message);
     };
 
-    window.__ElectroTechProAttached = true;
+    window.__ElectroHubProAttached = true;
   }
 
-  console.log("ElectroTechBD Pro Pack loaded.");
+  console.log("ElectroHubBD Pro Pack loaded.");
 })();
