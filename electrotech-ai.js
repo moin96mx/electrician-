@@ -741,7 +741,7 @@ ${safety()}`;
     if (!text) {
       return `${header("স্বাগতম")}
 
-আমি ভোল্ট, ElectroTechBD-এর Electrical Assistant।
+আমি ভোল্ট, ElectroHubBD-এর Electrical Assistant।
 
 আপনি electrical calculation, protection, wiring,
 motor, transformer, generator, cable এবং troubleshooting
@@ -902,14 +902,14 @@ motor, transformer, generator, cable এবং troubleshooting
     return fallback();
   }
 
-  window.ElectroTechAI = {
+  window.ElectroHubAI = {
     answer: electricalAnswer,
     config: CONFIG
   };
 
   if (
     typeof window.chatLocalAnswer === "function" &&
-    !window.__ElectroTechAdvancedLoaded
+    !window.__ElectroHubAdvancedLoaded
   ) {
     const oldAnswer = window.chatLocalAnswer;
 
@@ -958,7 +958,7 @@ motor, transformer, generator, cable এবং troubleshooting
       return oldAnswer(message);
     };
 
-    window.__ElectroTechAdvancedLoaded = true;
+    window.__ElectroHubAdvancedLoaded = true;
   }
 
   console.log(
