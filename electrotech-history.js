@@ -4,7 +4,7 @@
     "use strict";
 
     const CONFIG = {
-        storageKey: "electrotechbd_calculation_history",
+        storageKey: "electrohubbd_calculation_history",
         maxItems: 100,
         navButtonId: "eth-open-history-nav",
         modalId: "eth-history-modal"
@@ -115,7 +115,7 @@
             }
         } catch (error) {
             console.warn(
-                "ElectroTechBD History Load Error:",
+                "ElectroHubBD History Load Error:",
                 error
             );
 
@@ -138,7 +138,7 @@
             return true;
         } catch (error) {
             console.warn(
-                "ElectroTechBD History Save Error:",
+                "ElectroHubBD History Save Error:",
                 error
             );
 
@@ -308,7 +308,7 @@
     function createCopyText(item) {
         let text = "";
 
-        text += "ElectroTechBD Electrical Calculation\n";
+        text += "ElectroHubBD Electrical Calculation\n";
         text += "====================================\n";
         text += "Date: " + formatDate(item.createdAt) + "\n";
 
@@ -1853,7 +1853,7 @@
         document.head.appendChild(style);
     }
 
-    window.ElectroTechHistory = {
+    window.ElectroHubHistory = {
         open: openHistory,
         close: closeHistory,
         save: saveCalculation,
@@ -1880,7 +1880,7 @@
         connectCalculationEvent();
 
         console.log(
-            "🗂 ElectroTechBD History System Loaded Successfully."
+            "🗂 ElectroHubBD History System Loaded Successfully."
         );
     }
 
