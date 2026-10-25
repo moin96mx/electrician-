@@ -320,11 +320,11 @@
     {
       "@context": "https://schema.org",
       "@type": "Electrician",
-      "name": "ElectroTechBD Engineering & Automation",
-      "url": "https://electrotechbd.xyz/",
+      "name": "ElectroHubBD Engineering & Automation",
+      "url": "https://electrohubbd.com/",
       "telephone": "+8801710830391",
       "areaServed": "Bangladesh",
-      "image": "https://electrotechbd.xyz/img/11a.webp",
+      "image": "https://electrohubbd.com/img/11a.webp",
       "description": "Licensed electrical wiring, smart home automation, solar power and safety inspection services."
     }
     </script>
@@ -1160,7 +1160,7 @@
                   srcset="img/1q-480.webp 480w, img/1q-720.webp 720w, img/1q-960.webp 960w, img/1q.webp 1322w"
                   sizes="(max-width: 700px) 92vw, (max-width: 1024px) 46vw, 530px"
                   width="1322" height="1190"
-                  alt="ElectroTechBD Chief Licensed Electrician"
+                  alt="ElectroHubBD Chief Licensed Electrician"
                   loading="lazy"
                   decoding="async">
           <span class="chief-live-badge"><span class="chief-dot"></span> VERIFIED PROFILE</span>
@@ -1302,7 +1302,7 @@
                     src="img/1x4.webp"
                     srcset="img/1x4.webp 400w"
                     sizes="(max-width: 560px) 90vw, 220px"
-                    width="400" height="267" alt="ElectroTechBD team member" loading="lazy" decoding="async">
+                    width="400" height="267" alt="ElectroHubBD team member" loading="lazy" decoding="async">
                     <span class="team-badge">Technician</span>
                 </div>
                 <div class="team-info">
@@ -1318,7 +1318,7 @@
                     src="img/1x5-480.webp"
                     srcset="img/1x5-480.webp 480w, img/1x5-720.webp 720w, img/1x5.webp 800w"
                     sizes="(max-width: 560px) 90vw, (max-width: 1100px) 42vw, 330px"
-                    width="800" height="853" alt="ElectroTechBD industrial wiring specialist" loading="lazy" decoding="async">
+                    width="800" height="853" alt="ElectroHubBD industrial wiring specialist" loading="lazy" decoding="async">
                     <span class="team-badge">Licensed</span>
                 </div>
                 <div class="team-info">
@@ -1709,7 +1709,7 @@
         <iframe
           class="map-embed"
           src="https://www.google.com/maps?q=Dhaka%2C%20Bangladesh&hl=bn&z=13&output=embed"
-          title="ElectroTechBD Engineering office location on Google Maps"
+          title="ElectroHubBD Engineering office location on Google Maps"
           loading="lazy"
           referrerpolicy="no-referrer-when-downgrade"
           allowfullscreen></iframe>
@@ -1743,7 +1743,7 @@
           <div class="contact-ico"><i class="fa-solid fa-globe"></i></div>
           <div>
             <h3>ওয়েবসাইট</h3>
-            <p><a href="https://electrotechbd.xyz" target="_blank" rel="noopener">electrohubbd.com</a></p>
+            <p><a href="https://electrohubbd.com" target="_blank" rel="noopener">electrohubbd.com</a></p>
           </div>
         </div>
 
@@ -2735,7 +2735,7 @@
   <span class="chat-ping"></span>
 </button>
 
-<div class="chat-window" id="chat-window" role="dialog" aria-label="ElectroTechBD চ্যাট সহকারী">
+<div class="chat-window" id="chat-window" role="dialog" aria-label="ElectroHubBD চ্যাট সহকারী">
 
   <div class="chat-head">
     <div class="chat-head-id">
@@ -2915,12 +2915,12 @@
   }
 
   const chatFeatureScripts = [
-    'electrotech-ai.js',
-    'electrotech-pro-pack.js',
-    'electrotech-engine-3.js',
-    'electrotech-ultimate.js',
-    'electrotech-smart-system.js',
-    'electrotech-master-router.js'
+    'electrohubbd-ai.js',
+    'electrohubbd-pro-pack.js',
+    'electrohubbd-engine-3.js',
+    'electrohubbd-ultimate.js',
+    'electrohubbd-smart-system.js',
+    'electrohubbd-master-router.js'
   ];
   let chatFeaturePromise;
 
@@ -2945,16 +2945,16 @@
 
     try {
       await Promise.all([
-        loadFeatureScript('electrotech-load-form.js'),
-        loadFeatureScript('electrotech-report.js'),
-        loadFeatureScript('electrotech-history.js')
+        loadFeatureScript('electrohubbd-load-form.js'),
+        loadFeatureScript('electrohubbd-report.js'),
+        loadFeatureScript('electrohubbd-history.js')
       ]);
 
-      if (!window.ElectroTechLoadForm) {
+      if (!window.ElectroHubLoadForm) {
         throw new Error('Load calculator did not initialize');
       }
 
-      window.ElectroTechLoadForm.open();
+      window.ElectroHubLoadForm.open();
     } catch (error) {
       console.error('Load calculator failed to load:', error);
       alert('ক্যালকুলেটর লোড করা যায়নি। ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।');
@@ -2965,13 +2965,13 @@
     closeNav();
 
     try {
-      await loadFeatureScript('electrotech-history.js');
+      await loadFeatureScript('electrohubbd-history.js');
 
-      if (!window.ElectroTechHistory) {
+      if (!window.ElectroHubHistory) {
         throw new Error('Calculation history did not initialize');
       }
 
-      window.ElectroTechHistory.open();
+      window.ElectroHubHistory.open();
     } catch (error) {
       console.error('Calculation history failed to load:', error);
       alert('হিসাবের ইতিহাস লোড করা যায়নি। ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।');
