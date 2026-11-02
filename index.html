@@ -449,7 +449,7 @@
                 <a href="#pricing">প্যাকেজ</a>
                 <a href="#booking" class="btn btn-glow">বুকিং করুন</a>
                 <!-- <a href="#faq">FAQ</a> -->
-                <a href="/ovijog/">অভিযোগ করুন</a>
+                <a href="/complaints/">অভিযোগ করুন</a>
 
                 <button
                   type="button"
@@ -2810,13 +2810,13 @@
   <span class="chat-ping"></span>
 </button>
 
-<div class="chat-window" id="chat-window" role="dialog" aria-label="ElectroTechBD চ্যাট সহকারী">
+<div class="chat-window" id="chat-window" role="dialog" aria-labelledby="chat-title">
 
   <div class="chat-head">
     <div class="chat-head-id">
       <div class="chat-avatar"><i class="fa-solid fa-bolt-lightning"></i></div>
       <div>
-        <strong>ইলেকট্রোটেক অ্যাসিস্ট্যান্ট</strong>
+        <strong id="chat-title">ElectroHubBD সহকারী</strong>
         <span class="chat-state"><i class="fa-solid fa-circle"></i> স্বয়ংক্রিয় সহায়তা</span>
       </div>
     </div>
@@ -2830,7 +2830,7 @@
   <div class="chat-chips" id="chat-chips"></div>
 
   <form class="chat-input-row" id="chat-form" autocomplete="off">
-    <input type="text" id="chat-input" placeholder="আপনার প্রশ্ন লিখুন..." aria-label="বার্তা লিখুন">
+    <input type="text" id="chat-input" placeholder="আপনার প্রশ্ন লিখুন..." aria-label="বার্তা লিখুন" maxlength="2000">
     <button type="submit" aria-label="পাঠান"><i class="fa-solid fa-paper-plane"></i></button>
   </form>
 
@@ -2872,7 +2872,7 @@
         <li><a href="#booking">বুকিং</a></li>
         <li><a href="#pricing">প্রাইসিং</a></li>
         <li><a href="#faq">FAQ</a></li>
-        <!-- <li><a href="/ovijog/">অভিযোগ করুন</a></li> -->
+        <!-- <li><a href="/complaints/">অভিযোগ করুন</a></li> -->
        
         <li><a href="/privacy-policy/">Privacy Policy</a></li>
         <li><a href="/terms-conditions/">Terms & Conditions</a></li>
@@ -2887,7 +2887,7 @@
         <!-- <li><a href="#electrical">হোম কন্ট্রোল সিস্টেম</a></li> -->
         <li><a href="#electrical">প্যানেল বোর্ড সেটআপ</a></li>
         <li><a href="#contact">২৪/৭ ইমার্জেন্সি সার্ভিস</a></li>
-        <!-- <li><a href="/ovijog/">অভিযোগ করুন</a></li> -->
+        <!-- <li><a href="/complaints/">অভিযোগ করুন</a></li> -->
       </ul>
     </div>
 
@@ -2897,9 +2897,9 @@
         <li><i class="fa-solid fa-location-dot"></i> ঢাকা, বাংলাদেশ</li>
         <li><i class="fa-solid fa-phone-volume"></i> <a href="tel:+8801710830391">+880 1710830391</a></li>
         <li><i class="fa-solid fa-globe"></i> <a href="https://electrohubbd.com" target="_blank" rel="noopener">electrohubbd.com</a></li>
-        <!-- <li><i class="fa-solid fa-comment-dots"></i> <a href="/ovijog/">অভিযোগ করুন</a></li> -->
+        <!-- <li><i class="fa-solid fa-comment-dots"></i> <a href="/complaints/">অভিযোগ করুন</a></li> -->
         <li><i class="fa-solid fa-envelope"></i> <a href="mailto:info@electrohubbd.com" style="text-decoration: none; color: inherit;">info@electrohubbd.com</a></li>
-        <li><i class="fa-regular fa-message"></i><a href="/ovijog/">অভিযোগ ও মতামত</a></li>
+        <li><i class="fa-regular fa-message"></i><a href="/complaints/">অভিযোগ ও মতামত</a></li>
       </ul>
 
       <!-- <form class="footer-newsletter" id="newsletter-form"
@@ -3089,6 +3089,6 @@
 
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
         <script src="supabase-config.js?v=cac31b0" defer></script>
-        <script src="script.js?v=20261104-bangladesh-map-boundary" defer></script>
+        <script src="script.js?v=20261103-chatbot-fixes" defer></script>
 </body>
 </html>

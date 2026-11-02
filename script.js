@@ -1487,10 +1487,13 @@ const CHAT_CONFIG = {
     phone: "+8801710830391",
 
     website:
-        "https://electrotechbd.xyz",
+        "https://electrohubbd.com",
 
     assistantName:
         "ভোল্ট",
+
+    maxMessageLength:
+        2000,
 
     maxHistory:
         12
@@ -1530,7 +1533,7 @@ const CHAT_KB = [
         ],
 
         reply:
-            "ElectroTech-এর প্রধান প্যাকেজগুলো হলো:\n\n" +
+            "ElectroHubBD-এর প্রধান প্যাকেজগুলো হলো:\n\n" +
             "⚡ Basic Wiring — ৳২৫ / Sq.Ft\n" +
             "🏠 Smart Home IoT — ৳৪৫ / Sq.Ft\n" +
             "🏭 Industrial / Commercial — Custom Budget\n\n" +
@@ -1567,7 +1570,7 @@ const CHAT_KB = [
         ],
 
         reply:
-            "ElectroTech-এর contact section-এ অফিসের location এবং Google Map দেওয়া আছে। 👉 #contact\n\n" +
+            "ElectroHubBD-এর contact section-এ অফিসের location এবং Google Map দেওয়া আছে। 👉 #contact\n\n" +
             "বর্তমান ওয়েবসাইটে location হিসেবে Dhaka, Bangladesh দেখানো হয়েছে।"
     },
 
@@ -1576,16 +1579,22 @@ const CHAT_KB = [
             "ফোন",
             "যোগাযোগ",
             "নম্বর",
+            "নাম্বার",
             "কল",
             "contact",
+            "contact number",
+            "company number",
             "phone",
             "call",
+            "number",
             "whatsapp",
-            "হোয়াটসঅ্যাপ"
+            "হোয়াটসঅ্যাপ",
+            "কোম্পানির ফোন",
+            "কোম্পানির যোগাযোগ"
         ],
 
         reply:
-            "ElectroTech-এর সাথে সরাসরি যোগাযোগ করতে কল করুন:\n\n" +
+            "ElectroHubBD-এর সাথে সরাসরি যোগাযোগ করতে কল করুন:\n\n" +
             "📞 +880 1710830391\n\n" +
             "Booking-এর মাধ্যমে site visit request-ও করতে পারেন 👉 #booking"
     },
@@ -1625,7 +1634,7 @@ const CHAT_KB = [
         ],
 
         reply:
-            "Smart Home system-এর মাধ্যমে fan control automation করা যায়। ElectroTech-এর simulator-এ fan control-এর একটি demo আছে 👉 #simulator"
+            "Smart Home system-এর মাধ্যমে fan control automation করা যায়। ElectroHubBD-এর simulator-এ fan control-এর একটি demo আছে 👉 #simulator"
     },
 
     {
@@ -1653,7 +1662,7 @@ const CHAT_KB = [
         ],
 
         reply:
-            "ElectroTech-এর estimator-এ Solar System option আছে। Solar select করলে আনুমানিক Solar Add-on cost মোট বাজেটে যোগ হয় 👉 #estimator"
+            "ElectroHubBD-এর estimator-এ Solar System option আছে। Solar select করলে আনুমানিক Solar Add-on cost মোট বাজেটে যোগ হয় 👉 #estimator"
     },
 
     {
@@ -1665,12 +1674,11 @@ const CHAT_KB = [
             "founder",
             "owner",
             "সাইদুজ্জামান",
-            "কে চালায়",
-            "কোম্পানির"
+            "কে চালায়"
         ],
 
         reply:
-            "ElectroTech Engineering & Automation-এর website information অনুযায়ী এইচ. এম. মো. সাইদুজ্জামান প্রতিষ্ঠাতা ও প্রধান নির্বাহী হিসেবে উল্লেখ আছেন। বিস্তারিত দেখতে 👉 #team"
+            "ElectroHubBD-এর website information অনুযায়ী এইচ. এম. মো. সাইদুজ্জামান প্রতিষ্ঠাতা ও প্রধান নির্বাহী হিসেবে উল্লেখ আছেন। বিস্তারিত দেখতে 👉 #team"
     },
 
     {
@@ -1683,7 +1691,7 @@ const CHAT_KB = [
         ],
 
         reply:
-            "ElectroTech-এর website: electrotechbd.xyz ⚡"
+            'ElectroHubBD-এর website: <a href="https://electrohubbd.com">electrohubbd.com</a> ⚡'
     },
 
     {
@@ -1695,7 +1703,7 @@ const CHAT_KB = [
         ],
 
         reply:
-            "ElectroTech website-এ Chief Electrician-এর জন্য Permit: E20230043144 উল্লেখ করা হয়েছে। লাইসেন্স/permit সম্পর্কিত সিদ্ধান্তের ক্ষেত্রে official verification করা সবচেয়ে ভালো।"
+            "ElectroHubBD website-এ Chief Electrician-এর জন্য Permit: E20230043144 উল্লেখ করা হয়েছে। লাইসেন্স/permit সম্পর্কিত সিদ্ধান্তের ক্ষেত্রে official verification করা সবচেয়ে ভালো।"
     },
 
     {
@@ -1725,7 +1733,7 @@ const CHAT_KB = [
         ],
 
         reply:
-            "ElectroTech-এর Smart Automation project showcase দেখতে পারেন 👉 #projects"
+            "ElectroHubBD-এর Smart Automation project showcase দেখতে পারেন 👉 #projects"
     },
 
     {
@@ -1756,7 +1764,7 @@ const CHAT_KB = [
 
         reply:
             "আসসালামু আলাইকুম! 👋\n\n" +
-            "আমি ভোল্ট — ElectroTech-এর AI Assistant। ⚡\n\n" +
+            "আমি ভোল্ট — ElectroHubBD-এর সহকারী। ⚡\n\n" +
             "আপনি electrical service, wiring, smart home, solar, budget, booking বা safety সম্পর্কে প্রশ্ন করতে পারেন।"
     },
 
@@ -1775,9 +1783,9 @@ const CHAT_KB = [
 
 const CHAT_FALLBACK =
 
-    "এই প্রশ্নটির নির্দিষ্ট উত্তর আমার ElectroTech knowledge base-এ নেই। 🙂\n\n" +
+    "এই প্রশ্নটির নির্দিষ্ট উত্তর আমার ElectroHubBD-এর সহায়িকা-তথ্যে নেই। 🙂\n\n" +
 
-    "আপনি চাইলে প্রশ্নটি একটু বিস্তারিতভাবে লিখতে পারেন। অথবা ElectroTech team-এর সাথে যোগাযোগ করুন:\n\n" +
+    "আপনি চাইলে প্রশ্নটি একটু বিস্তারিতভাবে লিখতে পারেন। অথবা ElectroHubBD team-এর সাথে যোগাযোগ করুন:\n\n" +
 
     "📞 +880 1710830391\n\n" +
 
@@ -2133,7 +2141,7 @@ async function chatGetReply(message) {
 
             return (
                 localReply +
-                "\n\n⚠️ AI server বর্তমানে unavailable, তাই local ElectroTech information থেকে উত্তর দেওয়া হয়েছে।"
+                "\n\n⚠️ AI server বর্তমানে unavailable, তাই ElectroHubBD-এর local তথ্য থেকে উত্তর দেওয়া হয়েছে।"
             );
         }
 
@@ -2151,6 +2159,14 @@ async function chatSend(message) {
             .trim();
 
     if (!text) {
+        return;
+    }
+
+    if (text.length > CHAT_CONFIG.maxMessageLength) {
+        chatAddMessage(
+            `একটি বার্তা সর্বোচ্চ ${CHAT_CONFIG.maxMessageLength} অক্ষরের হতে পারে। প্রশ্নটি সংক্ষিপ্ত করে আবার পাঠান।`,
+            "bot"
+        );
         return;
     }
 
@@ -2251,6 +2267,12 @@ function chatToggle(forceClose = false) {
             ? "true"
             : "false"
     );
+    launcher.setAttribute(
+        "aria-label",
+        shouldOpen
+            ? "চ্যাট সহকারী বন্ধ করুন"
+            : "চ্যাট সহকারী খুলুন"
+    );
 
     launcher.innerHTML =
         shouldOpen
@@ -2271,7 +2293,7 @@ function chatToggle(forceClose = false) {
         chatAddMessage(
 
             "আসসালামু আলাইকুম! 👋\n" +
-            "আমি ভোল্ট — ElectroTech-এর AI Assistant। ⚡\n\n" +
+            "আমি ভোল্ট — ElectroHubBD-এর সহকারী। ⚡\n\n" +
             "Electrical, Smart Home, Solar, Wiring, Budget অথবা Booking সম্পর্কে আপনার প্রশ্ন লিখুন।",
 
             "bot"
@@ -2323,7 +2345,10 @@ function initChat() {
 
         closeButton.addEventListener(
             "click",
-            () => chatToggle(true)
+            () => {
+                chatToggle(true);
+                launcher.focus();
+            }
         );
     }
 
@@ -2371,10 +2396,12 @@ function initChat() {
         event => {
 
             if (
-                event.key === "Escape"
+                event.key === "Escape" &&
+                chatEl("chat-window")?.classList.contains("active")
             ) {
 
                 chatToggle(true);
+                launcher.focus();
             }
         }
     );

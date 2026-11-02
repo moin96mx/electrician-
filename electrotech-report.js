@@ -140,6 +140,8 @@
 
                 max-height:
                     calc(100vh - 24px);
+                max-height:
+                    calc(100dvh - 24px);
 
                 overflow-y: auto;
 
@@ -510,6 +512,8 @@
                 .etr-report-panel {
                     max-height:
                         calc(100vh - 12px);
+                    max-height:
+                        calc(100dvh - 12px);
 
                     padding: 12px;
                 }

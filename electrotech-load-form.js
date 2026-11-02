@@ -1031,6 +1031,8 @@
 
                 max-height:
                     calc(100vh - 30px);
+                max-height:
+                    calc(100dvh - 30px);
 
                 display: none;
                 overflow-y: auto;
@@ -1504,6 +1506,8 @@
 
                     max-height:
                         calc(100vh - 20px);
+                    max-height:
+                        calc(100dvh - 20px);
 
                     padding: 16px;
                 }
@@ -1556,6 +1560,8 @@
 
                     max-height:
                         calc(100vh - 12px);
+                    max-height:
+                        calc(100dvh - 12px);
 
                     padding: 12px;
 
