@@ -1159,7 +1159,18 @@ function initBookingLocationMap() {
     }
 
     const defaultCenter = [23.8103, 90.4125];
-    const map = window.L.map(mapElement).setView(defaultCenter, 11);
+    const map = window.L.map(mapElement, {
+        minZoom: 5,
+        maxZoom: 19,
+        scrollWheelZoom: true,
+        doubleClickZoom: true,
+        touchZoom: true,
+        keyboard: true
+    }).setView(defaultCenter, 11);
+    mapElement.querySelector('.leaflet-control-zoom-in')?.setAttribute('aria-label', 'মানচিত্র বড় করে দেখুন');
+    mapElement.querySelector('.leaflet-control-zoom-in')?.setAttribute('title', 'মানচিত্র বড় করে দেখুন');
+    mapElement.querySelector('.leaflet-control-zoom-out')?.setAttribute('aria-label', 'মানচিত্র ছোট করে দেখুন');
+    mapElement.querySelector('.leaflet-control-zoom-out')?.setAttribute('title', 'মানচিত্র ছোট করে দেখুন');
     window.L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         maxZoom: 19,
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
