@@ -22,6 +22,11 @@
     table{width:100%;min-width:1100px;border-collapse:collapse}th,td{min-width:100px;padding:10px 8px;border-bottom:1px solid var(--line);font-size:13px;text-align:left;vertical-align:top}th{color:var(--muted);white-space:nowrap}
     .map-link{display:inline-block;padding:6px 9px;border:1px solid var(--cyan);border-radius:7px;color:var(--cyan);text-decoration:none;white-space:nowrap}
     td{max-width:280px;overflow-wrap:anywhere;white-space:pre-wrap}.notice{color:var(--muted);font-size:13px}.btn-red{color:#fca5a5}.btn-green{color:#6ee7b7}
+    th.long-field-heading,td.long-field-cell{min-width:220px;width:240px;max-width:260px}
+    .cell-scroll{max-height:4.2em;overflow:auto;overscroll-behavior:contain;line-height:1.4;white-space:pre-wrap;overflow-wrap:anywhere;padding-right:4px}
+    .cell-scroll:focus{outline:2px solid var(--cyan);outline-offset:2px}
+    .file-link{padding:6px 9px;border:1px solid var(--cyan);border-radius:7px;background:transparent;color:var(--cyan);cursor:pointer;white-space:nowrap}
+    .file-link:hover{background:var(--cyan);color:#041019}
     .pagination{display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap;margin-top:16px}.pag-info{color:var(--muted);font-size:12px}
     @media(max-width:700px){.stats{grid-template-columns:repeat(2,1fr)}.container{padding:18px 12px}.panel{padding:12px}}
   </style>
@@ -81,6 +86,6 @@
     </section>
   </main>
   <script src="/supabase-config.js?v=cac31b0" defer></script>
-  <script src="/admin/admin.js?v=20261102-location" defer></script>
+  <script src="/admin/admin.js?v=20261103-admin-files" defer></script>
 </body>
 </html>

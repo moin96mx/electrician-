@@ -3,6 +3,7 @@
   const tokenKey = 'electrohub_admin_token';
   const userKey = 'electrohub_admin_user';
   const pageSize = 25;
+  const scrollFields = new Set(['notes', 'message', 'details', 'items']);
   const tables = {
     bookings: {
       endpoint: 'bookings',
@@ -132,10 +133,16 @@
       return;
     }
 
-    const headers = config.fields.map(field => `<th>${escapeHTML(field)}</th>`).join('');
+    const headers = config.fields.map(field =>
+      `<th${scrollFields.has(field) ? ' class="long-field-heading"' : ''}>${escapeHTML(field)}</th>`
+    ).join('');
     const body = rows.map(row => {
       const cells = config.fields.map(field => {
-        const value = formatValue(row[field]).slice(0, 1000);
+        const value = formatValue(row[field]);
+        if (field === 'file_name') {
+          if (!value) return '<td>ফাইল নেই</td>';
+          return `<td><button class="file-link" type="button" data-action="attachment" data-id="${escapeHTML(row.id)}" aria-label="সংযুক্ত ফাইল খুলুন: ${escapeHTML(value)}">ফাইল খুলুন</button><br><small>${escapeHTML(value)}</small></td>`;
+        }
         if (field === 'location') {
           const latitude = Number(row.latitude);
           const longitude = Number(row.longitude);
@@ -154,6 +161,9 @@
             `<option value="${escapeHTML(status)}"${row.status === status ? ' selected' : ''}>${escapeHTML(status)}</option>`
           ).join('');
           return `<td><select data-status-for="${escapeHTML(row.id)}">${options}</select></td>`;
+        }
+        if (scrollFields.has(field) && value) {
+          return `<td class="long-field-cell"><div class="cell-scroll" role="region" aria-label="${escapeHTML(field)}; scroll to read full text" tabindex="0">${escapeHTML(value)}</div></td>`;
         }
         return `<td>${escapeHTML(value)}</td>`;
       }).join('');
@@ -249,7 +259,30 @@
       if (!button) return;
       const id = button.dataset.id;
       try {
-        if (button.dataset.action === 'delete') {
+        if (button.dataset.action === 'attachment') {
+          const preview = window.open('about:blank', '_blank');
+          if (!preview) throw new Error('Allow pop-ups to open this attachment.');
+          preview.opener = null;
+          preview.document.title = 'Loading attachment…';
+          try {
+            const response = await fetch(api.apiUrl(`/bookings/${encodeURIComponent(id)}/file`), {
+              headers: {
+                ...api.headers(),
+                Authorization: `Bearer ${currentToken()}`
+              }
+            });
+            if (!response.ok) {
+              const result = await response.json().catch(() => ({}));
+              throw new Error(result.message || `File request failed (${response.status}).`);
+            }
+            const objectUrl = URL.createObjectURL(await response.blob());
+            preview.location.href = objectUrl;
+            window.setTimeout(() => URL.revokeObjectURL(objectUrl), 60_000);
+          } catch (error) {
+            preview.close();
+            throw error;
+          }
+        } else if (button.dataset.action === 'delete') {
           if (!window.confirm('Delete this entry?')) return;
           await request(tables[name].deletePath(id), { method: 'DELETE' });
         } else if (button.dataset.action === 'status') {
