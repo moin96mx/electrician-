@@ -1162,6 +1162,7 @@ function initBookingLocationMap() {
     const map = window.L.map(mapElement, {
         minZoom: 5,
         maxZoom: 19,
+        maxBoundsViscosity: 1,
         scrollWheelZoom: true,
         doubleClickZoom: true,
         touchZoom: true,
@@ -1173,9 +1174,45 @@ function initBookingLocationMap() {
     mapElement.querySelector('.leaflet-control-zoom-out')?.setAttribute('title', 'মানচিত্র ছোট করে দেখুন');
     window.L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         maxZoom: 19,
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> | Boundary: <a href="https://www.geoboundaries.org/">geoBoundaries</a> (CC0)'
     }).addTo(map);
-    status.textContent = "মানচিত্রে চাপ দিয়ে অবস্থান নির্বাচন করুন।";
+    const worldMaskRing = [[-85, -180], [-85, 180], [85, 180], [85, -180]];
+    const maskPane = map.createPane("bangladeshMask");
+    maskPane.style.zIndex = "660";
+    maskPane.style.pointerEvents = "none";
+    const maskStyle = {
+        pane: "bangladeshMask",
+        stroke: false,
+        fillColor: "#071018",
+        fillOpacity: 1,
+        fillRule: "evenodd",
+        interactive: false
+    };
+    const loadingMask = window.L.polygon([worldMaskRing], maskStyle).addTo(map);
+    let boundaryGeometry = null;
+    let countryViewBounds = null;
+    let selectedLocation = null;
+    status.textContent = "বাংলাদেশের মানচিত্র লোড হচ্ছে…";
+
+    const isInRing = (latitude, longitude, ring) => {
+        let inside = false;
+        for (let i = 0, j = ring.length - 1; i < ring.length; j = i, i += 1) {
+            const [currentLongitude, currentLatitude] = ring[i];
+            const [previousLongitude, previousLatitude] = ring[j];
+            const crossesLatitude = (currentLatitude > latitude) !== (previousLatitude > latitude);
+            if (crossesLatitude &&
+                longitude < (previousLongitude - currentLongitude) *
+                    (latitude - currentLatitude) /
+                    (previousLatitude - currentLatitude) + currentLongitude) {
+                inside = !inside;
+            }
+        }
+        return inside;
+    };
+    const isInBangladesh = (latitude, longitude) => boundaryGeometry?.coordinates.some(polygon =>
+        isInRing(latitude, longitude, polygon[0]) &&
+        !polygon.slice(1).some(ring => isInRing(latitude, longitude, ring))
+    ) ?? false;
 
     let marker = null;
     let accuracyCircle = null;
@@ -1185,7 +1222,15 @@ function initBookingLocationMap() {
         if (!Number.isFinite(latitude) || !Number.isFinite(longitude) ||
             latitude < -90 || latitude > 90 || longitude < -180 || longitude > 180) {
             status.textContent = "সঠিক map location নির্বাচন করা যায়নি। আবার চেষ্টা করুন।";
-            return;
+            return false;
+        }
+        if (!boundaryGeometry) {
+            status.textContent = "বাংলাদেশের মানচিত্র লোড হচ্ছে। একটু পরে আবার চেষ্টা করুন।";
+            return false;
+        }
+        if (!isInBangladesh(latitude, longitude)) {
+            status.textContent = "শুধু বাংলাদেশের ভেতরের অবস্থান নির্বাচন করা যাবে।";
+            return false;
         }
 
         if (!marker) {
@@ -1195,10 +1240,19 @@ function initBookingLocationMap() {
                 alt: "নির্বাচিত সার্ভিস লোকেশন"
             }).addTo(map);
             marker.bindTooltip("আপনার সাইটের অবস্থান", { direction: "top", offset: [0, -30] });
-            marker.on("dragend", () => setLocation(marker.getLatLng()));
+            marker.on("dragend", () => {
+                const draggedLocation = marker.getLatLng();
+                if (!isInBangladesh(draggedLocation.lat, draggedLocation.lng)) {
+                    if (selectedLocation) marker.setLatLng(selectedLocation);
+                    status.textContent = "Pin বাংলাদেশের সীমানার বাইরে নেওয়া যাবে না।";
+                    return;
+                }
+                setLocation(draggedLocation);
+            });
         } else {
             marker.setLatLng([latitude, longitude]);
         }
+        selectedLocation = [latitude, longitude];
 
         if (accuracyCircle) {
             map.removeLayer(accuracyCircle);
@@ -1221,6 +1275,7 @@ function initBookingLocationMap() {
             }).addTo(map);
         }
         status.textContent = `অবস্থান বাছাই হয়েছে। Pin টেনে ঠিক করতে পারেন।${accuracyText}`;
+        return true;
     };
 
     map.on("click", event => setLocation(event.latlng));
@@ -1229,6 +1284,7 @@ function initBookingLocationMap() {
             map.removeLayer(marker);
             marker = null;
         }
+        selectedLocation = null;
         if (accuracyCircle) {
             map.removeLayer(accuracyCircle);
             accuracyCircle = null;
@@ -1237,8 +1293,14 @@ function initBookingLocationMap() {
         longitudeInput.value = "";
         clearButton.disabled = true;
         status.classList.remove("has-location");
-        map.setView(defaultCenter, 11);
-        status.textContent = "মানচিত্রে চাপ দিয়ে অবস্থান নির্বাচন করুন।";
+        if (countryViewBounds) {
+            map.fitBounds(countryViewBounds, { padding: [10, 10], maxZoom: 7 });
+        } else {
+            map.setView(defaultCenter, 11);
+        }
+        status.textContent = boundaryGeometry
+            ? "মানচিত্রে চাপ দিয়ে বাংলাদেশের ভেতরের অবস্থান নির্বাচন করুন।"
+            : "বাংলাদেশের মানচিত্র লোড হচ্ছে…";
     };
     locateButton?.addEventListener("click", () => {
         if (!navigator.geolocation) {
@@ -1255,8 +1317,9 @@ function initBookingLocationMap() {
                     lat: position.coords.latitude,
                     lng: position.coords.longitude
                 };
-                map.setView([coordinates.lat, coordinates.lng], 17);
-                setLocation(coordinates, "gps", position.coords.accuracy);
+                if (setLocation(coordinates, "gps", position.coords.accuracy)) {
+                    map.setView([coordinates.lat, coordinates.lng], 17);
+                }
                 locateButton.disabled = false;
                 locateButton.removeAttribute("aria-busy");
             },
@@ -1275,6 +1338,47 @@ function initBookingLocationMap() {
     });
 
     clearButton?.addEventListener("click", resetBookingLocationSelection);
+
+    fetch("data/bangladesh-boundary.geojson")
+        .then(response => {
+            if (!response.ok) throw new Error(`Boundary request failed: ${response.status}`);
+            return response.json();
+        })
+        .then(boundaryData => {
+            const feature = boundaryData.features?.find(item =>
+                item.geometry?.type === "MultiPolygon" &&
+                item.geometry.coordinates?.length
+            );
+            if (!feature || feature.geometry.coordinates.some(polygon => !polygon[0]?.length)) {
+                throw new Error("Bangladesh boundary geometry is missing or invalid.");
+            }
+
+            boundaryGeometry = feature.geometry;
+            const countryRings = boundaryGeometry.coordinates.map(polygon =>
+                polygon[0].map(([longitude, latitude]) => [latitude, longitude])
+            );
+            countryViewBounds = window.L.geoJSON(feature).getBounds().pad(0.02);
+            map.setMaxBounds(countryViewBounds.pad(0.1));
+            map.removeLayer(loadingMask);
+            window.L.polygon([worldMaskRing, ...countryRings], maskStyle).addTo(map);
+            window.L.geoJSON(feature, {
+                pane: "bangladeshMask",
+                interactive: false,
+                style: { color: "#19e6c2", weight: 1.5, fill: false }
+            }).addTo(map);
+            map.fitBounds(countryViewBounds, { padding: [10, 10], maxZoom: 7 });
+            status.textContent = "মানচিত্রে চাপ দিয়ে বাংলাদেশের ভেতরের অবস্থান নির্বাচন করুন।";
+        })
+        .catch(error => {
+            console.error("Could not load the Bangladesh map boundary.", error);
+            map.dragging.disable();
+            map.touchZoom.disable();
+            map.doubleClickZoom.disable();
+            map.scrollWheelZoom.disable();
+            map.keyboard.disable();
+            if (locateButton) locateButton.disabled = true;
+            status.textContent = "বাংলাদেশের মানচিত্র লোড হয়নি। লোকেশন না দিয়েও বুকিং করা যাবে।";
+        });
 }
 
 function initDragAndDrop() {

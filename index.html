@@ -86,6 +86,7 @@
       .booking-location-map-wrap { position: relative; }
       #booking-location-map { height: clamp(290px, 42vw, 390px); border: 1px solid rgba(25, 230, 194, .25); border-radius: 12px; overflow: hidden; background: #10232c; }
       #booking-location-map:focus-within { outline: 2px solid var(--accent-cyan); outline-offset: 2px; }
+      #booking-location-map .leaflet-pane > svg { max-width: none; }
       #booking-location-status { display: flex; align-items: flex-start; gap: 8px; min-height: 42px; margin-top: 10px; padding: 10px 12px; border: 1px solid rgba(159, 206, 211, .14); border-radius: 9px; color: #cbd9dc; background: rgba(7, 16, 24, .55); font-size: 13px; }
       #booking-location-status::before { content: "ⓘ"; color: var(--accent-cyan); font-weight: 700; }
       #booking-location-status.has-location { border-color: rgba(25, 230, 194, .35); color: #b8ffef; }
@@ -3088,6 +3089,6 @@
 
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
         <script src="supabase-config.js?v=cac31b0" defer></script>
-        <script src="script.js?v=20261102-booking-status" defer></script>
+        <script src="script.js?v=20261104-bangladesh-map-boundary" defer></script>
 </body>
 </html>
