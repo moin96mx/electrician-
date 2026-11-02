@@ -19,6 +19,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preconnect" href="https://unpkg.com" crossorigin>
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/webfonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="ai-catalog" href="https://electrohubbd.com/ai-catalog.json" />
 
@@ -26,6 +27,7 @@
     <link rel="icon" href="/logo.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="192x192" href="/img/favicon-192x192.png">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 
     <style>
       :root {
@@ -66,6 +68,45 @@
       .top-contact a { color: white; text-decoration: none; }
       .brand-mark { width: 1em; height: 1em; vertical-align: -.125em; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
       .social-glyph { font-family: Arial, sans-serif; font-size: .9em; font-style: normal; font-weight: 800; line-height: 1; }
+      .booking-location-box { grid-column: 1 / -1; padding: clamp(14px, 2.5vw, 22px); border: 1px solid rgba(25, 230, 194, .28); border-radius: 16px; background: linear-gradient(145deg, rgba(16, 29, 41, .98), rgba(7, 16, 24, .94)); box-shadow: 0 16px 38px rgba(0, 0, 0, .18); }
+      .booking-location-heading { display: flex; align-items: center; flex-wrap: wrap; gap: 9px; margin-bottom: 7px; }
+      .booking-location-box h3 { margin: 0; color: var(--text-main); font-size: 18px; }
+      .booking-location-optional { padding: 3px 8px; border: 1px solid rgba(158, 178, 186, .3); border-radius: 999px; color: var(--text-muted); font-size: 11px; }
+      .booking-location-intro { margin: 0 0 15px; color: var(--text-muted); font-size: 13px; }
+      .booking-location-guide { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px; margin: 0 0 14px; padding: 0; list-style: none; }
+      .booking-location-guide li { display: flex; align-items: flex-start; gap: 8px; padding: 10px; border: 1px solid rgba(159, 206, 211, .12); border-radius: 10px; color: #cbd9dc; background: rgba(7, 16, 24, .48); font-size: 12px; }
+      .booking-location-guide b { display: grid; width: 21px; height: 21px; flex: 0 0 21px; place-items: center; border-radius: 50%; color: #041019; background: var(--accent-cyan); font-size: 11px; }
+      .booking-location-actions { display: flex; flex-wrap: wrap; gap: 9px; margin-bottom: 10px; }
+      .booking-location-actions button { min-height: 42px; padding: 9px 14px; border: 1px solid rgba(25, 230, 194, .4); border-radius: 9px; color: var(--text-main); background: #10232c; cursor: pointer; transition: background .18s ease, border-color .18s ease, opacity .18s ease; }
+      .booking-location-actions button:hover:not(:disabled) { border-color: var(--accent-cyan); background: #15323b; }
+      .booking-location-actions button:focus-visible { outline: 2px solid var(--accent-cyan); outline-offset: 2px; }
+      .booking-location-actions .booking-location-primary { color: #041019; background: var(--accent-cyan); font-weight: 700; }
+      .booking-location-actions .booking-location-primary:hover:not(:disabled) { background: #69f3db; }
+      .booking-location-actions button:disabled { cursor: not-allowed; opacity: .48; }
+      .booking-location-map-wrap { position: relative; }
+      #booking-location-map { height: clamp(290px, 42vw, 390px); border: 1px solid rgba(25, 230, 194, .25); border-radius: 12px; overflow: hidden; background: #10232c; }
+      #booking-location-map:focus-within { outline: 2px solid var(--accent-cyan); outline-offset: 2px; }
+      #booking-location-status { display: flex; align-items: flex-start; gap: 8px; min-height: 42px; margin-top: 10px; padding: 10px 12px; border: 1px solid rgba(159, 206, 211, .14); border-radius: 9px; color: #cbd9dc; background: rgba(7, 16, 24, .55); font-size: 13px; }
+      #booking-location-status::before { content: "ⓘ"; color: var(--accent-cyan); font-weight: 700; }
+      #booking-location-status.has-location { border-color: rgba(25, 230, 194, .35); color: #b8ffef; }
+      #booking-location-status.has-location::before { content: "✓"; }
+      .booking-location-privacy { display: block; margin-top: 8px; color: var(--text-muted); font-size: 11px; }
+      .leaflet-container { z-index: 0; font: inherit; }
+      .leaflet-control-zoom a { color: #10232c !important; }
+      body > a.skip-link { position: fixed; top: 10px; left: 10px; z-index: 2000; padding: 12px 16px; transform: translateY(-160%); border: 2px solid var(--accent-cyan); border-radius: 8px; color: #041019; background: var(--accent-cyan); font-weight: 700; }
+      body > a.skip-link:focus { top: 10px; transform: translateY(0); }
+      a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid var(--accent-cyan); outline-offset: 3px; }
+      html { scroll-padding-top: 90px; }
+      @media(max-width:600px) {
+        .booking-location-guide { grid-template-columns: 1fr; gap: 6px; }
+        .booking-location-guide li { align-items: center; padding: 8px 10px; }
+        .booking-location-actions { display: grid; grid-template-columns: 1fr 1fr; }
+        .booking-location-actions button { padding-inline: 8px; font-size: 12px; }
+        #booking-location-map { height: 300px; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+      }
       .main-header {
         position: sticky;
         top: 0;
@@ -321,10 +362,10 @@
       "@context": "https://schema.org",
       "@type": "Electrician",
       "name": "ElectroHubBD Engineering & Automation",
-      "url": "https://electrotechbd.xyz/",
+      "url": "https://electrohubbd.com/",
       "telephone": "+8801710830391",
       "areaServed": "Bangladesh",
-      "image": "https://electrotechbd.xyz/img/11a.webp",
+      "image": "https://electrohubbd.com/img/11a.webp",
       "description": "Licensed electrical wiring, smart home automation, solar power and safety inspection services."
     }
     </script>
@@ -332,7 +373,7 @@
 </head>
 
 <body>
-    <!-- <a class="skip-link" href="#home">Skip to content</a> -->
+    <a class="skip-link" href="#main-content">মূল কনটেন্টে যান</a>
 
     <div class="top-bar" role="region" aria-label="লাইসেন্স ও যোগাযোগের তথ্য">
         <div class="container top-bar-flex">
@@ -392,13 +433,13 @@
             </a>
 
             <button class="mobile-menu-toggle" type="button"
-                    aria-label="Open navigation menu"
+                    aria-label="মেনু খুলুন"
                     aria-expanded="false"
                     aria-controls="site-navigation">
                 <span></span><span></span><span></span>
             </button>
 
-            <nav class="nav-menu" id="site-navigation">
+            <nav class="nav-menu" id="site-navigation" aria-label="প্রধান নেভিগেশন">
                 <!-- <a href="/shop/">shop</a> -->
                 <!-- <a href="#chief-electrician">প্রধান ইলেকট্রিশিয়ান</a> -->
                 <a href="#simulator">Smart Home</a>
@@ -441,7 +482,7 @@
 
     <div class="nav-overlay" id="nav-overlay"></div>
 
-    <main>
+    <main id="main-content">
     <section class="hero-section" id="home">
 
         <div class="container hero-grid">
@@ -471,7 +512,7 @@
 
                     <a href="#estimator" class="btn btn-primary">
                         <i class="fa-solid fa-calculator"></i>
-                        ফ্রি কনসালটেশন নিন
+                        ফ্রি এস্টিমেট হিসাব করুন
                     </a>
 
                     <a href="#simulator" class="btn btn-outline">
@@ -1403,6 +1444,31 @@
             <input type="date" id="meeting-date" name="মিটিং তারিখ" required>
             <span class="input-laser"></span>
           </div>
+        </div>
+
+        <div class="booking-location-box">
+          <div class="booking-location-heading">
+            <h3><i class="fa-solid fa-location-dot" aria-hidden="true"></i> সাইটের অবস্থান</h3>
+            <span class="booking-location-optional">ঐচ্ছিক</span>
+          </div>
+          <p class="booking-location-intro">টেকনিশিয়ান যেন সহজে আপনার বাড়ি বা কাজের সাইট খুঁজে পান, map-এ সঠিক জায়গাটি pin করে দিন।</p>
+          <ol class="booking-location-guide">
+            <li><b>১</b><span>map-এ zoom করে সঠিক জায়গায় চাপ দিন</span></li>
+            <li><b>২</b><span>pin টেনে ঠিক অবস্থানে বসান</span></li>
+            <li><b>৩</b><span>ভুল হলে “Pin মুছুন” চাপ দিয়ে আবার দিন</span></li>
+          </ol>
+          <div class="booking-location-actions">
+            <button type="button" class="booking-location-primary" id="booking-use-location"><i class="fa-solid fa-crosshairs" aria-hidden="true"></i> আমার বর্তমান অবস্থান</button>
+            <button type="button" id="booking-clear-location" disabled><i class="fa-solid fa-rotate-left" aria-hidden="true"></i> Pin মুছুন</button>
+          </div>
+          <div class="booking-location-map-wrap">
+            <div id="booking-location-map" role="application" aria-label="সার্ভিস সাইটের অবস্থান বাছাইয়ের মানচিত্র" aria-describedby="booking-location-help"></div>
+          </div>
+          <span id="booking-location-help" class="booking-location-privacy">map-এ চাপ দিয়ে বা pin সরিয়ে অবস্থান বাছুন। GPS ব্যবহার করলে browser আলাদা অনুমতি চাইবে।</span>
+          <span id="booking-location-status" aria-live="polite" aria-atomic="true">মানচিত্র প্রস্তুত হচ্ছে…</span>
+          <span class="booking-location-privacy"><i class="fa-solid fa-lock" aria-hidden="true"></i> location দেওয়া বাধ্যতামূলক নয়। বুকিং পাঠালে শুধু নির্বাচিত pin-টিই আমাদের admin-এ যাবে।</span>
+          <input type="hidden" id="booking-latitude" name="latitude">
+          <input type="hidden" id="booking-longitude" name="longitude">
         </div>
 
         <div class="holo-dropzone" id="dropzone">
@@ -2750,7 +2816,7 @@
       <div class="chat-avatar"><i class="fa-solid fa-bolt-lightning"></i></div>
       <div>
         <strong>ইলেকট্রোটেক অ্যাসিস্ট্যান্ট</strong>
-        <span class="chat-state"><i class="fa-solid fa-circle"></i> এখন অনলাইন</span>
+        <span class="chat-state"><i class="fa-solid fa-circle"></i> স্বয়ংক্রিয় সহায়তা</span>
       </div>
     </div>
     <button class="chat-close" id="chat-close" type="button" aria-label="চ্যাট বন্ধ করুন">
@@ -2835,12 +2901,12 @@
         <li><i class="fa-regular fa-message"></i><a href="/ovijog/">অভিযোগ ও মতামত</a></li>
       </ul>
 
-      <form class="footer-newsletter" id="newsletter-form"
+      <!-- <form class="footer-newsletter" id="newsletter-form"
             method="POST"
             onsubmit="handleNewsletterSubmit(event)">
         <input type="text" id="newsletter-contact" aria-label="ইমেইল বা ফোন নম্বর" name="ইমেইল বা ফোন" placeholder="Enter your email" inputmode="email" autocomplete="on" required>
         <button type="submit" aria-label="সাবস্ক্রাইব করুন"><i class="fa-solid fa-paper-plane"></i></button>
-      </form>
+      </form> -->
     </div>
 
   </div>
@@ -2871,15 +2937,18 @@
     navMenu.classList.add('active');
     navOverlay.classList.add('active');
     navToggle.setAttribute('aria-expanded', 'true');
+    navToggle.setAttribute('aria-label', 'মেনু বন্ধ করুন');
     document.body.classList.add('nav-open');
   }
 
-  function closeNav() {
+  function closeNav(returnFocus = false) {
     navToggle.classList.remove('active');
     navMenu.classList.remove('active');
     navOverlay.classList.remove('active');
     navToggle.setAttribute('aria-expanded', 'false');
+    navToggle.setAttribute('aria-label', 'মেনু খুলুন');
     document.body.classList.remove('nav-open');
+    if (returnFocus) navToggle.focus();
   }
 
   if (navToggle && navMenu && navOverlay) {
@@ -2887,7 +2956,13 @@
       navMenu.classList.contains('active') ? closeNav() : openNav();
     });
 
-    navOverlay.addEventListener('click', closeNav);
+    navOverlay.addEventListener('click', () => closeNav(true));
+
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape' && navMenu.classList.contains('active')) {
+        closeNav(true);
+      }
+    });
 
     navMenu.querySelectorAll('a').forEach(link => {
       link.addEventListener('click', closeNav);
@@ -3011,7 +3086,8 @@
   });
 </script>
 
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
         <script src="supabase-config.js?v=cac31b0" defer></script>
-        <script src="script.js?v=cac31b0" defer></script>
+        <script src="script.js?v=20261102-booking-location" defer></script>
 </body>
 </html>

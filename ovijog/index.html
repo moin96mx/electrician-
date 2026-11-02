@@ -8,7 +8,7 @@
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" href="/logo.svg" type="image/svg+xml">
 <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600&family=Inter:wght@600;700;800&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/supabase-config.js?v=cac31b0"></script>
 <style>
 :root{--bg:#060913;--card:#0f172a;--card2:#131d35;--soft:#1e293b;--soft2:#25324d;--cyan:#00ffcc;--cyan2:#00d1b2;--cyan-dim:rgba(0,255,204,.12);--line:rgba(255,255,255,.08);--line2:rgba(255,255,255,.12);--muted:#8b9bb4;--text:#eef2ff;--r:20px}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -204,13 +204,18 @@ document.getElementById('ovijogForm').addEventListener('submit', async (e)=>{
   if(finalArea.includes('Other Custom') && customInput.value.trim()){ finalArea = districtSel.value + ' - ' + customInput.value.trim(); }
   const payload = { name:document.getElementById('name').value, phone:document.getElementById('phone').value, area:finalArea, type:document.getElementById('type').value, details:document.getElementById('details').value, is_anonymous:document.getElementById('anonymous').checked, status:'pending' };
   try{
-    const { data, error } = await supabaseClient.from('ovijog').insert([payload]).select();
-    if(error) throw error;
+    const response = await fetch(window.ElectroTechSupabase.apiUrl('/ovijog'), {
+      method:'POST',
+      headers:{...window.ElectroTechSupabase.headers(),'Content-Type':'application/json'},
+      body:JSON.stringify(payload)
+    });
+    const result = await response.json();
+    if(!response.ok || !result.success) throw new Error(result.message || 'Complaint could not be submitted.');
     document.getElementById('ovijogForm').style.display='none';
     document.querySelector('.hero').style.display='none';
     document.getElementById('formCard').style.marginTop='60px';
     document.getElementById('successBox').style.display='block';
-    document.getElementById('complaintId').innerText = '#EH-' + data[0].id.toString().padStart(4,'0');
+    document.getElementById('complaintId').innerText = '#EH-' + String(result.data.id).padStart(4,'0');
     window.scrollTo({top:0,behavior:'smooth'});
   }catch(err){ alert('Error: '+err.message); btn.classList.remove('loading'); btn.disabled=false; }
 });

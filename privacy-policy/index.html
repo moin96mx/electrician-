@@ -573,6 +573,11 @@
       body{
       font-size:16px
       }
+      .topbar-in{
+      flex-wrap:wrap;
+      justify-content:center;
+      padding:12px 14px
+      }
       .hero{
       padding:48px 16px 32px
       }
@@ -590,7 +595,10 @@
       }
       .back{
       padding:8px 14px;
-      font-size:13.5px
+      font-size:13.5px;
+      max-width:100%;
+      white-space:normal;
+      text-align:center
       }
       }
       @media print{
@@ -651,7 +659,7 @@
         <p>
           <strong>ElectroHubBD Engineering &amp; Automation</strong> (“ElectroHubBD”, “আমরা”) আপনার ব্যক্তিগত তথ্যকে সম্মানের সঙ্গে বিবেচনা করে। এই নীতিতে <strong>electrohubbd.com</strong> ব্যবহার, যোগাযোগ বা সার্ভিস বুক করার সময় কোন তথ্য নেওয়া হয়, কেন ব্যবহার করা হয় এবং কীভাবে আপনার অনুরোধ জানাবেন তা বলা হয়েছে।</p>
           <div class="meta">
-            <span>সর্বশেষ হালনাগাদ: ২ অক্টোবর ২০২৬</span>
+            <span>সর্বশেষ হালনাগাদ: ২ নভেম্বর ২০২৬</span>
             <span>electrohubbd.com</span>
           </div>
         </section>
@@ -728,7 +736,7 @@
                                 <div class="dt">
                                   <div class="row">
                                     <h3>বুকিং ও site-visit request</h3>
-                                    <p>আপনার নাম, ফোন নম্বর, পছন্দের সার্ভিস, পছন্দের visit date, project notes এবং ঐচ্ছিক blueprint/drawing attachment।</p>
+                                    <p>আপনার নাম, ফোন নম্বর, পছন্দের সার্ভিস, পছন্দের visit date, project notes এবং ঐচ্ছিক blueprint/drawing attachment। Booking form-এ map pin বসালে বা নিজে GPS button চাপলে নির্বাচিত latitude/longitude-ও নেওয়া হবে; location দেওয়া ঐচ্ছিক।</p>
                                   </div>
                                   <div class="row">
                                     <h3>Contact ও quick-contact form</h3>
@@ -752,6 +760,7 @@
                                 <ul>
                                   <li>আপনার প্রশ্নের উত্তর, booking যাচাই এবং service নিয়ে যোগাযোগ করতে।</li>
                                   <li>আপনার দেওয়া project information অনুযায়ী প্রাথমিক estimate বা পরামর্শ দিতে।</li>
+                                  <li>আপনার সম্মতিতে দেওয়া booking location-এ technician পাঠানোর পরিকল্পনা করতে।</li>
                                   <li>ঐচ্ছিক drawing/attachment দেখে কাজের scope বুঝতে।</li>
                                   <li>সাইট সচল রাখা, নিরাপত্তা রক্ষা এবং technical সমস্যা সমাধান করতে।</li>
                                 </ul>
@@ -764,7 +773,7 @@
                                   <span class="idx">০৩</span>
                                   <h2>তথ্য কোথায় প্রক্রিয়াকরণ বা শেয়ার হতে পারে</h2>
                                 </div>
-                                <p>Booking, contact ও estimator request পরিচালনা করতে তথ্য <strong>Supabase-এর Edge Functions, database এবং private file storage-এ</strong> প্রক্রিয়াকৃত হয়। Supabase এবং static website hosting provider তাদের নিজস্ব privacy policy অনুযায়ী technical তথ্য প্রক্রিয়া করতে পারে; তাদের server বাংলাদেশে নাও থাকতে পারে। Contact form-এর তথ্য আর FormSubmit-এ পাঠানো হয় না।</p>
+                                <p>Booking, contact ও estimator request পরিচালনা করতে তথ্য <strong>Supabase-এর Edge Functions, database এবং private file storage-এ</strong> প্রক্রিয়াকৃত হয়। Booking-এ নির্বাচিত location শুধু বুকিং সামলাতে আমাদের admin দেখতে পারে। Map দেখাতে OpenStreetMap tile service ব্যবহার হয়; map লোড হলে browser ওই provider-এর সঙ্গে সংযোগ করে। Supabase, OpenStreetMap এবং static website hosting provider তাদের নিজস্ব privacy policy অনুযায়ী technical তথ্য প্রক্রিয়া করতে পারে; তাদের server বাংলাদেশে নাও থাকতে পারে। Contact form-এর তথ্য আর FormSubmit-এ পাঠানো হয় না।</p>
                                 <p>আপনি নিজে phone বা WhatsApp link ব্যবহার করলে আপনার device সংশ্লিষ্ট phone/WhatsApp service খুলবে। WhatsApp-এ যোগাযোগ করলে আপনার নম্বর ও পাঠানো message WhatsApp-এর কাছে যাবে এবং তাদের নীতিমালা প্রযোজ্য হবে।</p>
                                 <p>সাইটে Google Fonts ও Font Awesome-এর মতো third-party design resource লোড হয়; browser সেগুলো আনতে সংশ্লিষ্ট provider-এর সঙ্গে সংযোগ করে।</p>
                               </section>

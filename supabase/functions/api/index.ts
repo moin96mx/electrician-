@@ -21,6 +21,32 @@ const allowedFileTypes: Record<string, string> = {
   '.dwg': 'application/octet-stream',
 };
 const fileBucket = 'booking-files';
+const shopProducts: Record<number, { name: string; price: number }> = {
+  1: { name: 'ABB MCB 32A Single Pole - Original', price: 1850 },
+  2: { name: 'ABB MCB 63A Double Pole - Main Switch', price: 2950 },
+  3: { name: 'ABB RCCB 40A - Safety Breaker', price: 4450 },
+  4: { name: 'BRB Cable 2.5rm - 100m Coil (Original)', price: 8500 },
+  5: { name: 'BRB Cable 1.5rm - 100m Coil', price: 5900 },
+  6: { name: 'BRB Cable 4.0rm - 100m Coil - AC Line', price: 12500 },
+  7: { name: 'Havells Ceiling Fan 56" - Premium Copper', price: 3200 },
+  8: { name: 'Havells Switch + Socket Combo - 4 Gang', price: 1450 },
+  9: { name: 'Havells LED Batten 20W - Bright White', price: 1150 },
+  10: { name: 'Walton LED TV 32" Smart - Official', price: 28500 },
+  11: { name: 'Walton Refrigerator 12 CFT - Inverter', price: 42500 },
+  12: { name: 'Walton Washing Machine 7kg - Top Load', price: 24500 },
+  13: { name: 'SSG LED Panel Light 18W - Cool White', price: 950 },
+  14: { name: 'SSG Gang Switch 3 Pin Socket - White', price: 650 },
+  15: { name: 'SSG LED Bulb 15W - Pack of 2', price: 550 },
+  16: { name: 'Vision Rice Cooker 2.8L - Non Stick', price: 2950 },
+  17: { name: 'Vision LED Bulb 12W - Pack of 4', price: 750 },
+  18: { name: 'Vision Electric Kettle 1.7L - Steel', price: 1850 },
+  19: { name: 'Singer Stand Fan 16" - High Speed', price: 3650 },
+  20: { name: 'Singer Iron - Steam Iron 1200W', price: 2250 },
+  21: { name: 'Singer Table Fan 12" - Low Noise', price: 2450 },
+  22: { name: 'Energypac IPS 1000VA - Pure Sine Wave', price: 18500 },
+  23: { name: 'Energypac Stabilizer 1000VA - AC Safety', price: 6850 },
+  24: { name: 'Energypac Generator 3KW - Petrol', price: 48500 },
+};
 
 if (!supabaseUrl || !anonKey || !serviceRoleKey) {
   throw new Error('Supabase URL, anon key, and service role key must be configured.');
@@ -45,6 +71,8 @@ type BookingRow = {
   file_type: string | null;
   file_size: number | null;
   file_path: string | null;
+  latitude: number | null;
+  longitude: number | null;
   created_at: string;
 };
 
@@ -89,6 +117,9 @@ function mapBooking(row: BookingRow) {
     status: row.status,
     attachment: row.file_name
       ? { name: row.file_name, type: row.file_type, size: row.file_size }
+      : null,
+    location: row.latitude !== null && row.longitude !== null
+      ? { latitude: row.latitude, longitude: row.longitude }
       : null,
     createdAt: row.created_at,
   };
@@ -189,13 +220,44 @@ async function handleRequest(request: Request, headers: HeadersInit): Promise<Re
     }, 200, headers);
   }
 
+  if (method === 'POST' && route === '/admin/logout') {
+    if (!(await requireAdmin(request))) return failure('Unauthorized.', 401, headers);
+    const token = (request.headers.get('Authorization') || '').slice('Bearer '.length);
+    const { error } = await adminClient.auth.admin.signOut(token, 'local');
+    throwIfError(error);
+    return jsonResponse({ success: true, message: 'Signed out.' }, 200, headers);
+  }
+
   const publicSubmission = method === 'POST' && (route === '/bookings' || route === '/contact');
   const publicRoute = (method === 'GET' && route === '/health') ||
     (method === 'POST' && route === '/admin/login') ||
     publicSubmission ||
-    (method === 'POST' && route === '/bookings/upload-url');
+    (method === 'POST' && route === '/bookings/upload-url') ||
+    (method === 'POST' && (route === '/ovijog' || route === '/shop-orders'));
   if (!publicRoute && !(await requireAdmin(request))) {
     return failure('Unauthorized.', 401, headers);
+  }
+
+  const adminTableMatch = route.match(/^\/admin\/(bookings|contacts|ovijog|shop_orders)$/);
+  if (method === 'GET' && adminTableMatch) {
+    const offset = Number(url.searchParams.get('offset') || 0);
+    const limit = Number(url.searchParams.get('limit') || 25);
+    if (!Number.isSafeInteger(offset) || offset < 0 ||
+      !Number.isSafeInteger(limit) || limit < 1 || limit > 100) {
+      return failure('A valid offset and limit (1-100) are required.', 400, headers);
+    }
+
+    const { data, count, error } = await adminClient
+      .from(adminTableMatch[1])
+      .select('*', { count: 'exact' })
+      .order('created_at', { ascending: false })
+      .range(offset, offset + limit - 1);
+    throwIfError(error);
+    return jsonResponse({
+      success: true,
+      data: data || [],
+      total: count || 0,
+    }, 200, headers);
   }
 
   if (method === 'GET' && route === '/admin/entries') {
@@ -266,7 +328,7 @@ async function handleRequest(request: Request, headers: HeadersInit): Promise<Re
 
   if (method === 'POST' && route === '/bookings') {
     const { name: submittedName, phone: submittedPhone, service: submittedService,
-      date: submittedDate, notes: submittedNotes, attachment } = await request.json();
+      date: submittedDate, notes: submittedNotes, attachment, location } = await request.json();
     const name = String(submittedName || '').trim();
     const phone = String(submittedPhone || '').trim();
     const service = String(submittedService || '').trim();
@@ -281,6 +343,19 @@ async function handleRequest(request: Request, headers: HeadersInit): Promise<Re
     }
     if (name.length > 200 || phone.length > 40 || service.length > 200 || notes.length > 5000) {
       return failure('One or more fields exceed the allowed length.', 400, headers);
+    }
+    let latitude: number | null = null;
+    let longitude: number | null = null;
+    if (location !== undefined && location !== null) {
+      if (typeof location !== 'object' ||
+        typeof location.latitude !== 'number' || !Number.isFinite(location.latitude) ||
+        typeof location.longitude !== 'number' || !Number.isFinite(location.longitude) ||
+        location.latitude < -90 || location.latitude > 90 ||
+        location.longitude < -180 || location.longitude > 180) {
+        return failure('A valid map location is required when location is provided.', 400, headers);
+      }
+      latitude = location.latitude;
+      longitude = location.longitude;
     }
 
     const id = newId('ENG');
@@ -330,6 +405,8 @@ async function handleRequest(request: Request, headers: HeadersInit): Promise<Re
       file_type: fileType,
       file_size: fileSize,
       file_path: filePath,
+      latitude,
+      longitude,
     }).select('*').single();
 
     if (inserted.error) {
@@ -342,8 +419,11 @@ async function handleRequest(request: Request, headers: HeadersInit): Promise<Re
 
     const booking = mapBooking(inserted.data as BookingRow);
     try {
+      const locationLink = latitude !== null && longitude !== null
+        ? `\n📍 অবস্থান: https://www.google.com/maps?q=${latitude},${longitude}`
+        : '';
       await sendWhatsAppNotification(
-        `✅ নতুন বুকিং: ${booking.name}\n📞 ${booking.phone}\n🛠️ ${booking.service}\n📅 ${booking.date}\n📝 ${booking.notes || 'No notes'}`,
+        `✅ নতুন বুকিং: ${booking.name}\n📞 ${booking.phone}\n🛠️ ${booking.service}\n📅 ${booking.date}\n📝 ${booking.notes || 'No notes'}${locationLink}`,
       );
     } catch (error) {
       console.error('WhatsApp notification request failed:', error);
@@ -375,6 +455,119 @@ async function handleRequest(request: Request, headers: HeadersInit): Promise<Re
       message: 'Contact information saved successfully.',
       data: mapContact(inserted.data),
     }, 201, headers);
+  }
+
+  if (method === 'POST' && route === '/ovijog') {
+    const input = await request.json();
+    const name = typeof input.name === 'string' ? input.name.trim() : '';
+    const phone = typeof input.phone === 'string' ? input.phone.trim() : '';
+    const area = typeof input.area === 'string' ? input.area.trim() : '';
+    const type = typeof input.type === 'string' ? input.type.trim() : '';
+    const details = typeof input.details === 'string' ? input.details.trim() : '';
+
+    if (!name || !phone || !area || !type || !details ||
+      name.length > 200 || phone.length > 40 || area.length > 200 ||
+      type.length > 200 || details.length > 5000 ||
+      (input.is_anonymous !== undefined && typeof input.is_anonymous !== 'boolean')) {
+      return failure('Valid complaint details are required.', 400, headers);
+    }
+
+    const inserted = await adminClient.from('ovijog').insert({
+      name: input.is_anonymous === true ? 'Anonymous' : name,
+      phone,
+      area,
+      type,
+      details,
+      is_anonymous: input.is_anonymous === true,
+      status: 'pending',
+    }).select('id').single();
+    throwIfError(inserted.error);
+    return jsonResponse({
+      success: true,
+      message: 'Complaint received successfully.',
+      data: { id: inserted.data.id },
+    }, 201, headers);
+  }
+
+  if (method === 'POST' && route === '/shop-orders') {
+    const input = await request.json();
+    const customerName = typeof input.customerName === 'string' ? input.customerName.trim() : '';
+    const phone = typeof input.phone === 'string' ? input.phone.trim() : '';
+    const area = typeof input.area === 'string' ? input.area.trim() : '';
+    if (!customerName || !phone || !area || customerName.length > 200 ||
+      phone.length > 40 || area.length > 300 || !Array.isArray(input.items) ||
+      input.items.length < 1 || input.items.length > 50) {
+      return failure('Valid customer details and order items are required.', 400, headers);
+    }
+
+    const items: Array<{ id: number; pid: string; name: string; price: number; qty: number }> = [];
+    for (const item of input.items) {
+      const id = Number(item?.id);
+      const qty = Number(item?.qty);
+      const product = shopProducts[id];
+      if (!Number.isSafeInteger(id) || !product ||
+        !Number.isSafeInteger(qty) || qty < 1 || qty > 100 ||
+        (item?.name !== undefined &&
+          (typeof item.name !== 'string' || item.name.length > 200))) {
+        return failure('One or more order items are invalid.', 400, headers);
+      }
+      items.push({
+        id,
+        pid: `#P-${id}`,
+        name: product.name,
+        price: product.price,
+        qty,
+      });
+    }
+
+    const total = items.reduce((sum, item) => sum + item.price * item.qty, 0) + 120;
+    const orderNo = `#EH-${crypto.randomUUID().slice(0, 8).toUpperCase()}`;
+    const inserted = await adminClient.from('shop_orders').insert({
+      order_no: orderNo,
+      customer_name: customerName,
+      phone,
+      area,
+      items,
+      total,
+      status: 'pending',
+    }).select('id, order_no').single();
+    throwIfError(inserted.error);
+    return jsonResponse({
+      success: true,
+      message: 'Order received successfully.',
+      data: { id: inserted.data.id, orderNo: inserted.data.order_no, total },
+    }, 201, headers);
+  }
+
+  const adminStatusMatch = route.match(/^\/admin\/(ovijog|shop_orders)\/([^/]+)\/status$/);
+  if (method === 'PATCH' && adminStatusMatch) {
+    const { status } = await request.json();
+    const allowedStatuses = adminStatusMatch[1] === 'ovijog'
+      ? ['pending', 'in-progress', 'solved']
+      : ['pending', 'archived'];
+    if (typeof status !== 'string' || !allowedStatuses.includes(status)) {
+      return failure('Invalid status value.', 400, headers);
+    }
+    const updated = await adminClient.from(adminStatusMatch[1])
+      .update({ status })
+      .eq('id', decodeURIComponent(adminStatusMatch[2]))
+      .select('id')
+      .maybeSingle();
+    throwIfError(updated.error);
+    if (!updated.data) return failure('Entry not found.', 404, headers);
+    return jsonResponse({ success: true, message: 'Status updated.' }, 200, headers);
+  }
+
+  const adminDeleteMatch = route.match(/^\/admin\/(ovijog|shop_orders)\/([^/]+)$/);
+  if (method === 'DELETE' && adminDeleteMatch) {
+    const removed = await adminClient.from(adminDeleteMatch[1])
+      .delete()
+      .eq('id', decodeURIComponent(adminDeleteMatch[2]))
+      .select('id')
+      .maybeSingle();
+    throwIfError(removed.error);
+    if (!removed.data) return failure('Entry not found.', 404, headers);
+    return jsonResponse({ success: true, message: 'Entry deleted.' }, 200, headers);
   }
 
   const bookingStatusMatch = route.match(/^\/bookings\/([^/]+)\/status$/);

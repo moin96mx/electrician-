@@ -6,6 +6,7 @@ const state = {
 };
 
 let acTemp = 24;
+let resetBookingLocationSelection = () => {};
 
 function toggleAppliance(type) {
 
@@ -688,6 +689,12 @@ async function handleBookingSubmit(event) {
     const notes =
         notesElement ? notesElement.value.trim() : "";
 
+    const latitudeValue = document.getElementById("booking-latitude")?.value;
+    const longitudeValue = document.getElementById("booking-longitude")?.value;
+    const location = latitudeValue && longitudeValue
+        ? { latitude: Number(latitudeValue), longitude: Number(longitudeValue) }
+        : null;
+
     const fileElement =
         document.getElementById("blueprint-file");
 
@@ -772,7 +779,7 @@ async function handleBookingSubmit(event) {
                 ...window.ElectroTechSupabase.headers(),
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ name, phone, service, date, notes, attachment })
+            body: JSON.stringify({ name, phone, service, date, notes, attachment, location })
         });
         const result = await response.json();
         if (!response.ok || !result.success) {
@@ -832,6 +839,8 @@ function closeBookingModal() {
 
         form.reset();
     }
+
+    resetBookingLocationSelection();
 
     const fileInput =
         document.getElementById("blueprint-file");
@@ -1133,6 +1142,127 @@ function initDateInput() {
 
     dateInput.min =
         `${year}-${month}-${day}`;
+}
+
+function initBookingLocationMap() {
+    const mapElement = document.getElementById("booking-location-map");
+    const latitudeInput = document.getElementById("booking-latitude");
+    const longitudeInput = document.getElementById("booking-longitude");
+    const status = document.getElementById("booking-location-status");
+    const locateButton = document.getElementById("booking-use-location");
+    const clearButton = document.getElementById("booking-clear-location");
+
+    if (!mapElement || !latitudeInput || !longitudeInput || !status) return;
+    if (!window.L) {
+        status.textContent = "মানচিত্র লোড হয়নি। লোকেশন না দিয়েও বুকিং করা যাবে।";
+        return;
+    }
+
+    const defaultCenter = [23.8103, 90.4125];
+    const map = window.L.map(mapElement).setView(defaultCenter, 11);
+    window.L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+
+    let marker = null;
+    let accuracyCircle = null;
+    const setLocation = (coordinates, source = "map", accuracy = null) => {
+        const latitude = Number(coordinates.lat);
+        const longitude = Number(coordinates.lng);
+        if (!Number.isFinite(latitude) || !Number.isFinite(longitude) ||
+            latitude < -90 || latitude > 90 || longitude < -180 || longitude > 180) {
+            status.textContent = "সঠিক map location নির্বাচন করা যায়নি। আবার চেষ্টা করুন।";
+            return;
+        }
+
+        if (!marker) {
+            marker = window.L.marker([latitude, longitude], {
+                draggable: true,
+                title: "অবস্থানের pin সরাতে টেনে ধরুন",
+                alt: "নির্বাচিত সার্ভিস লোকেশন"
+            }).addTo(map);
+            marker.bindTooltip("আপনার সাইটের অবস্থান", { direction: "top", offset: [0, -30] });
+            marker.on("dragend", () => setLocation(marker.getLatLng()));
+        } else {
+            marker.setLatLng([latitude, longitude]);
+        }
+
+        if (accuracyCircle) {
+            map.removeLayer(accuracyCircle);
+            accuracyCircle = null;
+        }
+        latitudeInput.value = latitude.toFixed(7);
+        longitudeInput.value = longitude.toFixed(7);
+        status.classList.add("has-location");
+        clearButton.disabled = false;
+        const accuracyText = source === "gps" && Number.isFinite(accuracy) && accuracy > 0
+            ? ` GPS-এর আনুমানিক নির্ভুলতা ±${Math.round(accuracy)} মিটার।`
+            : "";
+        if (source === "gps" && Number.isFinite(accuracy) && accuracy > 0) {
+            accuracyCircle = window.L.circle([latitude, longitude], {
+                radius: Math.min(accuracy, 10000),
+                color: "#19e6c2",
+                weight: 1,
+                fillColor: "#19e6c2",
+                fillOpacity: 0.12
+            }).addTo(map);
+        }
+        status.textContent = `অবস্থান বাছাই হয়েছে। Pin টেনে ঠিক করতে পারেন।${accuracyText}`;
+    };
+
+    map.on("click", event => setLocation(event.latlng));
+    resetBookingLocationSelection = () => {
+        if (marker) {
+            map.removeLayer(marker);
+            marker = null;
+        }
+        if (accuracyCircle) {
+            map.removeLayer(accuracyCircle);
+            accuracyCircle = null;
+        }
+        latitudeInput.value = "";
+        longitudeInput.value = "";
+        clearButton.disabled = true;
+        status.classList.remove("has-location");
+        map.setView(defaultCenter, 11);
+        status.textContent = "মানচিত্রে চাপ দিয়ে অবস্থান নির্বাচন করুন।";
+    };
+    locateButton?.addEventListener("click", () => {
+        if (!navigator.geolocation) {
+            status.textContent = "এই browser-এ GPS location পাওয়া যায় না। Map-এ চাপ দিয়ে pin বসান।";
+            return;
+        }
+
+        locateButton.disabled = true;
+        locateButton.setAttribute("aria-busy", "true");
+        status.textContent = "আপনার অনুমতির অপেক্ষায়…";
+        navigator.geolocation.getCurrentPosition(
+            position => {
+                const coordinates = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
+                map.setView([coordinates.lat, coordinates.lng], 17);
+                setLocation(coordinates, "gps", position.coords.accuracy);
+                locateButton.disabled = false;
+                locateButton.removeAttribute("aria-busy");
+            },
+            error => {
+                const message = error.code === error.PERMISSION_DENIED
+                    ? "Location permission বন্ধ আছে। Browser settings-এ অনুমতি দিন, অথবা map-এ pin বসান।"
+                    : error.code === error.TIMEOUT
+                        ? "GPS থেকে উত্তর পেতে সময় বেশি লাগছে। আবার চেষ্টা করুন, অথবা map-এ pin বসান।"
+                        : "বর্তমান অবস্থান পাওয়া যায়নি। GPS চালু করুন, অথবা map-এ pin বসান।";
+                status.textContent = message;
+                locateButton.disabled = false;
+                locateButton.removeAttribute("aria-busy");
+            },
+            { enableHighAccuracy: true, timeout: 12000, maximumAge: 60000 }
+        );
+    });
+
+    clearButton?.addEventListener("click", resetBookingLocationSelection);
 }
 
 function initDragAndDrop() {
@@ -2264,6 +2394,8 @@ document.addEventListener(
         initRevealAnimations();
 
         initDateInput();
+
+        initBookingLocationMap();
 
         initDragAndDrop();
 

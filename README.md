@@ -10,13 +10,15 @@ Create a project in the Supabase Dashboard and install the Supabase CLI. From th
 supabase login
 supabase link --project-ref YOUR_PROJECT_REF
 2. Create the database and private upload bucket
-Apply the schema migration with the CLI:
+For a new project, apply the schema with the CLI:
 
 supabase db push
-Alternatively, open the Supabase Dashboard's SQL Editor and run supabase/schema.sql. This creates the bookings and contacts tables, enables row-level security without public table policies, and creates the private booking-files bucket.
+Alternatively, open the Supabase Dashboard's SQL Editor and run supabase/schema.sql. This creates the bookings, contacts, complaints, and shop-order tables and private booking-files bucket, and removes direct public table access.
+
+For an existing live site, do not apply the lock-down migration yet. First deploy the API and publish the updated static site in steps 4-5. Then apply pending migrations with `supabase db push`. If using the Dashboard SQL Editor, run both `supabase/migrations/20261102121500_lock_down_public_data.sql` and `supabase/migrations/20261102223000_add_booking_location.sql`. This order keeps forms working while they switch from direct table access to the API.
 
 3. Create the admin account
-In Supabase Dashboard → Authentication → Users, create the admin user with the email address that will be used to sign in. Disable public sign-ups in Authentication settings. Set the same address as the ADMIN_EMAIL function secret in the next step.
+In Supabase Dashboard → Authentication → Users, create the admin user with the email address that will be used to sign in. In Authentication settings, turn off public sign-ups. Set the same address as the ADMIN_EMAIL function secret in the next step.
 
 4. Set Edge Function secrets and deploy
 Set the admin email and the allowed website origins. Include the production site origin and any local development origin you use:
@@ -28,7 +30,7 @@ supabase secrets set WHATSAPP_ADMIN_NUMBER=8801XXXXXXXXX WHATSAPP_PHONE_NUMBER_I
 Deploy the API function:
 
 supabase functions deploy api --no-verify-jwt
-The function validates admin access itself using the Supabase Auth access token and the ADMIN_EMAIL secret. The Supabase service-role key stays server-side and must never be put in the website.
+The function validates admin access itself using the Supabase Auth access token and the ADMIN_EMAIL secret. The Supabase service-role key stays server-side and must never be put in the website. Deploy the API before publishing frontend changes that use the complaint, shop-order, admin, or booking-location API fields.
 
 5. Configure the static website
 In supabase-config.js, set:
@@ -47,7 +49,7 @@ now loads script.js instead of the old minified file.
 Open this URL, replacing the project reference:
 
 https://YOUR_PROJECT_REF.supabase.co/functions/v1/api/health
-It should return {"success":true,...}. Then test a booking, the contact/estimate forms, and admin sign-in at /admin. Attachments are stored in the private bucket and limited to 10 MB.
+It should return {"success":true,...}. Then test a booking with and without an optional map pin, the contact/estimate forms, and admin sign-in at /admin. A booking pin is optional; GPS is only requested when the customer presses the location button. The admin booking table shows a Google Maps link for bookings that include coordinates. Attachments are stored in the private bucket and limited to 10 MB.
 
 Local development
 Use Supabase CLI's local stack and run the SQL schema against its database:
