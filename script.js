@@ -1164,6 +1164,7 @@ function initBookingLocationMap() {
         maxZoom: 19,
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map);
+    status.textContent = "মানচিত্রে চাপ দিয়ে অবস্থান নির্বাচন করুন।";
 
     let marker = null;
     let accuracyCircle = null;
