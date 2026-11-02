@@ -7,3 +7,16 @@ const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_hAkwDSANcb2xURtd3UKqHg_l0iUMOts
 window.SUPABASE_URL = SUPABASE_URL;
 window.SUPABASE_ANON_KEY = SUPABASE_ANON_KEY;
 window.SUPABASE_KEY = SUPABASE_ANON_KEY;
+window.ElectroTechSupabase = Object.freeze({
+  projectUrl: SUPABASE_URL.replace(/\/+$/, ''),
+  apiUrl(path) {
+    const endpoint = path.replace(/^\/+/, '');
+    return `${this.projectUrl}/functions/v1/api/${endpoint}`;
+  },
+  headers() {
+    return {
+      apikey: SUPABASE_ANON_KEY,
+      Authorization: `Bearer ${SUPABASE_ANON_KEY}`
+    };
+  }
+});

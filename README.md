@@ -31,11 +31,17 @@ supabase functions deploy api --no-verify-jwt
 The function validates admin access itself using the Supabase Auth access token and the ADMIN_EMAIL secret. The Supabase service-role key stays server-side and must never be put in the website.
 
 5. Configure the static website
-In supabase-config.js, replace:
+In supabase-config.js, set:
 
-YOUR_PROJECT_REF with the project reference from the Supabase project URL
-YOUR_SUPABASE_ANON_KEY with the project's public anon/publishable key from Dashboard → Project Settings → API
-The anon key is designed to be public. Never put the service-role key in this file. Publish the updated website files, including supabase-config.js, script.js, and admin.html, to the existing static host. The home page now loads script.js instead of the old minified file.
+`SUPABASE_URL` to the project URL and `SUPABASE_ANON_KEY` (also used as
+`SUPABASE_PUBLISHABLE_KEY`) to the project's public anon/publishable key from
+Dashboard → Project Settings → API. The file exposes the shared API and storage
+request helpers used by the website.
+
+The anon key is designed to be public. Never put the service-role key in this
+file. Publish the updated website files, including supabase-config.js,
+script.js, and admin/index.html, to the existing static host. The home page
+now loads script.js instead of the old minified file.
 
 6. Verify
 Open this URL, replacing the project reference:
@@ -63,4 +69,3 @@ https://electrohubbd.com/llms.txt provides an AI-readable overview and links to 
 https://electrohubbd.com/ai-catalog.json publishes service and booking resources using the Agentic Resource Discovery (ARD) catalog format.
 Important
 Do not commit .env or publish any Supabase service-role key. The frontend only needs the Supabase project URL and anon/publishable key.
-

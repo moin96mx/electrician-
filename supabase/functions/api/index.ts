@@ -8,7 +8,7 @@ const adminPhone = Deno.env.get('WHATSAPP_ADMIN_NUMBER')?.replace(/\s+/g, '');
 const whatsappPhoneNumberId = Deno.env.get('WHATSAPP_PHONE_NUMBER_ID');
 const whatsappToken = Deno.env.get('WHATSAPP_TOKEN');
 const allowedOrigins = (Deno.env.get('SITE_ORIGINS') ||
-  'https://electrotechbd.xyz,https://www.electrotechbd.xyz,http://localhost:5500,http://127.0.0.1:5500')
+  'https://electrohubbd.com,https://www.electrohubbd.com,http://localhost:5500,http://127.0.0.1:5500')
   .split(',')
   .map((origin) => origin.trim())
   .filter(Boolean);
