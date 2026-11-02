@@ -1144,7 +1144,103 @@ function initDateInput() {
         `${year}-${month}-${day}`;
 }
 
+let bookingMapDependenciesPromise;
+
+function loadBookingMapDependencies() {
+    if (!bookingMapDependenciesPromise) {
+        const stylesheet = document.createElement("link");
+        stylesheet.rel = "stylesheet";
+        stylesheet.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
+
+        const stylesheetPromise = new Promise((resolve, reject) => {
+            stylesheet.onload = resolve;
+            stylesheet.onerror = () => reject(
+                new Error("Leaflet stylesheet failed to load.")
+            );
+        });
+
+        document.head.appendChild(stylesheet);
+
+        const scriptPromise = window.L
+            ? Promise.resolve()
+            : new Promise((resolve, reject) => {
+                const script = document.createElement("script");
+                script.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
+                script.async = true;
+                script.onload = () => {
+                    if (window.L) {
+                        resolve();
+                    } else {
+                        reject(new Error("Leaflet loaded without its map API."));
+                    }
+                };
+                script.onerror = () => {
+                    script.remove();
+                    reject(new Error("Leaflet script failed to load."));
+                };
+                document.body.appendChild(script);
+            });
+
+        bookingMapDependenciesPromise = Promise.all([
+            stylesheetPromise,
+            scriptPromise
+        ]).catch(error => {
+            stylesheet.remove();
+            bookingMapDependenciesPromise = null;
+            throw error;
+        });
+    }
+
+    return bookingMapDependenciesPromise;
+}
+
 function initBookingLocationMap() {
+    const mapElement = document.getElementById("booking-location-map");
+    const status = document.getElementById("booking-location-status");
+
+    if (!mapElement || !status) return;
+
+    let loading = false;
+    const startMap = () => {
+        if (loading || mapElement.dataset.mapInitialized === "true") return;
+        loading = true;
+        status.textContent = "বাংলাদেশের মানচিত্র লোড হচ্ছে…";
+
+        loadBookingMapDependencies()
+            .then(() => {
+                createBookingLocationMap();
+                mapElement.dataset.mapInitialized = "true";
+            })
+            .catch(error => {
+                loading = false;
+                console.error("Could not load the booking map.", error);
+                status.textContent = "মানচিত্র লোড হয়নি। আবার চেষ্টা করুন, অথবা লোকেশন না দিয়েও বুকিং করুন।";
+            });
+    };
+
+    mapElement.addEventListener("pointerdown", startMap);
+    mapElement.addEventListener("focusin", startMap);
+
+    const locateButton = document.getElementById("booking-use-location");
+    locateButton?.addEventListener("pointerdown", startMap);
+    locateButton?.addEventListener("focusin", startMap);
+
+    if ("IntersectionObserver" in window) {
+        const observer = new IntersectionObserver(entries => {
+            if (entries.some(entry => entry.isIntersecting)) {
+                observer.disconnect();
+                startMap();
+            }
+        }, { rootMargin: "400px 0px" });
+        observer.observe(mapElement);
+    } else if ("requestIdleCallback" in window) {
+        window.requestIdleCallback(startMap, { timeout: 2500 });
+    } else {
+        window.setTimeout(startMap, 1500);
+    }
+}
+
+function createBookingLocationMap() {
     const mapElement = document.getElementById("booking-location-map");
     const latitudeInput = document.getElementById("booking-latitude");
     const longitudeInput = document.getElementById("booking-longitude");
