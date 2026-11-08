@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Our Expert Engineers & Electricians | ElectroHubBD</title>
+  <meta name="description" content="Meet our 4 Expert Engineers and 9 Certified Electricians at ElectroHubBD with 100% responsive design.">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" href="/logo.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="../img/favicon-192x192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600&family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #071018;
+      --panel: #0f172a;
+      --line: #1e293b;
+      --line2: #334155;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --cyan: #00ffcc;
+      --purple: #7c3aed;
+      --blue: #38bdf8;
+      --green: #34d399;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100%;
+      overflow-x: hidden;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Hind Siliguri', 'Inter', sans-serif;
+      line-height: 1.6;
+      -webkit-text-size-adjust: 100%;
+    }
+    body {
+      padding-bottom: 60px;
+    }
+    header {
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      width: 100%;
+    }
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+    .header-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 70px;
+      gap: 12px;
+      width: 100%;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      font-family: 'Inter', sans-serif;
+      font-weight: 800;
+      font-size: 18px;
+      min-width: 0;
+    }
+    .logo-text {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .logo-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--cyan), var(--purple));
+      display: grid;
+      place-items: center;
+      box-shadow: 0 0 20px rgba(0, 255, 204, 0.3);
+      flex-shrink: 0;
+    }
+    .nav-link {
+      font-size: 13px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid var(--line);
+      padding: 7px 12px;
+      border-radius: 100px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .nav-link:hover {
+      border-color: var(--cyan);
+      color: var(--text);
+      background: rgba(0, 255, 204, 0.05);
+    }
+
+    .hero {
+      text-align: center;
+      padding: 40px 12px 24px;
+      width: 100%;
+    }
+    .hero h1 {
+      font-size: clamp(24px, 5vw, 38px);
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 12px;
+      line-height: 1.3;
+    }
+    .hero h1 span {
+      color: var(--cyan);
+    }
+    .hero p {
+      max-width: 680px;
+      margin: 0 auto 24px;
+      color: var(--muted);
+      font-size: clamp(14px, 2.5vw, 16px);
+      padding: 0 8px;
+    }
+
+    /* FILTER TABS */
+    .filter-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+      width: 100%;
+    }
+    .filter-btn {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      color: var(--muted);
+      padding: 8px 16px;
+      border-radius: 100px;
+      font-size: 13.5px;
+      font-family: 'Hind Siliguri', sans-serif;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      background: rgba(0,255,204,0.1);
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    /* SEARCH BAR */
+    .search-wrap {
+      max-width: 520px;
+      width: 100%;
+      margin: 0 auto;
+      position: relative;
+      padding: 0 4px;
+    }
+    .search-input {
+      width: 100%;
+      padding: 13px 18px 13px 44px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      color: #fff;
+      font-size: 14.5px;
+      font-family: 'Hind Siliguri', 'Inter', sans-serif;
+      outline: none;
+      transition: all 0.2s;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .search-input:focus {
+      border-color: var(--cyan);
+      box-shadow: 0 0 0 3px rgba(0,255,204,0.15);
+    }
+    .search-icon {
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      pointer-events: none;
+    }
+
+    .section-container {
+      width: 100%;
+    }
+    .section-title {
+      font-size: clamp(20px, 3.5vw, 24px);
+      font-weight: 700;
+      color: #fff;
+      margin: 36px 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 10px;
+      width: 100%;
+    }
+    .section-title span {
+      font-size: 13px;
+      background: var(--line);
+      padding: 4px 12px;
+      border-radius: 20px;
+      color: var(--cyan);
+    }
+
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+      width: 100%;
+    }
+    .team-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      cursor: pointer;
+      position: relative;
+    }
+    .team-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(0, 255, 204, 0.4);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+    .team-card::after {
+      content: "বিস্তারিত দেখুন →";
+      position: absolute;
+      bottom: 14px;
+      right: 18px;
+      font-size: 12px;
+      color: var(--cyan);
+      opacity: 0;
+      transform: translateY(4px);
+      transition: all 0.2s ease;
+    }
+    .team-card:hover::after {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .team-img-wrap {
+      width: 100%;
+      height: 230px;
+      background: #131c31;
+      position: relative;
+      overflow: hidden;
+      display: grid;
+      place-items: center;
+    }
+    .team-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+    .team-card:hover .team-img-wrap img {
+      transform: scale(1.05);
+    }
+    .badge-id {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(7, 16, 24, 0.88);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid var(--cyan);
+      color: var(--cyan);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 8px;
+      z-index: 2;
+    }
+    .badge-status {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: rgba(7, 16, 24, 0.88);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(52, 211, 153, 0.3);
+      color: var(--green);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      z-index: 2;
+    }
+    .badge-status::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      background: var(--green);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--green);
+    }
+    .badge-role {
+      position: absolute;
+      bottom: 12px;
+      left: 12px;
+      background: rgba(7, 16, 24, 0.88);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(0, 255, 204, 0.3);
+      color: var(--cyan);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 8px;
+      z-index: 2;
+      max-width: calc(100% - 24px);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .badge-role.electrician {
+      border-color: rgba(56, 189, 248, 0.3);
+      color: var(--blue);
+    }
+    .team-info {
+      padding: 18px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 38px;
+      width: 100%;
+    }
+    .team-name {
+      font-size: 17px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+    .team-title {
+      font-size: 11.5px;
+      color: var(--blue);
+      font-weight: 600;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .team-bio {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 14px;
+      flex: 1;
+    }
+    .team-meta {
+      border-top: 1px solid var(--line);
+      padding-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: var(--muted);
+      gap: 8px;
+      width: 100%;
+    }
+    .team-meta b {
+      color: var(--text);
+    }
+
+    /* MODAL POPUP */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(3, 7, 13, 0.85);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      display: grid;
+      place-items: center;
+      z-index: 1000;
+      padding: 16px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      overflow-y: auto;
+    }
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .modal-card {
+      background: #0f172a;
+      border: 1px solid rgba(0, 255, 204, 0.3);
+      border-radius: 24px;
+      max-width: 520px;
+      width: 100%;
+      padding: 24px;
+      position: relative;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+      transform: translateY(20px);
+      transition: transform 0.3s ease;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .modal-overlay.active .modal-card {
+      transform: translateY(0);
+    }
+    .modal-close {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: #1e293b;
+      border: none;
+      color: #fff;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-size: 16px;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      transition: background 0.2s;
+    }
+    .modal-close:hover {
+      background: var(--cyan);
+      color: #031019;
+    }
+    .modal-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+    .modal-img {
+      width: 75px;
+      height: 75px;
+      border-radius: 14px;
+      object-fit: cover;
+      border: 2px solid var(--cyan);
+      flex-shrink: 0;
+    }
+    .modal-title-area {
+      min-width: 0;
+      flex: 1;
+    }
+    .modal-title-area h2 {
+      font-size: 20px;
+      color: #fff;
+      margin-bottom: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .modal-title-area p {
+      font-size: 12px;
+      color: var(--blue);
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .modal-id-badge {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      background: rgba(0,255,204,0.1);
+      color: var(--cyan);
+      border: 1px solid rgba(0,255,204,0.3);
+      padding: 2px 8px;
+      border-radius: 6px;
+      margin-top: 4px;
+    }
+    .modal-body p {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+    .skills-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+    .skill-pill {
+      font-size: 11px;
+      background: #1e293b;
+      color: var(--cyan);
+      padding: 3px 8px;
+      border-radius: 6px;
+      border: 1px solid rgba(0,255,204,0.2);
+    }
+    .modal-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      background: #071018;
+      border: 1px solid var(--line);
+      padding: 14px;
+      border-radius: 12px;
+      margin-bottom: 18px;
+    }
+    .modal-stat-item .label {
+      font-size: 11.5px;
+      color: var(--muted);
+      margin-bottom: 2px;
+    }
+    .modal-stat-item .val {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--cyan);
+    }
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+    }
+    .btn-action {
+      flex: 1;
+      padding: 11px 14px;
+      border-radius: 10px;
+      font-size: 13.5px;
+      font-weight: 700;
+      text-align: center;
+      text-decoration: none;
+      font-family: 'Hind Siliguri', sans-serif;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .btn-primary {
+      background: var(--cyan);
+      color: #031019;
+    }
+    .btn-primary:hover {
+      background: #00cca3;
+    }
+    .btn-secondary {
+      background: #1e293b;
+      color: #fff;
+      border: 1px solid var(--line2);
+    }
+    .btn-secondary:hover {
+      background: var(--line2);
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--muted);
+      font-size: 15px;
+      display: none;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 30px 16px;
+      color: var(--muted);
+      font-size: 13px;
+      border-top: 1px solid var(--line);
+      margin-top: 50px;
+      width: 100%;
+    }
+    .footer a {
+      color: var(--cyan);
+      text-decoration: none;
+    }
+
+    /* Media queries for strict responsiveness */
+    @media (max-width: 768px) {
+      .container { padding: 0 12px; }
+      .team-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+      .hero { padding: 30px 8px 20px; }
+    }
+    @media (max-width: 480px) {
+      .team-grid { grid-template-columns: 1fr; }
+      .modal-header { flex-direction: column; text-align: center; }
+      .modal-card { padding: 18px; }
+      .modal-actions { flex-direction: column; }
+      .header-inner { height: 64px; }
+      .logo { font-size: 16px; }
+      .logo-mark { width: 34px; height: 34px; }
+      .nav-link { padding: 6px 10px; font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="container header-inner">
+      <a href="../" class="logo">
+        <span class="logo-mark">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#03201b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>
+        </span>
+        <span class="logo-text"><span style="color:#fff">Electro</span><span style="color:var(--cyan)">HubBD</span></span>
+      </a>
+      <a href="../" class="nav-link">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+        হোমে ফিরুন
+      </a>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <h1>আমাদের <span>বিশেষজ্ঞ টিম</span> ও কারিগরবৃন্দ</h1>
+      <p>যেকোনো সদস্যের কার্ডে ক্লিক করে বিস্তারিত জেনে নিন, বুক করুন অথবা ক্যাটাগরি ও আইডি দিয়ে খুঁজুন।</p>
+      
+      <!-- FILTER TABS -->
+      <div class="filter-tabs">
+        <button class="filter-btn active" data-filter="all">সকল সদস্য (১৩)</button>
+        <button class="filter-btn" data-filter="engineers">প্রকৌশলীগণ (৪)</button>
+        <button class="filter-btn" data-filter="electricians">ইলেকট্রিশিয়ান (৯)</button>
+      </div>
+
+      <!-- SEARCH INPUT -->
+      <div class="search-wrap">
+        <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="teamSearch" class="search-input" placeholder="আইডি দিয়ে খুঁজুন (যেমন: ENG-101) অথবা নাম দিয়ে..." autocomplete="off">
+      </div>
+    </section>
+
+    <div id="noResults" class="no-results">কোনো ইঞ্জিনিয়ার বা ইলেকট্রিশিয়ান পাওয়া যায়নি। সঠিক নাম বা ইউনিক আইডি দিয়ে আবার চেষ্টা করুন।</div>
+
+    <!-- ENGINEERS SECTION (4) -->
+    <div class="section-container" data-category="engineers">
+      <div class="section-title">
+        প্রকৌশলীগণ (Lead Engineers) <span>৪ জন</span>
+      </div>
+
+      <div class="team-grid">
+        <!-- Engineer 1 -->
+        <div class="team-card" data-id="ENG-101" data-name="engr. farhan ahmed farhan ahmed" data-role="Chief Electrical & IoT Specialist" data-exp="১২+ বছর" data-projects="৪৫০+" data-skills="BUET EEE • IoT Automation • Load Calculation • Substation" data-desc="BUET EEE গ্র্যাজুয়েট। শিল্প ও আবাসিক বৈদ্যুতিক ওয়্যারিং, স্মার্ট হোম অটোমেশন এবং লোড ম্যানেজমেন্টে ১২+ বছরের অভিজ্ঞতা। বিভিন্ন বাণিজ্যিক প্রজেক্টের লিড ইঞ্জিনিয়ার হিসেবে সফলভাবে দায়িত্ব পালন করেছেন।">
+          <div class="team-img-wrap">
+            <img src="../img/1x2.webp" alt="Engr. Farhan Ahmed">
+            <span class="badge-status">উপলব্ধ</span>
+            <span class="badge-id">ENG-101</span>
+            <div class="badge-role">Chief Engineer</div>
+          </div>
+          <div class="team-info">
+            <div class="team-name">Engr. Farhan Ahmed</div>
+            <div class="team-title">Chief Electrical & IoT Specialist</div>
+            <div class="team-bio">BUET EEE গ্র্যাজুয়েট। শিল্প ও আবাসিক বৈদ্যুতিক ওয়্যারিং, স্মার্ট হোম অটোমেশন এবং লোড ম্যানেজমেন্টে ১২+ বছরের অভিজ্ঞতা।</div>
+            <div class="team-meta">
+              <span>অভিজ্ঞতা: <b>১২+ বছর</b></span>
+              <span>প্রজেক্ট: <b>৪৫০+</b></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Engineer 2 -->
+        <div class="team-card" data-id="ENG-102" data-name="engr. nazmul hasan nazmul hasan" data-role="Substation & Safety Expert" data-exp="১০+ বছর" data-projects="৩২০+" data-skills="High-Voltage • 3-Phase Balancing • Safety Audit" data-desc="হাই-ভোল্টেজ সাবস্টেশন ডিজাইন, থ্রি-ফেজ ব্যালেন্সিং এবং ইন্ডাস্ট্রিয়াল সেফটি অডিটে বিশেষ পারদর্শী। শতভাগ দুর্ঘটনা রোধে উন্নত প্রটোকল বাস্তবায়নে দক্ষ।">
+          <div class="team-img-wrap">
+            <img src="../img/1x2.webp" alt="Engr. Nazmul Hasan">
+            <span class="badge-status">উপলব্ধ</span>
+            <span class="badge-id">ENG-102</span>
+            <div class="badge-role">Senior Engineer</div>
+          </div>
+          <div class="team-info">
+            <div class="team-name">Engr. Nazmul Hasan</div>
+            <div class="team-title">Substation & Safety Expert</div>
+            <div class="team-bio">হাই-ভোল্টেজ সাবস্টেশন ডিজাইন, থ্রি-ফেজ ব্যালেন্সিং এবং ইন্ডাস্ট্রিয়াল সেফটি অডিটে বিশেষ পারদর্শী।</div>
+            <div class="team-meta">
+              <span>অভিজ্ঞতা: <b>১০+ বছর</b></span>
+              <span>প্রজেক্ট: <b>৩২০+</b></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Engineer 3 -->
+        <div class="team-card" data-id="ENG-103" data-name="tanvir mahmud engr. tanvir mahmud" data-role="Smart IoT & Solar Integration Lead" data-exp="৮+ বছর" data-projects="২৮০+" data-skills="Solar Inverter • IoT Sensors • Energy Saving" data-desc="সোলার ইনভার্টার সেটআপ, আইওটি সেন্সর ইন্টিগ্রেশন এবং এনার্জি সেভিং সলিউশন এক্সপার্ট। আধুনিক রিনিউয়েবল এনার্জি প্রজেক্টে বিশেষ অবদান রাখছেন।">
+          <div class="team-img-wrap">
+            <img src="../img/1x2.webp" alt="Tanvir Mahmud">
+            <span class="badge-status">উপলব্ধ</span>
+            <span class="badge-id">ENG-103</span>
+            <div class="badge-role">Automation Lead</div>
+          </div>
+          <div class="team-info">
+            <div class="team-name">Engr. Tanvir Mahmud</div>
+            <div class="team-title">Smart IoT & Solar Integration Lead</div>
+            <div class="team-bio">সোলার ইনভার্টার সেটআপ, আইওটি সেন্সর ইন্টিগ্রেশন এবং এনার্জি সেভিং সলিউশন এক্সপার্ট।</div>
+            <div class="team-meta">
+              <span>অভিজ্ঞতা: <b>৮+ বছর</b></span>
+              <span>প্রজেক্ট: <b>২৮০+</b></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Engineer 4 -->
+        <div class="team-card" data-id="ENG-104" data-name="sabbir rahman engr. sabbir rahman" data-role="Power Systems & AutoCAD Specialist" data-exp="৭+ বছর" data-projects="২৫০+" data-skills="Blueprint Design • Load Calc • Circuit Safety" data-desc="কমপ্লেক্স বিল্ডিং ব্লুপ্রিন্ট ডিজাইন, পাওয়ার লোড ক্যালকুলেশন এবং সার্কিট সেফটি প্রটোকল বিশেষজ্ঞ। নিখুঁত ম্যাপিংয়ের জন্য পরিচিত।">
+          <div class="team-img-wrap">
+            <img src="../img/1x2.webp" alt="Engr. Sabbir Rahman">
+            <span class="badge-status">উপলব্ধ</span>
+            <span class="badge-id">ENG-104</span>
+            <div class="badge-role">Design Engineer</div>
+          </div>
+          <div class="team-info">
+            <div class="team-name">Engr. Sabbir Rahman</div>
+            <div class="team-title">Power Systems & AutoCAD Specialist</div>
+            <div class="team-bio">কমপ্লেক্স বিল্ডিং ব্লুপ্রিন্ট ডিজাইন, পাওয়ার লোড ক্যালকুলেশন এবং সার্কিট সেফটি প্রটোকল বিশেষজ্ঞ।</div>
+            <div class="team-meta">
+              <span>অভিজ্ঞতা: <b>৭+ বছর</b></span>
+              <span>প্রজেক্ট: <b>২৫০+</b></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ELECTRICIANS SECTION (9) -->
+    <div class="section-container" data-category="electricians" style="margin-top: 50px;">
+      <div class="section-title">
+        সার্টিফাইড ইলেকট্রিশিয়ান ও টেকনিশিয়ান <span>৯ জন</span>
+      </div>
+
+      <div class="team-grid">
+        <!-- Electrician 1 -->
+        <div class="team-card" data-id="ELEC-201" data-name="rahim uddin" data-role="Senior Field Master Technician" data-exp="৯+ বছর" data-projects="৬০০+" data-skills="Residential Wiring • Troubleshooting • Conduit" data-desc="আবাসিক ও বাণিজ্যিক ওয়্যারিং ইন্সটলেশন এবং অন-সাইট ট্রাবলশুটিংয়ে অত্যন্ত দক্ষ ও বিশ্বস্ত কারিগর। গ্রাহকদের কাছে অত্যন্ত জনপ্রিয়।">
+          <div class="team-img-wrap">
+            <img src="../img/1x2.webp" alt="Rahim Uddin">
+            <span class="badge-status">উপলব্ধ</span>
+            <span class="badge-id">ELEC-201</span>
+            <div class="badge-role electrician">Master Electrician</div>
+          </div>
+          <div class="team-info">
+            <div class="team-name">Rahim Uddin</div>
+            <div class="team-title">Senior Field Master Technician</div>
+            <div class="team-bio">আবাসিক ও বাণিজ্যিক ওয়্যারিং ইন্সটলেশন এবং অন-সাইট ট্রাবলশুটিংয়ে অত্যন্ত দক্ষ ও বিশ্বস্ত কারিগর।</div>
+            <div class="team-meta">
+              <span>অভিজ্ঞতা: <b>৯+ বছর</b></span>
+              <span>সফল কাজ: <b>৬০০+</b></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Electrician 2 -->
+        <div class="team-card" data-id="ELEC-202" data-name="jashim uddin" data-role="Panel Board & MCB Specialist" data-exp="৮+ বছর" data-projects="৫০০+" data-skills="Distribution Box • MCB • Heavy Duty Switchboard" data-desc="ডিস্ট্রিবিউশন বক্স, এসি সার্কিট ব্রেকার এবং হ্যাভি ডিউটি সুইচবোর্ড ফিটিংয়ে পারদর্শী। বিদ্যুৎ সুরক্ষায় বিশ্বস্ত নাম।">
+          <div class="team-img-wrap">
+            <img src="../img/1x2.webp" alt="Jashim Uddin">
+            <span class="badge-status">উপলব্ধ</span>
+            <span class="badge-id">ELEC-202</span>
+            <div class="badge-role electrician">Senior Wireman</div>
+          </div>
+          <div class="team-info">
+            <div class="team-name">Jashim Uddin</div>
+            <div class="team-title">Panel Board & MCB Specialist</div>
+            <div class="team-bio">ডিস্ট্রিবিউশন বক্স, এসি সার্কিট ব্রেকার এবং হ্যাভি ডিউটি সুইচবোর্ড ফিটিংয়ে পারদর্শী।</div>
+            <div class="team-meta">
+              <span>অভিজ্ঞতা: <b>৮+ বছর</b></span>
+              <span>সফল কাজ: <b>৫০০+</b></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Electrician 3 -->
+        <div class="team-card" data-id="ELEC-203" data-name="belal hossain" data-role="Lighting & Smart Switch Installer" data-exp="৬+ বছর" data-projects="৪২০+" data-skills="False Ceiling Lighting • LED Strip • Wireless Switch" data-desc="ফলস ছাদ লাইটিং, এলইডি স্ট্রিপ ও আধুনিক ওয়্যারলেস স্মার্ট সুইচ কনফিগারেশনে দক্ষ। নান্দনিক লাইটিং ডিজাইনে পারদর্শী।">
+          <div class="team-img-wrap">
+            <img src="../img/1x2.webp" alt="Belal Hossain">
+            <span class="badge-status">উপলব্ধ</span>
+            <span class="badge-id">ELEC-203</span>
+            <div class="badge-role electrician">Expert Technician</div>
+          </div>
+          <div class="team-info">
+            <div class="team-name">Belal Hossain</div>
+            <div class="team-title">Lighting & Smart Switch Installer</div>
+            <div class="team-bio">ফলস ছাদ লাইটিং, এলইডি স্ট্রিপ ও আধুনিক ওয়্যারলেস স্মার্ট সুইচ কনফিগারেশনে দক্ষ।</div>
+            <div class="team-meta">
+              <span>অভিজ্ঞতা: <b>৬+ বছর</b></span>
+              <span>সফল কাজ: <b>৪২০+</b></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Electrician 4 -->
+        <div class="team-card" data-id="ELEC-204" data-name="al-amin islam al amin islam" data-role="Emergency Fault Specialist" data-exp="৭+ বছর" data-projects="৫৫০+" data-skills="Short Circuit • Earthing Test • 24/7 Repair" data-desc="শর্ট সার্কিট ডিটেকশন, আর্থিং টেস্ট এবং ২৪/৭ ইমার্জেন্সি রিপেয়ার সার্ভিসে নিয়োজিত। দ্রুত ত্রুটি নিরসনে সিদ্ধহস্ত।">
+          <div class="team-img-wrap">
+            <img src="../img/1x2.webp" alt="Al-Amin Islam">
+            <span class="badge-status">উপলব্ধ</span>
+            <span class="badge-id">ELEC-204</span>
+            <div class="badge-role electrician">Field Technician</div>
+          </div>
+          <div class="team-info">
+            <div class="team-name">Al-Amin Islam</div>
+            <div class="team-title">Emergency Fault Specialist</div>
+            <div class="team-bio">শর্ট সার্কিট ডিটেকশন, আর্থিং টেস্ট এবং ২৪/৭ ইমার্জেন্সি রিপেয়ার সার্ভিসে নিয়োজিত।</div>
+            <div class="team-meta">
+              <span>অভিজ্ঞতা: <b>৭+ বছর</b></span>
+              <span>সফল কাজ: <b>৫৫০+</b></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Electrician 5 -->
+        <div class="team-card" data-id="ELEC-205" data-name="monir hossain" data-role="Industrial Wiring Expert" data-exp="৮+ বছর" data-projects="৩৫০+" data-skills="Heavy Cabling • Trunking Wiring • Factory Setup" data-desc="ফ্যাক্টরি ও বাণিজ্যিক বিল্ডিংয়ের ভারী বৈদ্যুতিক ক্যাবলিং এবং ট্রাফিং ওয়্যারিংয়ে অভিজ্ঞ। বড় প্রজেক্টের অভিজ্ঞ কারিগর।">
+          <div class="team-img-wrap">
+            <img src="../img/1x2.webp" alt="Monir Hossain">
+            <span class="badge-status">উপলব্ধ</span>
+            <span class="badge-id">ELEC-205</span>
+            <div class="badge-role electrician">Senior Electrician</div>
+          </div>
+          <div class="team-info">
+            <div class="team-name">Monir Hossain</div>
+            <div class="team-title">Industrial Wiring Expert</div>
+            <div class="team-bio">ফ্যাক্টরি ও বাণিজ্যিক বিল্ডিংয়ের ভারী বৈদ্যুতিক ক্যাবলিং এবং ট্রাফিং ওয়্যারিংয়ে অভিজ্ঞ।</div>
+            <div class="team-meta">
+              <span>অভিজ্ঞতা: <b>৮+ বছর</b></span>
+              <span>সফল কাজ: <b>৩৫০+</b></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Electrician 6 -->
+        <div class="team-card" data-id="ELEC-206" data-name="shafiqul islam" data-role="IoT & Sensor Setup Technician" data-exp="৫+ বছর" data-projects="৩০০+" data-skills="Smart Sensors • Gateway Setup • Remote Control" data-desc="স্মার্ট হোম সেন্সর, গেটওয়ে এবং অটোমেটেড রিমোট কন্ট্রোল সিস্টেম সেটআপে দক্ষ। আধুনিক প্রযুক্তির ব্যবহারে পারদর্শী।">
+          <div class="team-img-wrap">
+            <img src="../img/1x2.webp" alt="Shafiqul Islam">
+            <span class="badge-status">উপলব্ধ</span>
+            <span class="badge-id">ELEC-206</span>
+            <div class="badge-role electrician">Automation Tech</div>
+          </div>
+          <div class="team-info">
+            <div class="team-name">Shafiqul Islam</div>
+            <div class="team-title">IoT & Sensor Setup Technician</div>
+            <div class="team-bio">স্মার্ট হোম সেন্সর, গেটওয়ে এবং অটোমেটেড রিমোট কন্ট্রোল সিস্টেম সেটআপে দক্ষ।</div>
+            <div class="team-meta">
+              <span>অভিজ্ঞতা: <b>৫+ বছর</b></span>
+              <span>সফল কাজ: <b>৩০০+</b></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Electrician 7 -->
+        <div class="team-card" data-id="ELEC-207" data-name="kamal hossain" data-role="Generator & Inverter Technician" data-exp="৭+ বছর" data-projects="৪০০+" data-skills="IPS • Generator • Solar Backup" data-desc="আইপিএস, জেনারেটর ও সোলার ব্যাকআপ সিস্টেম মেইনটেন্যান্স এবং কানেকশনে বিশেষ পারদর্শী। পাওয়ার ব্যাকআপ এক্সপার্ট।">
+          <div class="team-img-wrap">
+            <img src="../img/1x2.webp" alt="Kamal Hossain">
+            <span class="badge-status">উপলব্ধ</span>
+            <span class="badge-id">ELEC-207</span>
+            <div class="badge-role electrician">Service Specialist</div>
+          </div>
+          <div class="team-info">
+            <div class="team-name">Kamal Hossain</div>
+            <div class="team-title">Generator & Inverter Technician</div>
+            <div class="team-bio">আইপিএস, জেনারেটর ও সোলার ব্যাকআপ সিস্টেম মেইনটেন্যান্স এবং কানেকশনে বিশেষ পারদর্শী।</div>
+            <div class="team-meta">
+              <span>অভিজ্ঞতা: <b>৭+ বছর</b></span>
+              <span>সফল কাজ: <b>৪০০+</b></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Electrician 8 -->
+        <div class="team-card" data-id="ELEC-208" data-name="ariful islam" data-role="Wiring & Conduit Installer" data-exp="৬+ বছর" data-projects="৩৭০+" data-skills="Concealed Wiring • Copper Pulling • Pipe Fitting" data-desc="দেয়ালে পাইপ ফিটিং, কনসিলড ওয়্যারিং এবং কপার ক্যাবল পুলিংয়ে অত্যন্ত নিপুণ। পরিচ্ছন্ন ওয়্যারিংয়ের জন্য পরিচিত।">
+          <div class="team-img-wrap">
+            <img src="../img/1x2.webp" alt="Ariful Islam">
+            <span class="badge-status">উপলব্ধ</span>
+            <span class="badge-id">ELEC-208</span>
+            <div class="badge-role electrician">Technician</div>
+          </div>
+          <div class="team-info">
+            <div class="team-name">Ariful Islam</div>
+            <div class="team-title">Wiring & Conduit Installer</div>
+            <div class="team-bio">দেয়ালে পাইপ ফিটিং, কনসিলড ওয়্যারিং এবং কপার ক্যাবল পুলিংয়ে অত্যন্ত নিপুণ।</div>
+            <div class="team-meta">
+              <span>অভিজ্ঞতা: <b>৬+ বছর</b></span>
+              <span>সফল কাজ: <b>৩৭০+</b></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Electrician 9 -->
+        <div class="team-card" data-id="ELEC-209" data-name="nasir uddin" data-role="Maintenance & Safety Tech" data-exp="৮+ বছর" data-projects="৪৮০+" data-skills="Maintenance Check • Fuse Repair • Safety Earthing" data-desc="রেগুলার মেইনটেন্যান্স চেকআপ, ফিউজ রিপ্রেজেন্টেশন এবং সেফটি আর্থিং নিশ্চিতকরণে দক্ষ। সুরক্ষা নিশ্চিতকরণে বিশেষজ্ঞ।">
+          <div class="team-img-wrap">
+            <img src="../img/1x2.webp" alt="Nasir Uddin">
+            <span class="badge-status">উপলব্ধ</span>
+            <span class="badge-id">ELEC-209</span>
+            <div class="badge-role electrician">Field Expert</div>
+          </div>
+          <div class="team-info">
+            <div class="team-name">Nasir Uddin</div>
+            <div class="team-title">Maintenance & Safety Tech</div>
+            <div class="team-bio">রেগুলার মেইনটেন্যান্স চেকআপ, ফিউজ রিপ্রেজেন্টেশন এবং সেফটি আর্থিং নিশ্চিতকরণে দক্ষ।</div>
+            <div class="team-meta">
+              <span>অভিজ্ঞতা: <b>৮+ বছর</b></span>
+              <span>সফল কাজ: <b>৪৮০+</b></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- DETAIL MODAL -->
+  <div id="teamModal" class="modal-overlay">
+    <div class="modal-card">
+      <button class="modal-close" id="modalClose">&times;</button>
+      <div class="modal-header">
+        <img id="modalImg" src="../img/1x2.webp" alt="Team Member" class="modal-img">
+        <div class="modal-title-area">
+          <h2 id="modalName">নাম</h2>
+          <p id="modalRole">পদবী</p>
+          <div id="modalId" class="modal-id-badge">ENG-000</div>
+        </div>
+      </div>
+      <div class="modal-body">
+        <p id="modalDesc">বিস্তারিত বিবরণ এখানে প্রদর্শিত হবে।</p>
+        <div id="skillsContainer" class="skills-row">
+          <!-- Skills tags -->
+        </div>
+        <div class="modal-stats">
+          <div class="modal-stat-item">
+            <div class="label" id="modalExpLabel">অভিজ্ঞতা</div>
+            <div class="val" id="modalExp">১০+ বছর</div>
+          </div>
+          <div class="modal-stat-item">
+            <div class="label" id="modalProjLabel">সফল কাজ</div>
+            <div class="val" id="modalProjects">৩০০+</div>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <a href="/#booking" class="btn-action btn-primary" id="modalBookBtn">⚡ এই বিশেষজ্ঞকে বুক করুন</a>
+          <a href="tel:+8801710830391" class="btn-action btn-secondary">📞 সরাসরি কল করুন</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <p>© 2026 <b>ElectroHubBD</b> — Licensed Electrical & Smart Automation | <a href="../">হোম পেজে যান</a></p>
+    </div>
+  </footer>
+
+  <script>
+    const searchInput = document.getElementById('teamSearch');
+    const cards = document.querySelectorAll('.team-card');
+    const sections = document.querySelectorAll('.section-container');
+    const noResults = document.getElementById('noResults');
+    const filterBtns = document.querySelectorAll('.filter-btn');
+
+    let currentFilter = 'all';
+
+    // Filter Tabs functionality
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', function() {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        currentFilter = this.getAttribute('data-filter');
+        applyFilterAndSearch();
+      });
+    });
+
+    // Search functionality
+    searchInput.addEventListener('input', function() {
+      applyFilterAndSearch();
+    });
+
+    function applyFilterAndSearch() {
+      const query = searchInput.value.toLowerCase().trim();
+      let totalVisible = 0;
+
+      sections.forEach(section => {
+        const cat = section.getAttribute('data-category');
+        const sectionCards = section.querySelectorAll('.team-card');
+        let sectionVisibleCount = 0;
+
+        if (currentFilter !== 'all' && currentFilter !== cat) {
+          section.style.display = 'none';
+          return;
+        }
+
+        sectionCards.forEach(card => {
+          const cardId = card.getAttribute('data-id').toLowerCase();
+          const cardName = card.getAttribute('data-name').toLowerCase();
+          const cardTitle = card.querySelector('.team-title').textContent.toLowerCase();
+          const cardBio = card.querySelector('.team-bio').textContent.toLowerCase();
+
+          const matchesQuery = cardId.includes(query) || cardName.includes(query) || cardTitle.includes(query) || cardBio.includes(query);
+
+          if (matchesQuery) {
+            card.style.display = 'flex';
+            sectionVisibleCount++;
+            totalVisible++;
+          } else {
+            card.style.display = 'none';
+          }
+        });
+
+        if (sectionVisibleCount === 0) {
+          section.style.display = 'none';
+        } else {
+          section.style.display = 'block';
+        }
+      });
+
+      if (totalVisible === 0) {
+        noResults.style.display = 'block';
+      } else {
+        noResults.style.display = 'none';
+      }
+    }
+
+    // Modal functionality
+    const modal = document.getElementById('teamModal');
+    const modalClose = document.getElementById('modalClose');
+    const modalImg = document.getElementById('modalImg');
+    const modalName = document.getElementById('modalName');
+    const modalRole = document.getElementById('modalRole');
+    const modalId = document.getElementById('modalId');
+    const modalDesc = document.getElementById('modalDesc');
+    const modalExp = document.getElementById('modalExp');
+    const modalProjects = document.getElementById('modalProjects');
+    const modalExpLabel = document.getElementById('modalExpLabel');
+    const modalProjLabel = document.getElementById('modalProjLabel');
+    const skillsContainer = document.getElementById('skillsContainer');
+
+    cards.forEach(card => {
+      card.addEventListener('click', function() {
+        const name = card.querySelector('.team-name').textContent;
+        const role = card.getAttribute('data-role');
+        const id = card.getAttribute('data-id');
+        const desc = card.getAttribute('data-desc');
+        const exp = card.getAttribute('data-exp');
+        const projects = card.getAttribute('data-projects');
+        const skills = card.getAttribute('data-skills').split('•').map(s => s.trim());
+        const imgSrc = card.querySelector('img').getAttribute('src');
+
+        modalImg.src = imgSrc;
+        modalName.textContent = name;
+        modalRole.textContent = role;
+        modalId.textContent = id;
+        modalDesc.textContent = desc;
+        modalExp.textContent = exp;
+        modalProjects.textContent = projects;
+
+        if (id.startsWith('ENG')) {
+          modalExpLabel.textContent = 'অভিজ্ঞতা';
+          modalProjLabel.textContent = 'সফল প্রজেক্ট';
+        } else {
+          modalExpLabel.textContent = 'অভিজ্ঞতা';
+          modalProjLabel.textContent = 'সফল কাজ';
+        }
+
+        skillsContainer.innerHTML = '';
+        skills.forEach(skill => {
+          const pill = document.createElement('span');
+          pill.className = 'skill-pill';
+          pill.textContent = '⚡ ' + skill;
+          skillsContainer.appendChild(pill);
+        });
+
+        modal.classList.add('active');
+      });
+    });
+
+    modalClose.addEventListener('click', function() {
+      modal.classList.remove('active');
+    });
+
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) {
+        modal.classList.remove('active');
+      }
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        modal.classList.remove('active');
+      }
+    });
+  </script>
+
+</body>
+</html>
