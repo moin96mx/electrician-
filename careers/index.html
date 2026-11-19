@@ -130,9 +130,16 @@ textarea{min-height:86px;resize:vertical}
 <textarea name="skills" placeholder="যেমন: House Wiring, Industrial Wiring, Solar, Substation, Motor Control..." required></textarea>
 <label>প্রত্যাশিত বেতন / Expected Salary (ঐচ্ছিক)</label>
 <input type="text" name="expected_salary" placeholder="যেমন: 20000">
-<label>CV এর লিংক দিন / CV Link <span>*</span></label>
-<div class="file-box" style="text-align:left"><b>✅ সবচেয়ে সহজ উপায় - ৩০ সেকেন্ডে:</b><br><span style="font-size:14px;line-height:1.7">১. আপনার CV ফাইলটা Google Drive এ আপলোড করুন<br>২. Share → Anyone with link → Copy Link<br>৩. নিচের ঘরে লিংকটা পেস্ট করুন<br><br>CV না থাকলে? WhatsApp এ সরাসরি পাঠান: <b style="color:#075E54">+880 1710830391</b></span></div>
-<input type="text" name="cv_drive_link" placeholder="https://drive.google.com/... আপনার CV এর লিংক এখানে দিন" required style="margin-top:10px">
+<label>আপনি CV কিভাবে পাঠাবেন? <span>*</span></label>
+<select name="cv_method" id="cv_method" required>
+<option value="">বাছাই করুন</option>
+<option value="Drive Link দিয়েছি">✅ Drive Link দিয়েছি - নিচে লিংক দিলাম</option>
+<option value="WhatsApp এ পাঠাবো">📱 WhatsApp এ পাঠাবো - ফর্ম জমা দিয়ে WhatsApp এ CV পাঠাবো</option>
+<option value="CV নেই - পরে পাঠাবো">📝 CV নেই - পরে WhatsApp এ পাঠাবো</option>
+</select>
+<label>CV এর লিংক দিন / CV Link <span style="color:#0a7a42">(ঐচ্ছিক - না থাকলে ফাঁকা রাখুন)</span></label>
+<div class="file-box" style="text-align:left"><b>✅ সবচেয়ে সহজ উপায় - ৩০ সেকেন্ডে:</b><br><span style="font-size:14px;line-height:1.7">১. আপনার CV ফাইলটা Google Drive এ আপলোড করুন<br>২. Share → Anyone with link → Copy Link<br>৩. নিচের ঘরে লিংকটা পেস্ট করুন<br><br><b>লিংক নেই? কোনো সমস্যা নেই!</b> নিচের ঘর ফাঁকা রেখেই ফর্ম জমা দিন। তারপর WhatsApp এ CV পাঠিয়ে দিন: <b style="color:#075E54">+880 1710830391</b></span></div>
+<input type="text" name="cv_drive_link" placeholder="লিংক থাকলে দিন, না থাকলে ফাঁকা রাখুন - ফর্ম এমনিতেই জমা হবে" style="margin-top:10px">
 <label>আপনার সম্পর্কে লিখুন <span>*</span></label>
 <textarea name="message" placeholder="নিজের সম্পর্কে ২-৩ লাইন লিখুন - আপনি কোথায় কাজ করেছেন, কি কি পারেন..." required></textarea>
 
@@ -146,5 +153,29 @@ textarea{min-height:86px;resize:vertical}
 </div>
 
 <footer class="footer"><div class="wrap"><div class="foot-grid"><div><h4>ElectroHubBD</h4><p>বাংলাদেশের বিশ্বস্ত ইলেকট্রিক্যাল সলিউশন কোম্পানি। হাউস ওয়্যারিং থেকে ইন্ডাস্ট্রিয়াল প্রজেক্ট — সব জায়গায় প্রফেশনাল সার্ভিস।</p></div><div><h4>যোগাযোগ</h4><ul><li>📍 Gulshan-Badda Link Road, Dhaka-1212</li><li>📞 +880 1710830391</li><li>✉️ info@electrohubbd.com</li><li>🌐 electrohubbd.com</li></ul></div><div><h4>Quick Links</h4><ul><li>Home</li><li>Services</li><li>Projects</li><li>Careers - Now Hiring</li></ul></div></div><div class="copy">© 2026 ElectroHubBD. All Rights Reserved. | Circular No: EHB-2026-01 | আমরা কোনো আবেদন ফি নিই না।</div></div></footer>
+
+<script>
+document.getElementById('cv_method').addEventListener('change', function(){
+  var linkInput = document.querySelector('input[name="cv_drive_link"]');
+  if(this.value.includes('WhatsApp') || this.value.includes('CV নেই')){
+    linkInput.placeholder = 'ফাঁকা রাখুন - আপনি WhatsApp এ পাঠাবেন';
+    linkInput.style.background = '#FFF8E1';
+  } else {
+    linkInput.placeholder = 'https://drive.google.com/... লিংক এখানে দিন';
+    linkInput.style.background = '#F9FAFB';
+  }
+});
+// After submit, also show WhatsApp button
+var form = document.querySelector('form');
+form.addEventListener('submit', function(){
+  var name = document.querySelector('input[name="name"]').value;
+  var phone = document.querySelector('input[name="phone"]').value;
+  var district = document.querySelector('input[name="district"]').value;
+  var msg = 'আসসালামু আলাইকুম, আমি ElectroHubBD তে আবেদন করেছি।%0Aনাম: ' + encodeURIComponent(name) + '%0Aমোবাইল: ' + encodeURIComponent(phone) + '%0Aজেলা: ' + encodeURIComponent(district) + '%0Aআমার CV পাঠাচ্ছি।';
+  localStorage.setItem('ehb_wa', msg);
+});
+</script>
+<div id="wa-float" style="position:fixed;bottom:20px;right:20px;z-index:999"><a href="https://wa.me/8801710830391?text=আসসালামু আলাইকুম, আমি ElectroHubBD তে আবেদন করতে চাই। আমার CV পাঠাচ্ছি।" target="_blank" style="background:#25D366;color:#fff;padding:13px 18px;border-radius:30px;font-weight:800;box-shadow:0 6px 20px rgba(0,0,0,.3);display:block">📱 WhatsApp এ CV পাঠান</a></div>
 </body>
+
 </html>
